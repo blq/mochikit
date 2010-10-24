@@ -98,7 +98,7 @@ MochiKit.Base.update(MochiKit.Base, {
             return new me();
         }
     },
-    
+
     _flattenArray: function (res, lst) {
         for (var i = 0; i < lst.length; i++) {
             var o = lst[i];
@@ -1116,7 +1116,7 @@ MochiKit.Base.update(MochiKit.Base, {
         if (data.length === 0) {
             throw new TypeError('median() requires at least one argument');
         }
-        data.sort(compare);
+        data.sort(MochiKit.Base.compare);
         if (data.length % 2 == 0) {
             var upper = data.length / 2;
             return (data[upper] + data[upper - 1]) / 2;
@@ -1269,7 +1269,10 @@ MochiKit.Base.update(MochiKit.Base, {
     }
 });
 
-/** @id MochiKit.Base.AdapterRegistry */
+/**
+ * @id MochiKit.Base.AdapterRegistry
+ * @constructor
+ */
 MochiKit.Base.AdapterRegistry = function () {
     this.pairs = [];
 };
@@ -1371,6 +1374,7 @@ MochiKit.Base._deprecated = function (module, name, target, version, exportable)
     module[name] = func;
 };
 
+/** @this MochiKit.Base */
 MochiKit.Base.__new__ = function () {
     var m = this;
 
@@ -1395,7 +1399,10 @@ MochiKit.Base.__new__ = function () {
         };
     }
 
-    /** @id MochiKit.Base.NamedError */
+    /**
+     * @id MochiKit.Base.NamedError
+     * @constructor
+     */
     m.NamedError = function (name) {
         this.message = name;
         this.name = name;
@@ -1460,11 +1467,11 @@ MochiKit.Base.__new__();
 // XXX: Internet Explorer blows
 //
 if (MochiKit.__export__) {
-    compare = MochiKit.Base.compare;
-    compose = MochiKit.Base.compose;
-    serializeJSON = MochiKit.Base.serializeJSON;
-    mean = MochiKit.Base.mean;
-    median = MochiKit.Base.median;
+    window.compare = MochiKit.Base.compare;
+    window.compose = MochiKit.Base.compose;
+    window.serializeJSON = MochiKit.Base.serializeJSON;
+    window.mean = MochiKit.Base.mean;
+    window.median = MochiKit.Base.median;
 }
 
 MochiKit.Base._exportSymbols(this, MochiKit.Base);
