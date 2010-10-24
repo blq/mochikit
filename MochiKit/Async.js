@@ -10,7 +10,10 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 MochiKit.Base._module('Async', '1.5', ['Base']);
 
-/** @id MochiKit.Async.Deferred */
+/**
+ * @id MochiKit.Async.Deferred
+ * @constructor
+ */
 MochiKit.Async.Deferred = function (/* optional */ canceller) {
     this.chain = [];
     this.id = this._nextId();
@@ -500,7 +503,10 @@ MochiKit.Base.update(MochiKit.Async, {
 });
 
 
-/** @id MochiKit.Async.DeferredLock */
+/**
+ * @id MochiKit.Async.DeferredLock
+ * @constructor
+ */
 MochiKit.Async.DeferredLock = function () {
     this.waiting = [];
     this.locked = false;
@@ -545,7 +551,10 @@ MochiKit.Async.DeferredLock.prototype = {
 
 };
 
-/** @id MochiKit.Async.DeferredList */
+/**
+ * @id MochiKit.Async.DeferredList
+ * @constructor
+ */
 MochiKit.Async.DeferredList = function (list, /* optional */fireOnOneCallback, fireOnOneErrback, consumeErrors, canceller) {
 
     // call parent constructor
@@ -627,6 +636,7 @@ MochiKit.Async.maybeDeferred = function (func) {
 };
 
 
+/** @this MochiKit.Async */
 MochiKit.Async.__new__ = function () {
     var m = MochiKit.Base;
     var ne = m.partial(m._newNamedError, this);
