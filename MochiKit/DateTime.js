@@ -27,6 +27,7 @@ MochiKit.DateTime.isoDate = function (str) {
     return date;
 };
 
+/** @const */
 MochiKit.DateTime._isoRegexp = /(\d{4,})(?:-(\d{1,2})(?:-(\d{1,2})(?:[T ](\d{1,2}):(\d{1,2})(?::(\d{1,2})(?:\.(\d+))?)?(?:(Z)|([+-])(\d{1,2})(?::(\d{1,2}))?)?)?)?)?/;
 
 /** @id MochiKit.DateTime.isoTimestamp */

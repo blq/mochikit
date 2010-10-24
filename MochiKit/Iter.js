@@ -396,7 +396,7 @@ MochiKit.Base.update(MochiKit.Iter, {
         var rval;
         if (iterable instanceof Array) {
             return iterable.slice();
-        } 
+        }
         // this is necessary to avoid a Safari crash
         if (typeof(iterable) == "function" &&
                 !(iterable instanceof Function) &&
@@ -747,7 +747,7 @@ MochiKit.Base.update(MochiKit.Iter, {
     }
 });
 
-
+/** @this MochiKit.Iter */
 MochiKit.Iter.__new__ = function () {
     var m = MochiKit.Base;
     // Re-use StopIteration if exists (e.g. SpiderMonkey)
@@ -781,7 +781,7 @@ MochiKit.Iter.__new__();
 // XXX: Internet Explorer blows
 //
 if (MochiKit.__export__) {
-    reduce = MochiKit.Iter.reduce;
+    window.reduce = MochiKit.Iter.reduce;
 }
 
 MochiKit.Base._exportSymbols(this, MochiKit.Iter);

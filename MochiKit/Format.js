@@ -291,6 +291,7 @@ MochiKit.Format.LOCALE = {
     __export__: false
 };
 
+/** @this MochiKit.Format */
 MochiKit.Format.__new__ = function () {
     MochiKit.Base.nameFunctions(this);
     var base = this.NAME + ".";

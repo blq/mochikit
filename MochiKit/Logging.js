@@ -10,7 +10,10 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 MochiKit.Base._module('Logging', '1.5', ['Base']);
 
-    /** @id MochiKit.Logging.LogMessage */
+/**
+ * @id MochiKit.Logging.LogMessage
+ * @constructor
+ */
 MochiKit.Logging.LogMessage = function (num, level, info) {
     this.num = num;
     this.level = level;
@@ -75,7 +78,10 @@ MochiKit.Base.update(MochiKit.Logging, {
 
 });
 
-/** @id MochiKit.Logging.Logger */
+/**
+ * @id MochiKit.Logging.Logger
+ * @constructor
+ */
 MochiKit.Logging.Logger = function (/* optional */maxSize) {
     this.counter = 0;
     if (typeof(maxSize) == 'undefined' || maxSize === null) {
@@ -206,6 +212,7 @@ MochiKit.Logging.Logger.prototype = {
     }
 };
 
+/** @this MochiKit.Logging */
 MochiKit.Logging.__new__ = function () {
     this.LogLevel = {
         ERROR: 40,

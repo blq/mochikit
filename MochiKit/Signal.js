@@ -12,7 +12,10 @@ MochiKit.Base._module('Signal', '1.5', ['Base', 'DOM'/*, 'Style'*/]);
 
 MochiKit.Signal._observers = [];
 
-/** @id MochiKit.Signal.Event */
+/**
+ * @id MochiKit.Signal.Event
+ * @constructor
+ */
 MochiKit.Signal.Event = function (src, e) {
     this._event = e || window.event;
     this._src = src;
@@ -63,7 +66,7 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
             }
             str += '}';
         }
-        if (this.type() == 'mouseover' || this.type() == 'mouseout' || 
+        if (this.type() == 'mouseover' || this.type() == 'mouseout' ||
             this.type() == 'mouseenter' || this.type() == 'mouseleave') {
             str += ', relatedTarget(): ' + repr(this.relatedTarget());
         }
@@ -490,7 +493,10 @@ MochiKit.Signal._specialKeys = {
     }
 })();
 
-/* Internal object to keep track of created signals. */
+/**
+ * Internal object to keep track of created signals.
+ * @constructor
+ */
 MochiKit.Signal.Ident = function (ident) {
     this.source = ident.source;
     this.signal = ident.signal;
@@ -532,10 +538,10 @@ MochiKit.Base.update(MochiKit.Signal, {
             if (sig === 'onload' || sig === 'onunload') {
                 return function (nativeEvent) {
                     obj[func].apply(obj, [new E(src, nativeEvent)]);
-                    
+
                     var ident = new MochiKit.Signal.Ident({
                         source: src, signal: sig, objOrFunc: obj, funcOrStr: func});
-                    
+
                     MochiKit.Signal._disconnect(ident);
                 };
             } else {
@@ -547,10 +553,10 @@ MochiKit.Base.update(MochiKit.Signal, {
             if (sig === 'onload' || sig === 'onunload') {
                 return function (nativeEvent) {
                     func.apply(obj, [new E(src, nativeEvent)]);
-                    
+
                     var ident = new MochiKit.Signal.Ident({
                         source: src, signal: sig, objOrFunc: func});
-                    
+
                     MochiKit.Signal._disconnect(ident);
                 };
             } else {
@@ -658,12 +664,12 @@ MochiKit.Base.update(MochiKit.Signal, {
         }
 
         var ident = new MochiKit.Signal.Ident({
-            source: src, 
-            signal: sig, 
-            listener: listener, 
-            isDOM: isDOM, 
-            objOrFunc: objOrFunc, 
-            funcOrStr: funcOrStr, 
+            source: src,
+            signal: sig,
+            listener: listener,
+            isDOM: isDOM,
+            objOrFunc: objOrFunc,
+            funcOrStr: funcOrStr,
             connected: true
         });
         self._observers.push(ident);
@@ -873,6 +879,7 @@ MochiKit.Base.update(MochiKit.Signal, {
 
 });
 
+/** @this MochiKit.Signal */
 MochiKit.Signal.__new__ = function (win) {
     var m = MochiKit.Base;
     this._document = document;
@@ -895,10 +902,10 @@ MochiKit.Signal.__new__(this);
 // XXX: Internet Explorer blows
 //
 if (MochiKit.__export__) {
-    connect = MochiKit.Signal.connect;
-    disconnect = MochiKit.Signal.disconnect;
-    disconnectAll = MochiKit.Signal.disconnectAll;
-    signal = MochiKit.Signal.signal;
+    window.connect = MochiKit.Signal.connect;
+    window.disconnect = MochiKit.Signal.disconnect;
+    window.disconnectAll = MochiKit.Signal.disconnectAll;
+    window.signal = MochiKit.Signal.signal;
 }
 
 MochiKit.Base._exportSymbols(this, MochiKit.Signal);

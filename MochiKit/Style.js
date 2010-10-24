@@ -11,7 +11,10 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 MochiKit.Base._module('Style', '1.5', ['Base', 'DOM']);
 
 
-/** @id MochiKit.Style.Dimensions */
+/**
+ * @id MochiKit.Style.Dimensions
+ * @constructor
+ */
 MochiKit.Style.Dimensions = function (w, h) {
     if (!(this instanceof MochiKit.Style.Dimensions)) {
         return new MochiKit.Style.Dimensions(w, h);
@@ -30,7 +33,10 @@ MochiKit.Style.Dimensions.prototype.toString = function () {
 };
 
 
-/** @id MochiKit.Style.Coordinates */
+/**
+ * @id MochiKit.Style.Coordinates
+ * @constructor
+ */
 MochiKit.Style.Coordinates = function (x, y) {
     if (!(this instanceof MochiKit.Style.Coordinates)) {
         return new MochiKit.Style.Coordinates(x, y);
@@ -228,8 +234,8 @@ MochiKit.Base.update(MochiKit.Style, {
 
             if (parent != elem) {
                 while (parent) {
-                    c.x += parseInt(parent.style.borderLeftWidth) || 0;
-                    c.y += parseInt(parent.style.borderTopWidth) || 0;
+                    c.x += parseInt(parent.style.borderLeftWidth, 10) || 0;
+                    c.y += parseInt(parent.style.borderTopWidth, 10) || 0;
                     c.x += parent.offsetLeft;
                     c.y += parent.offsetTop;
                     parent = parent.offsetParent;
