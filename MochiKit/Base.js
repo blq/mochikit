@@ -1,4 +1,5 @@
-/***
+/**
+@license
 
 MochiKit.Base 1.5
 
@@ -176,7 +177,13 @@ MochiKit.Base.update(MochiKit.Base, {
             if (typeof(o) != 'undefined' && o !== null) {
                 for (var k in o) {
                     var v = o[k];
-                    if (typeof(self[k]) == 'object' && typeof(v) == 'object') {
+                    if (typeof(self[k]) == 'object' && typeof(v) == 'object'
+						// @Franson edit todo: detect Array, RegExp and DOM objs also?
+						// todo: for maximum correctness we should first copy the object and _then_
+						// see if any custom properties have been added to Date and update them.
+						&& !MochiKit.Base.isDateLike(v)
+						&& !(v instanceof Array)
+					){
                         arguments.callee(self[k], v);
                     } else {
                         self[k] = v;
@@ -1211,6 +1218,8 @@ MochiKit.Base.update(MochiKit.Base, {
         for (var i = 0; i < len; i++) {
             v = values[i];
             if (typeof(v) != 'undefined' && v !== null) {
+                if (MochiKit.Base.isDateLike(v)) // @Franson mod. todo: check the json-registry here?
+                    v = MochiKit.DateTime.toISOTimestamp(v, true)
                 rval.push(urlEncode(names[i]) + "=" + urlEncode(v));
             }
         }

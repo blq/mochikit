@@ -520,7 +520,7 @@ MochiKit.Base.update(MochiKit.DOM, {
             elem = self.getElement(elem);
         }
         var e = self.coerceToDOM(elem);
-        e.parentNode.removeChild(e);
+        if (e && e.parentNode) e.parentNode.removeChild(e);
         return e;
     },
 

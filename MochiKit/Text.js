@@ -563,6 +563,7 @@ MochiKit.Text._truncToPercent = function (value, precision) {
  * @property {Number} pos The position of the error.
  * @property {String} message The error message text.
  * @extends MochiKit.Base.NamedError
+ * @constructor
  */
 MochiKit.Text.FormatPatternError = function (pattern, pos, message) {
     this.pattern = pattern;

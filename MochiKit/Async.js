@@ -188,7 +188,11 @@ MochiKit.Async.Deferred.prototype = {
                 continue;
             }
             try {
-                res = f(res);
+                var ret = f(res);
+				// test patch based on goog.Deferred port and Dojo logic, I'd also say this is more intuitive..
+                if (ret !== undefined) { // If no result, then use previous result.
+				    res = ret;
+				}
                 fired = ((res instanceof Error) ? 1 : 0);
                 if (res instanceof MochiKit.Async.Deferred) {
                     cb = function (res) {
@@ -372,6 +376,7 @@ MochiKit.Base.update(MochiKit.Async, {
             headers: undefined,
             mimeType: undefined
             */
+			, async: true // test to enable synchronous requests (for window.onunload state-saving)
         }, opts);
         var self = MochiKit.Async;
         var req = self.getXMLHttpRequest();
@@ -384,9 +389,9 @@ MochiKit.Base.update(MochiKit.Async, {
         // Safari will send undefined:undefined, so we have to check.
         // We can't use apply, since the function is native.
         if ('username' in opts) {
-            req.open(opts.method, url, true, opts.username, opts.password);
+            req.open(opts.method, url, opts.async, opts.username, opts.password);
         } else {
-            req.open(opts.method, url, true);
+            req.open(opts.method, url, opts.async);
         }
         if (req.overrideMimeType && opts.mimeType) {
             req.overrideMimeType(opts.mimeType);
