@@ -1,6 +1,7 @@
 @echo off
 REM example compilation of MochiKit using the Google Closure compiler, http://code.google.com/p/closure-compiler/
 REM note that not all MochiKit modules are included yet
+REM add --formatting PRETTY_PRINT to examine result
 java -jar Closure/compiler.jar ^
 	--compilation_level SIMPLE_OPTIMIZATIONS ^
 	--warning_level VERBOSE ^
@@ -18,6 +19,7 @@ java -jar Closure/compiler.jar ^
 	--js ../MochiKit/Format.js ^
 	--js ../MochiKit/Text.js ^
 	--js ../MochiKit/Logging.js ^
+	--js ../MochiKit/Color.js ^
 	^
 	--externs closure_externs/mochikit_extern.js ^
 	--externs closure_externs/webkit_console.js ^
