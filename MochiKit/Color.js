@@ -10,7 +10,10 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 MochiKit.Base._module('Color', '1.5', ['Base', 'DOM', 'Style']);
 
-/** @id MochiKit.Color.Color */
+/** 
+ * @id MochiKit.Color.Color 
+ * @constructor
+ */
 MochiKit.Color.Color = function (red, green, blue, alpha) {
     if (typeof(alpha) == 'undefined' || alpha === null) {
         alpha = 1.0;
@@ -592,6 +595,7 @@ MochiKit.Base.update(MochiKit.Color, {
         return digits;
     },
 
+	/** @this MochiKit.Color */
     __new__: function () {
         var m = MochiKit.Base;
         /** @id MochiKit.Color.Color.fromRGBString */

@@ -940,6 +940,7 @@ MochiKit.Base.update(MochiKit.DOM, {
         return null;
     },
 
+	/** @this MochiKit.DOM */
     __new__: function (win) {
 
         var m = MochiKit.Base;
