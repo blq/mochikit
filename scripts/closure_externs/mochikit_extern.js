@@ -1,18 +1,12 @@
 /**
  * necessary to get MochiKit to compile
+ * + the official Closure webkit_console.js, json.js
  *
  * @externs
  */
 
-var MochiKit = {};
-
-
-//-- not part of MochiKit but needed..
-
 var Debug = {};
 var debug = {};
-
-//var console;
 
 var StopIteration = {};
 

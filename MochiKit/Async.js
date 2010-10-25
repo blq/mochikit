@@ -26,206 +26,205 @@ MochiKit.Async.Deferred = function (/* optional */ canceller) {
     this.finalized = false;
 };
 
-MochiKit.Async.Deferred.prototype = {
     /** @id MochiKit.Async.Deferred.prototype.repr */
-    repr: function () {
-        return 'Deferred(' + this.id + ', ' + this.state() + ')';
-    },
-
-    toString: MochiKit.Base.forwardCall("repr"),
-
-    _nextId: MochiKit.Base.counter(),
-
-    /** @id MochiKit.Async.Deferred.prototype.state */
-    state: function () {
-        if (this.fired == -1) {
-            return 'unfired';
-        } else if (this.fired === 0) {
-            return 'success';
-        } else {
-            return 'error';
-        }
-    },
-
-    /** @id MochiKit.Async.Deferred.prototype.cancel */
-    cancel: function (e) {
-        var self = MochiKit.Async;
-        if (this.fired == -1) {
-            if (this.canceller) {
-                this.canceller(this);
-            } else {
-                this.silentlyCancelled = true;
-            }
-            if (this.fired == -1) {
-                if (typeof(e) === 'string') {
-                    e = new self.GenericError(e);
-                } else if (!(e instanceof Error)) {
-                    e = new self.CancelledError(this);
-                }
-                this.errback(e);
-            }
-        } else if ((this.fired === 0) && (this.results[0] instanceof self.Deferred)) {
-            this.results[0].cancel(e);
-        }
-    },
-
-    _resback: function (res) {
-        /***
-
-        The primitive that means either callback or errback
-
-        ***/
-        this.fired = ((res instanceof Error) ? 1 : 0);
-        this.results[this.fired] = res;
-        if (this.paused === 0) {
-            this._fire();
-        }
-    },
-
-    _check: function () {
-        if (this.fired != -1) {
-            if (!this.silentlyCancelled) {
-                throw new MochiKit.Async.AlreadyCalledError(this);
-            }
-            this.silentlyCancelled = false;
-            return;
-        }
-    },
-
-    /** @id MochiKit.Async.Deferred.prototype.callback */
-    callback: function (res) {
-        this._check();
-        if (res instanceof MochiKit.Async.Deferred) {
-            throw new Error("Deferred instances can only be chained if they are the result of a callback");
-        }
-        this._resback(res);
-    },
-
-    /** @id MochiKit.Async.Deferred.prototype.errback */
-    errback: function (res) {
-        this._check();
-        var self = MochiKit.Async;
-        if (res instanceof self.Deferred) {
-            throw new Error("Deferred instances can only be chained if they are the result of a callback");
-        }
-        if (!(res instanceof Error)) {
-            res = new self.GenericError(res);
-        }
-        this._resback(res);
-    },
-
-    /** @id MochiKit.Async.Deferred.prototype.addBoth */
-    addBoth: function (fn) {
-        if (arguments.length > 1) {
-            fn = MochiKit.Base.partial.apply(null, arguments);
-        }
-        return this.addCallbacks(fn, fn);
-    },
-
-    /** @id MochiKit.Async.Deferred.prototype.addCallback */
-    addCallback: function (fn) {
-        if (arguments.length > 1) {
-            fn = MochiKit.Base.partial.apply(null, arguments);
-        }
-        return this.addCallbacks(fn, null);
-    },
-
-    /** @id MochiKit.Async.Deferred.prototype.addErrback */
-    addErrback: function (fn) {
-        if (arguments.length > 1) {
-            fn = MochiKit.Base.partial.apply(null, arguments);
-        }
-        return this.addCallbacks(null, fn);
-    },
-
-    /** @id MochiKit.Async.Deferred.prototype.addCallbacks */
-    addCallbacks: function (cb, eb) {
-        if (this.chained) {
-            throw new Error("Chained Deferreds can not be re-used");
-        }
-        if (this.finalized) {
-            throw new Error("Finalized Deferreds can not be re-used");
-        }
-        this.chain.push([cb, eb]);
-        if (this.fired >= 0) {
-            this._fire();
-        }
-        return this;
-    },
-
-    /** @id MochiKit.Async.Deferred.prototype.setFinalizer */
-    setFinalizer: function (fn) {
-        if (this.chained) {
-            throw new Error("Chained Deferreds can not be re-used");
-        }
-        if (this.finalized) {
-            throw new Error("Finalized Deferreds can not be re-used");
-        }
-        if (arguments.length > 1) {
-            fn = MochiKit.Base.partial.apply(null, arguments);
-        }
-        this._finalizer = fn;
-        if (this.fired >= 0) {
-            this._fire();
-        }
-        return this;
-    },
-
-    _fire: function () {
-        /***
-
-        Used internally to exhaust the callback sequence when a result
-        is available.
-
-        ***/
-        var chain = this.chain;
-        var fired = this.fired;
-        var res = this.results[fired];
-        var self = this;
-        var cb = null;
-        while (chain.length > 0 && this.paused === 0) {
-            // Array
-            var pair = chain.shift();
-            var f = pair[fired];
-            if (f === null) {
-                continue;
-            }
-            try {
-                var ret = f(res);
-				// test patch based on goog.Deferred port and Dojo logic, I'd also say this is more intuitive..
-                if (ret !== undefined) { // If no result, then use previous result.
-				    res = ret;
-				}
-                fired = ((res instanceof Error) ? 1 : 0);
-                if (res instanceof MochiKit.Async.Deferred) {
-                    cb = function (res) {
-                        self.paused--;
-                        self._resback(res);
-                    };
-                    this.paused++;
-                }
-            } catch (err) {
-                fired = 1;
-                if (!(err instanceof Error)) {
-                    err = new MochiKit.Async.GenericError(err);
-                }
-                res = err;
-            }
-        }
-        this.fired = fired;
-        this.results[fired] = res;
-        if (this.chain.length == 0 && this.paused === 0 && this._finalizer) {
-            this.finalized = true;
-            this._finalizer(res);
-        }
-        if (cb && this.paused) {
-            // this is for "tail recursion" in case the dependent deferred
-            // is already fired
-            res.addBoth(cb);
-            res.chained = true;
-        }
-    }
+MochiKit.Async.Deferred.prototype.repr = function () {
+	return 'Deferred(' + this.id + ', ' + this.state() + ')';
 };
+
+MochiKit.Async.Deferred.prototype.toString = MochiKit.Base.forwardCall("repr");
+
+MochiKit.Async.Deferred.prototype._nextId = MochiKit.Base.counter();
+
+/** @id MochiKit.Async.Deferred.prototype.state */
+MochiKit.Async.Deferred.prototype.state = function () {
+	if (this.fired == -1) {
+		return 'unfired';
+	} else if (this.fired === 0) {
+		return 'success';
+	} else {
+		return 'error';
+	}
+};
+
+/** @id MochiKit.Async.Deferred.prototype.cancel */
+MochiKit.Async.Deferred.prototype.cancel = function (e) {
+	var self = MochiKit.Async;
+	if (this.fired == -1) {
+		if (this.canceller) {
+			this.canceller(this);
+		} else {
+			this.silentlyCancelled = true;
+		}
+		if (this.fired == -1) {
+			if (typeof(e) === 'string') {
+				e = new self.GenericError(e);
+			} else if (!(e instanceof Error)) {
+				e = new self.CancelledError(this);
+			}
+			this.errback(e);
+		}
+	} else if ((this.fired === 0) && (this.results[0] instanceof self.Deferred)) {
+		this.results[0].cancel(e);
+	}
+};
+
+MochiKit.Async.Deferred.prototype._resback = function (res) {
+	/***
+
+	The primitive that means either callback or errback
+
+	***/
+	this.fired = ((res instanceof Error) ? 1 : 0);
+	this.results[this.fired] = res;
+	if (this.paused === 0) {
+		this._fire();
+	}
+};
+
+MochiKit.Async.Deferred.prototype._check = function () {
+	if (this.fired != -1) {
+		if (!this.silentlyCancelled) {
+			throw new MochiKit.Async.AlreadyCalledError(this);
+		}
+		this.silentlyCancelled = false;
+		return;
+	}
+};
+
+/** @id MochiKit.Async.Deferred.prototype.callback */
+MochiKit.Async.Deferred.prototype.callback = function (res) {
+	this._check();
+	if (res instanceof MochiKit.Async.Deferred) {
+		throw new Error("Deferred instances can only be chained if they are the result of a callback");
+	}
+	this._resback(res);
+};
+
+/** @id MochiKit.Async.Deferred.prototype.errback */
+MochiKit.Async.Deferred.prototype.errback = function (res) {
+	this._check();
+	var self = MochiKit.Async;
+	if (res instanceof self.Deferred) {
+		throw new Error("Deferred instances can only be chained if they are the result of a callback");
+	}
+	if (!(res instanceof Error)) {
+		res = new self.GenericError(res);
+	}
+	this._resback(res);
+};
+
+/** @id MochiKit.Async.Deferred.prototype.addBoth */
+MochiKit.Async.Deferred.prototype.addBoth = function (fn) {
+	if (arguments.length > 1) {
+		fn = MochiKit.Base.partial.apply(null, arguments);
+	}
+	return this.addCallbacks(fn, fn);
+};
+
+/** @id MochiKit.Async.Deferred.prototype.addCallback */
+MochiKit.Async.Deferred.prototype.addCallback = function (fn) {
+	if (arguments.length > 1) {
+		fn = MochiKit.Base.partial.apply(null, arguments);
+	}
+	return this.addCallbacks(fn, null);
+};
+
+/** @id MochiKit.Async.Deferred.prototype.addErrback */
+MochiKit.Async.Deferred.prototype.addErrback = function (fn) {
+	if (arguments.length > 1) {
+		fn = MochiKit.Base.partial.apply(null, arguments);
+	}
+	return this.addCallbacks(null, fn);
+};
+
+/** @id MochiKit.Async.Deferred.prototype.addCallbacks */
+MochiKit.Async.Deferred.prototype.addCallbacks = function (cb, eb) {
+	if (this.chained) {
+		throw new Error("Chained Deferreds can not be re-used");
+	}
+	if (this.finalized) {
+		throw new Error("Finalized Deferreds can not be re-used");
+	}
+	this.chain.push([cb, eb]);
+	if (this.fired >= 0) {
+		this._fire();
+	}
+	return this;
+};
+
+/** @id MochiKit.Async.Deferred.prototype.setFinalizer */
+MochiKit.Async.Deferred.prototype.setFinalizer = function (fn) {
+	if (this.chained) {
+		throw new Error("Chained Deferreds can not be re-used");
+	}
+	if (this.finalized) {
+		throw new Error("Finalized Deferreds can not be re-used");
+	}
+	if (arguments.length > 1) {
+		fn = MochiKit.Base.partial.apply(null, arguments);
+	}
+	this._finalizer = fn;
+	if (this.fired >= 0) {
+		this._fire();
+	}
+	return this;
+};
+
+MochiKit.Async.Deferred.prototype._fire = function () {
+	/***
+
+	Used internally to exhaust the callback sequence when a result
+	is available.
+
+	***/
+	var chain = this.chain;
+	var fired = this.fired;
+	var res = this.results[fired];
+	var self = this;
+	var cb = null;
+	while (chain.length > 0 && this.paused === 0) {
+		// Array
+		var pair = chain.shift();
+		var f = pair[fired];
+		if (f === null) {
+			continue;
+		}
+		try {
+			var ret = f(res);
+			// test patch based on goog.Deferred port and Dojo logic, I'd also say this is more intuitive..
+			if (ret !== undefined) { // If no result, then use previous result.
+				res = ret;
+			}
+			fired = ((res instanceof Error) ? 1 : 0);
+			if (res instanceof MochiKit.Async.Deferred) {
+				cb = function (res) {
+					self.paused--;
+					self._resback(res);
+				};
+				this.paused++;
+			}
+		} catch (err) {
+			fired = 1;
+			if (!(err instanceof Error)) {
+				err = new MochiKit.Async.GenericError(err);
+			}
+			res = err;
+		}
+	}
+	this.fired = fired;
+	this.results[fired] = res;
+	if (this.chain.length == 0 && this.paused === 0 && this._finalizer) {
+		this.finalized = true;
+		this._finalizer(res);
+	}
+	if (cb && this.paused) {
+		// this is for "tail recursion" in case the dependent deferred
+		// is already fired
+		res.addBoth(cb);
+		res.chained = true;
+	}
+};
+
 
 MochiKit.Base.update(MochiKit.Async, {
     /** @id MochiKit.Async.evalJSONRequest */
@@ -273,6 +272,7 @@ MochiKit.Base.update(MochiKit.Async, {
         return self.XMLHttpRequest();
     },
 
+	/** @this XMLHttpRequest */
     _xhr_onreadystatechange: function (d) {
         // MochiKit.Logging.logDebug('this.readyState', this.readyState);
         var m = MochiKit.Base;
@@ -283,7 +283,7 @@ MochiKit.Base.update(MochiKit.Async, {
             } catch (e) {
                 try {
                     this.onreadystatechange = m.noop;
-                } catch (e) {
+                } catch (e2) {
                 }
             }
             var status = null;
@@ -322,7 +322,7 @@ MochiKit.Base.update(MochiKit.Async, {
         } catch (e) {
             try {
                 req.onreadystatechange = MochiKit.Base.noop;
-            } catch (e) {
+            } catch (e2) {
             }
         }
         req.abort();
@@ -513,46 +513,45 @@ MochiKit.Async.DeferredLock = function () {
     this.id = this._nextId();
 };
 
-MochiKit.Async.DeferredLock.prototype = {
-    __class__: MochiKit.Async.DeferredLock,
-    /** @id MochiKit.Async.DeferredLock.prototype.acquire */
-    acquire: function () {
-        var d = new MochiKit.Async.Deferred();
-        if (this.locked) {
-            this.waiting.push(d);
-        } else {
-            this.locked = true;
-            d.callback(this);
-        }
-        return d;
-    },
-    /** @id MochiKit.Async.DeferredLock.prototype.release */
-    release: function () {
-        if (!this.locked) {
-            throw TypeError("Tried to release an unlocked DeferredLock");
-        }
-        this.locked = false;
-        if (this.waiting.length > 0) {
-            this.locked = true;
-            this.waiting.shift().callback(this);
-        }
-    },
-    _nextId: MochiKit.Base.counter(),
-    repr: function () {
-        var state;
-        if (this.locked) {
-            state = 'locked, ' + this.waiting.length + ' waiting';
-        } else {
-            state = 'unlocked';
-        }
-        return 'DeferredLock(' + this.id + ', ' + state + ')';
-    },
-    toString: MochiKit.Base.forwardCall("repr")
-
+MochiKit.Async.DeferredLock.prototype.__class__ = MochiKit.Async.DeferredLock;
+/** @id MochiKit.Async.DeferredLock.prototype.acquire */
+MochiKit.Async.DeferredLock.prototype.acquire = function () {
+	var d = new MochiKit.Async.Deferred();
+	if (this.locked) {
+		this.waiting.push(d);
+	} else {
+		this.locked = true;
+		d.callback(this);
+	}
+	return d;
 };
+/** @id MochiKit.Async.DeferredLock.prototype.release */
+MochiKit.Async.DeferredLock.prototype.release = function () {
+	if (!this.locked) {
+		throw TypeError("Tried to release an unlocked DeferredLock");
+	}
+	this.locked = false;
+	if (this.waiting.length > 0) {
+		this.locked = true;
+		this.waiting.shift().callback(this);
+	}
+};
+MochiKit.Async.DeferredLock.prototype._nextId = MochiKit.Base.counter();
+MochiKit.Async.DeferredLock.prototype.repr = function () {
+	var state;
+	if (this.locked) {
+		state = 'locked, ' + this.waiting.length + ' waiting';
+	} else {
+		state = 'unlocked';
+	}
+	return 'DeferredLock(' + this.id + ', ' + state + ')';
+};
+MochiKit.Async.DeferredLock.prototype.toString = MochiKit.Base.forwardCall("repr");
+
 
 /**
  * @id MochiKit.Async.DeferredList
+ * @extends MochiKit.Async.Deferred
  * @constructor
  */
 MochiKit.Async.DeferredList = function (list, /* optional */fireOnOneCallback, fireOnOneErrback, consumeErrors, canceller) {

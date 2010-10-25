@@ -515,6 +515,7 @@ MochiKit.Base.update(MochiKit.Style, {
         return c;
     },
 
+	/** @this MochiKit.Style */
     __new__: function () {
         var m = MochiKit.Base;
 

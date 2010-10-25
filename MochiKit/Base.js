@@ -9,9 +9,8 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-if (typeof(MochiKit) == 'undefined') {
-    MochiKit = {};
-}
+var MochiKit = MochiKit || {};
+
 if (typeof(MochiKit.__export__) == "undefined") {
     MochiKit.__export__ = true;
 }
@@ -26,8 +25,8 @@ if (typeof(MochiKit.Base) == 'undefined') {
  * sure that the appropriate properties and default module functions
  * are defined.
  *
- * @param {String} name the module name, e.g. "Base"
- * @param {String} version the module version, e.g. "1.5"
+ * @param {string} name the module name, e.g. "Base"
+ * @param {string} version the module version, e.g. "1.5"
  * @param {Array} deps the array of module dependencies (as strings)
  */
 MochiKit.Base._module = function (name, version, deps) {
@@ -231,7 +230,6 @@ MochiKit.Base.update(MochiKit.Base, {
      /** @id MochiKit.Base.items */
     items: function (obj) {
         var rval = [];
-        var e;
         for (var prop in obj) {
             var v;
             try {
@@ -1218,8 +1216,8 @@ MochiKit.Base.update(MochiKit.Base, {
         for (var i = 0; i < len; i++) {
             v = values[i];
             if (typeof(v) != 'undefined' && v !== null) {
-                if (MochiKit.Base.isDateLike(v)) // @Franson mod. todo: check the json-registry here?
-                    v = MochiKit.DateTime.toISOTimestamp(v, true)
+                if (MochiKit.Base.isDateLike(v)) // force Dates to ISO stamps. todo: or check the json-registry here? this creates a circular dependency with DateTime..
+                    v = MochiKit.DateTime.toISOTimestamp(v, true);
                 rval.push(urlEncode(names[i]) + "=" + urlEncode(v));
             }
         }
@@ -1334,14 +1332,14 @@ MochiKit.Base._exportSymbols = function (globals, module) {
  * be located in another module, which must be loaded, or an
  * exception will be thrown.
  *
- * @param {Object/String} module the source module or module name
+ * @param {Object/string} module the source module or module name
  *            (e.g. 'DOM' or 'MochiKit.DOM')
- * @param {String} name the deprecated function name (e.g. 'getStyle')
- * @param {String} target the fully qualified name of the target
+ * @param {string} name the deprecated function name (e.g. 'getStyle')
+ * @param {string} target the fully qualified name of the target
  *            function (e.g. 'MochiKit.Style.getStyle')
- * @param {String} version the first version when the source function
+ * @param {string} version the first version when the source function
  *            was deprecated (e.g. '1.4')
- * @param {Boolean} [exportable] the exportable function flag,
+ * @param {boolean} [exportable] the exportable function flag,
  *            defaults to false
  */
 MochiKit.Base._deprecated = function (module, name, target, version, exportable) {
