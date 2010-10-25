@@ -14,10 +14,10 @@ MochiKit.Base._module('Text', '1.5', ['Base', 'Format']);
  * Checks if a text string starts with the specified substring. If
  * either of the two strings is null, false will be returned.
  *
- * @param {String} substr the substring to search for
- * @param {String} str the string to search in
+ * @param {string} substr the substring to search for
+ * @param {string} str the string to search in
  *
- * @return {Boolean} true if the string starts with the substring, or
+ * @return {boolean} true if the string starts with the substring, or
  *         false otherwise
  */
 MochiKit.Text.startsWith = function (substr, str) {
@@ -28,10 +28,10 @@ MochiKit.Text.startsWith = function (substr, str) {
  * Checks if a text string ends with the specified substring. If
  * either of the two strings is null, false will be returned.
  *
- * @param {String} substr the substring to search for
- * @param {String} str the string to search in
+ * @param {string} substr the substring to search for
+ * @param {string} str the string to search in
  *
- * @return {Boolean} true if the string ends with the substring, or
+ * @return {boolean} true if the string ends with the substring, or
  *         false otherwise
  */
 MochiKit.Text.endsWith = function (substr, str) {
@@ -43,10 +43,10 @@ MochiKit.Text.endsWith = function (substr, str) {
  * Checks if a text string contains the specified substring. If
  * either of the two strings is null, false will be returned.
  *
- * @param {String} substr the substring to search for
- * @param {String} str the string to search in
+ * @param {string} substr the substring to search for
+ * @param {string} str the string to search in
  *
- * @return {Boolean} true if the string contains the substring, or
+ * @return {boolean} true if the string contains the substring, or
  *         false otherwise
  */
 MochiKit.Text.contains = function (substr, str) {
@@ -57,12 +57,12 @@ MochiKit.Text.contains = function (substr, str) {
  * Adds a character to the left-hand side of a string until it
  * reaches the specified minimum length.
  *
- * @param {String} str the string to process
- * @param {Number} minLength the requested minimum length
- * @param {String} fillChar the padding character to add, defaults
+ * @param {string} str the string to process
+ * @param {number} minLength the requested minimum length
+ * @param {string} fillChar the padding character to add, defaults
  *            to a space
  *
- * @return {String} the padded string
+ * @return {string} the padded string
  */
 MochiKit.Text.padLeft = function (str, minLength, fillChar) {
     str = str || "";
@@ -77,12 +77,12 @@ MochiKit.Text.padLeft = function (str, minLength, fillChar) {
  * Adds a character to the right-hand side of a string until it
  * reaches the specified minimum length.
  *
- * @param {String} str the string to process
- * @param {Number} minLength the requested minimum length
- * @param {String} fillChar the padding character to add, defaults
+ * @param {string} str the string to process
+ * @param {number} minLength the requested minimum length
+ * @param {string} fillChar the padding character to add, defaults
  *            to a space
  *
- * @return {String} the padded string
+ * @return {string} the padded string
  */
 MochiKit.Text.padRight = function (str, minLength, fillChar) {
     str = str || "";
@@ -100,11 +100,11 @@ MochiKit.Text.padRight = function (str, minLength, fillChar) {
  * elements will be removed in order to accomodate the tail (that
  * will be appended). This function also works on arrays.
  *
- * @param {String} str the string to truncate
- * @param {Number} maxLength the maximum length
- * @param {String} [tail] the tail to append on truncation
+ * @param {string} str the string to truncate
+ * @param {number} maxLength the maximum length
+ * @param {string} [tail] the tail to append on truncation
  *
- * @return {String} the truncated string
+ * @return {string} the truncated string
  */
 MochiKit.Text.truncate = function (str, maxLength, tail) {
     if (str == null || str.length <= maxLength || maxLength < 0) {
@@ -126,8 +126,8 @@ MochiKit.Text.truncate = function (str, maxLength, tail) {
  * If max is given, at most max splits are done, giving at most
  * max + 1 elements in the returned list.
  *
- * @param {String} str the string to split
- * @param {String} [separator] the separator character to use,
+ * @param {string} str the string to split
+ * @param {string} [separator] the separator character to use,
  *            defaults to newline
  * @param {Int} [max] the maximum number of parts to return
  * @return {Array} an array of parts of the string
@@ -150,8 +150,8 @@ MochiKit.Text.split = function (str, separator, max) {
  * If max is given, at most max splits are done,
  * using splits from the right
  *
- * @param {String} str the string to split
- * @param {String} [separator] the separator character to use,
+ * @param {string} str the string to split
+ * @param {string} [separator] the separator character to use,
  *            defaults to newline
  * @param {Int} [max] the maximum number of parts to return
  * @return {Array} an array of parts of the string
@@ -163,7 +163,7 @@ MochiKit.Text.rsplit = function (str, separator, max) {
     separator = separator || '\n';
     var bits = str.split(separator);
     if ((typeof(max) == "undefined") || max >= bits.length-1){
-	return bits;
+        return bits;
     }
     bits.splice(0, bits.length-max, bits.slice(0, bits.length-max).join(separator));
     return bits;
@@ -175,7 +175,7 @@ MochiKit.Text.rsplit = function (str, separator, max) {
  * formatter pattern requires. See separate documentation for
  * information about the formatter pattern syntax.
  *
- * @param {String} pattern the formatter pattern string
+ * @param {string} pattern the formatter pattern string
  * @param {Object} [locale] the locale to use, defaults to
  *            LOCALE.en_US
  *
@@ -209,10 +209,10 @@ MochiKit.Text.formatter = function (pattern, locale) {
  * See separate documentation for information about the formatter
  * pattern syntax.
  *
- * @param {String} pattern the formatter pattern string
+ * @param {string} pattern the formatter pattern string
  * @param {Object} [...] the optional values to format
  *
- * @return {String} the formatted output string
+ * @return {string} the formatted output string
  *
  * @throws FormatPatternError if the format pattern was invalid
  */
@@ -224,13 +224,13 @@ MochiKit.Text.format = function (pattern/*, ...*/) {
 /**
  * Format a value with the specified format specifier.
  *
- * @param {String/Object} spec the format specifier string or parsed
+ * @param {string/Object} spec the format specifier string or parsed
  *            format specifier object
  * @param {Object} value the value to format
  * @param {Object} [locale] the locale to use, defaults to
  *            LOCALE.en_US
  *
- * @return {String} the formatted output string
+ * @return {string} the formatted output string
  *
  * @throws FormatPatternError if the format pattern was invalid
  */
@@ -310,11 +310,11 @@ MochiKit.Text.formatValue = function (spec, value, locale) {
  * will attempt to keep the number string length intact by removing
  * padded zeros (if possible).
  *
- * @param {String} num the formatted number string
+ * @param {string} num the formatted number string
  * @param {Object} locale the formatting locale to use
- * @param {Boolean} grouping the grouping flag
+ * @param {boolean} grouping the grouping flag
  *
- * @return {String} the localized number string
+ * @return {string} the localized number string
  */
 MochiKit.Text._localizeNumber = function (num, locale, grouping) {
     var parts = num.split(/\./);
@@ -343,7 +343,7 @@ MochiKit.Text._localizeNumber = function (num, locale, grouping) {
  * Parses a format pattern and returns an array of constant strings
  * and format info objects.
  *
- * @param {String} pattern the format pattern to analyze
+ * @param {string} pattern the format pattern to analyze
  *
  * @return {Array} an array of strings and format info objects
  *
@@ -394,9 +394,9 @@ MochiKit.Text._parsePattern = function (pattern) {
 /**
  * Parses a format instruction and returns a format info object.
  *
- * @param {String} pattern the format pattern string
- * @param {Number} startPos the first index of the format instruction
- * @param {Number} endPos the last index of the format instruction
+ * @param {string} pattern the format pattern string
+ * @param {number} startPos the first index of the format instruction
+ * @param {number} endPos the last index of the format instruction
  *
  * @return {Object} the format info object
  *
@@ -441,9 +441,9 @@ MochiKit.Text._parseFormat = function (pattern, startPos, endPos) {
 /**
  * Parses a string with format flags and returns a format info object.
  *
- * @param {String} pattern the format pattern string
- * @param {Number} startPos the first index of the format instruction
- * @param {Number} endPos the last index of the format instruction
+ * @param {string} pattern the format pattern string
+ * @param {number} startPos the first index of the format instruction
+ * @param {number} endPos the last index of the format instruction
  *
  * @return {Object} the format info object
  *
@@ -526,8 +526,9 @@ MochiKit.Text._parseFormatFlags = function (pattern, startPos, endPos) {
  * just move the decimal separator in the text string. It is ugly,
  * but works...
  *
- * @param {Number} value the value to format
- * @param {Number} precision the number of precision digits
+ * @param {number} value the value to format
+ * @param {number} precision the number of precision digits
+ * @return {string}
  */
 MochiKit.Text._truncToPercent = function (value, precision) {
     // TODO: This can be simplified by using MochiKit.Format._shiftNumber
@@ -551,17 +552,17 @@ MochiKit.Text._truncToPercent = function (value, precision) {
 /**
  * Creates a new format pattern error.
  *
- * @param {String} pattern the format pattern string
- * @param {Number} pos the position of the error
- * @param {String} message the error message text
+ * @param {string} pattern the format pattern string
+ * @param {number} pos the position of the error
+ * @param {string} message the error message text
  *
  * @return {Error} the format pattern error
  *
  * @class The format pattern error class. This error is thrown when
  *     a syntax error is encountered inside a format string.
- * @property {String} pattern The format pattern string.
- * @property {Number} pos The position of the error.
- * @property {String} message The error message text.
+ * @property {string} pattern The format pattern string.
+ * @property {number} pos The position of the error.
+ * @property {string} message The error message text.
  * @extends MochiKit.Base.NamedError
  * @constructor
  */

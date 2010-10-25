@@ -213,10 +213,10 @@ MochiKit.Format.roundToFixed = function (aNumber, precision) {
  * or the right. It also guarantees a specified minimum number of
  * fractional digits (but no maximum).
  *
- * @param {Number} aNumber the number to convert
- * @param {Number} precision the minimum number of decimal digits
+ * @param {number} aNumber the number to convert
+ * @param {number} precision the minimum number of decimal digits
  *
- * @return {String} the fixed format number string
+ * @return {string} the fixed format number string
  */
 MochiKit.Format._numberToFixed = function (aNumber, precision) {
     var str = aNumber.toString();
@@ -241,10 +241,10 @@ MochiKit.Format._numberToFixed = function (aNumber, precision) {
  * This function handles negative values and will add and remove
  * leading and trailing zeros as needed.
  *
- * @param {String} num the fixed format number string
- * @param {Number} exp the base-10 exponent to apply
+ * @param {string} num the fixed format number string
+ * @param {number} exp the base-10 exponent to apply
  *
- * @return {String} the new fixed format number string
+ * @return {string} the new fixed format number string
  */
 MochiKit.Format._shiftNumber = function (num, exp) {
     var pos = num.indexOf(".");
