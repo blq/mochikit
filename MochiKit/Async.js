@@ -474,6 +474,7 @@ MochiKit.Base.update(MochiKit.Async, {
             }
         };
         head.appendChild(script);
+		head = null;
         return d;
     },
 
@@ -641,7 +642,10 @@ MochiKit.Async.__new__ = function () {
     var ne = m.partial(m._newNamedError, this);
 
     ne("AlreadyCalledError",
-        /** @id MochiKit.Async.AlreadyCalledError */
+        /**
+         * @id MochiKit.Async.AlreadyCalledError
+         * @constructor
+         */
         function (deferred) {
             /***
 
@@ -654,7 +658,10 @@ MochiKit.Async.__new__ = function () {
     );
 
     ne("CancelledError",
-        /** @id MochiKit.Async.CancelledError */
+        /**
+         * @id MochiKit.Async.CancelledError
+         * @constructor
+         */
         function (deferred) {
             /***
 
@@ -666,7 +673,10 @@ MochiKit.Async.__new__ = function () {
     );
 
     ne("BrowserComplianceError",
-        /** @id MochiKit.Async.BrowserComplianceError */
+        /**
+         * @id MochiKit.Async.BrowserComplianceError
+         * @constructor
+         */
         function (msg) {
             /***
 
@@ -681,14 +691,20 @@ MochiKit.Async.__new__ = function () {
     );
 
     ne("GenericError",
-        /** @id MochiKit.Async.GenericError */
+        /**
+         * @id MochiKit.Async.GenericError
+         * @constructor
+         */
         function (msg) {
             this.message = msg;
         }
     );
 
     ne("XMLHttpRequestError",
-        /** @id MochiKit.Async.XMLHttpRequestError */
+        /**
+         * @id MochiKit.Async.XMLHttpRequestError
+         * @constructor
+         */
         function (req, msg) {
             /***
 
