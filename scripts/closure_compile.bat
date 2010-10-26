@@ -19,7 +19,9 @@ java -jar Closure/compiler.jar ^
 	--js ../MochiKit/Format.js ^
 	--js ../MochiKit/Text.js ^
 	--js ../MochiKit/Logging.js ^
+	--js ../MochiKit/LoggingPane.js ^
 	--js ../MochiKit/Color.js ^
+	--js ../MochiKit/Selector.js ^
 	^
 	--externs closure_externs/mochikit_extern.js ^
 	--externs closure_externs/webkit_console.js ^
