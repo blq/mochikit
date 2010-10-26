@@ -1399,6 +1399,7 @@ MochiKit.Base.__new__ = function () {
 
     /**
      * @id MochiKit.Base.NamedError
+     * @extends Error
      * @constructor
      */
     m.NamedError = function (name) {
@@ -1406,16 +1407,14 @@ MochiKit.Base.__new__ = function () {
         this.name = name;
     };
     m.NamedError.prototype = new Error();
-    m.update(m.NamedError.prototype, {
-        repr: function () {
-            if (this.message && this.message != this.name) {
-                return this.name + "(" + m.repr(this.message) + ")";
-            } else {
-                return this.name + "()";
-            }
-        },
-        toString: m.forwardCall("repr")
-    });
+    m.NamedError.prototype.repr = function() {
+		if (this.message && this.message != this.name) {
+			return this.name + "(" + m.repr(this.message) + ")";
+		} else {
+			return this.name + "()";
+		}
+	};
+    m.NamedError.prototype.toString = m.forwardCall("repr");
 
     /** @id MochiKit.Base.NotFound */
     m.NotFound = new m.NamedError("MochiKit.Base.NotFound");
