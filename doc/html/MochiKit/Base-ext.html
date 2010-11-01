@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.8: http://docutils.sourceforge.net/" />
+<title>MochiKit.Base-ext - functional programming</title>
+
+<link rel="stylesheet" href="../../../include/css/documentation.css" type="text/css" />
+<script type="text/javascript" src="../../../packed/MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="../../js/toc.js"></script>
+</head>
+<body>
+<a href="http://mochikit.com"><img id="mainlink" src="../../../include/img/g_logo_doc.gif" alt="MochiKit" /></a>
+<a class='indexlink' href='index.html'>Back to docs index</a>
+<div class="document">
+<div class="section" id="name">
+<h1>Name</h1>
+<p>MochiKit.Base-ext - even more functional programming</p>
+<dl class="docutils">
+<dt><em>Availability</em>:</dt>
+<dd>Available in MochiKit 1.5+</dd>
+</dl>
+</div>
+<div class="section" id="synopsis">
+<h1>Synopsis</h1>
+<pre class="literal-block">
+function f(x)
+{
+    return &quot;f(&quot; + x + &quot;)&quot;;
+}
+
+function g(x)
+{
+    return &quot;g(&quot; + x + &quot;)&quot;;
+}
+
+function h(x, y)
+{
+    return &quot;h(&quot; + x + &quot;, &quot; + y + &quot;)&quot;;
+}
+
+function k()
+{
+    return &quot;k()&quot;;
+}
+
+function test(f)
+{
+    return f(&quot;x&quot;, &quot;y&quot;);
+}
+
+// compose_f_gx
+t.is(test( bind2(f, bind2(g, _1)) ), 'f(g(x))');
+
+// compose_f_hxy
+t.is(test( bind2(f, bind2(h, _1, _2)) ), 'f(h(x, y))');
+
+// compose_h_fx_gx
+t.is(test( bind2(h, bind2(f, _1), bind2(g, _1)) ), 'h(f(x), g(x))');
+
+// compose_h_fx_gy
+t.is(test( bind2(h, bind2(f, _1), bind2(g, _2)) ), 'h(f(x), g(y))');
+
+// compose_f_k
+t.is(test( bind2(f, bind2(k)) ), 'f(k())');
+</pre>
+</div>
+<div class="section" id="description">
+<h1>Description</h1>
+<p>Even more functional programming</p>
+</div>
+<div class="section" id="dependencies">
+<h1>Dependencies</h1>
+<ul class="simple">
+<li><a class="mochiref reference external" href="Base.html">MochiKit.Base</a></li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h1>Overview</h1>
+<div class="section" id="base-extensions">
+<h2>Base extensions</h2>
+<p>&quot;bind 2.0&quot;</p>
+</div>
+</div>
+<div class="section" id="api-reference">
+<h1>API Reference</h1>
+<div class="section" id="functions">
+<h2>Functions</h2>
+<p>
+<a name="fn-bind2"></a>
+<a class="mochidef reference external" href="#fn-bind2">bind2(fn, self, a, b, ...)</a>:</p>
+<blockquote>
+<p>inspired by the C++ boost bind: <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html</a></p>
+<pre class="literal-block">
+bind2(...)
+</pre>
+</blockquote>
+<p>
+<a name="fn-protect"></a>
+<a class="mochidef reference external" href="#fn-protect">protect(boundFn)</a>:</p>
+<blockquote>
+simple wrapper to mask the fact that a fn is bound.
+to be used in cases where you don't want to evaluate a nested bind
+see <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds</a></blockquote>
+<p>
+<a name="fn-apply"></a>
+<a class="mochidef reference external" href="#fn-apply">apply(fn, a, b, ...)</a>:</p>
+<blockquote>
+assumes first arg is a function,
+calls it with the rest of the arguments applied.
+see <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds</a></blockquote>
+</div>
+</div>
+<div class="section" id="see-also">
+<h1>See Also</h1>
+<table class="docutils footnote" frame="void" id="id1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>C++ Boost bind: <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td>Nested bind: <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="authors">
+<h1>Authors</h1>
+<ul class="simple">
+<li>Fredrik Blomqvist &lt;fblomqvist at gmail.com&gt;</li>
+</ul>
+</div>
+<div class="section" id="copyright">
+<h1>Copyright</h1>
+<p>Copyright 2005 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
+dual-licensed free software; you can redistribute it and/or modify it
+under the terms of the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a> or the <a class="reference external" href="http://www.opensource.org/licenses/afl-2.1.php">Academic Free License
+v2.1</a>.</p>
+</div>
+</div>
+
+</body>
+</html>

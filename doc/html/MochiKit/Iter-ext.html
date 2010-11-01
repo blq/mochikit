@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.8: http://docutils.sourceforge.net/" />
+<title>MochiKit.Iter-ext - Iteration extensions</title>
+
+<link rel="stylesheet" href="../../../include/css/documentation.css" type="text/css" />
+<script type="text/javascript" src="../../../packed/MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="../../js/toc.js"></script>
+</head>
+<body>
+<a href="http://mochikit.com"><img id="mainlink" src="../../../include/img/g_logo_doc.gif" alt="MochiKit" /></a>
+<a class='indexlink' href='index.html'>Back to docs index</a>
+<div class="document">
+<div class="section" id="name">
+<h1>Name</h1>
+<p>MochiKit.Iter-ext - even more iterators</p>
+<dl class="docutils">
+<dt><em>Availability</em>:</dt>
+<dd>Available in MochiKit 1.5+</dd>
+</dl>
+</div>
+<div class="section" id="synopsis">
+<h1>Synopsis</h1>
+<pre class="literal-block">
+function length(a) {
+    return Math.sqrt(a.x*a.x + a.y*a.y);
+}
+
+function sub(a, b) {
+    return { x: a.x - b.x, y: a.y - b.y };
+}
+
+var polyline = [{x: 0, y: 0}, {x: 3, y: 0}, {x: 3, y: 4}]; // right triangle
+
+var perimeter = sum(imap(
+    function(pair) { return length(sub(pair[1], pair[0])); }, // could do in to map steps also; pair-&gt;segment vector-&gt;length
+    pairView(polyline, true)
+));
+
+assert( perimeter == 3 + 4 + 5 );
+</pre>
+</div>
+<div class="section" id="description">
+<h1>Description</h1>
+<p>Even more iterators</p>
+</div>
+<div class="section" id="dependencies">
+<h1>Dependencies</h1>
+<ul class="simple">
+<li><a class="mochiref reference external" href="Iter.html">MochiKit.Iter</a></li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h1>Overview</h1>
+<div class="section" id="iterator-extensions">
+<h2>Iterator extensions</h2>
+<pre class="literal-block">
+var tree = {
+    value: 1,
+    children: [
+        {
+            value: 2,
+            children: [
+                {
+                    value: 4,
+                    children: []
+                }
+            ]
+        },
+        {
+            value: 3,
+            children: [
+                {
+                    value: 5,
+                    children: [
+                        {
+                            value: 7,
+                            children: []
+                        }
+                    ]
+                },
+                {
+                    value: 6,
+                    children: []
+                }
+            ]
+        }
+    ]
+};
+
+forEach(treeLevelOrder(root, itemgetter('childnodes')), function(node) {
+    ....
+});
+
+assert(  );
+</pre>
+</div>
+</div>
+<div class="section" id="api-reference">
+<h1>API Reference</h1>
+<div class="section" id="functions">
+<h2>Functions</h2>
+<p>
+<a name="fn-pairview"></a>
+<a class="mochidef reference external" href="#fn-pairview">pairView(iterable)</a>:</p>
+<blockquote>
+<p>Pairwise view of an iterable (overlapping)</p>
+<p><tt class="docutils literal">pairView(iterable)</tt> --&gt;
+[a, b, c, d, ...] -&gt; [[a,b],[b,c],[c,d], ...], ...</p>
+</blockquote>
+<p>
+<a name="fn-treepreorder"></a>
+<a class="mochidef reference external" href="#fn-treepreorder">treePreOrder(iterable, getChildeNodes)</a>:</p>
+<blockquote>
+<p>parent-&gt;child order (depth-first, preorder). &quot;standard&quot; recursive descent.
+ref &lt;a href=&quot;<a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a>&quot;&gt;tree traversal&lt;/a&gt;</p>
+<pre class="literal-block">
+nodes = map(itemgetter('value'), treePreOrder(tree, itemgetter(children))) --&gt;
+[ 1, 3, 6, 5, 7, 2, 4 ]
+</pre>
+</blockquote>
+<p>
+<a name="fn-treelevelorder"></a>
+<a class="mochidef reference external" href="#fn-treelevelorder">treeLevelOrder(iterable, getChildeNodes)</a>:</p>
+<blockquote>
+<p>top-down, breadth-first, level-order traversal (parent-&gt;siblings order)
+ref &lt;a href=&quot;<a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a>&quot;&gt;tree traversal&lt;/a&gt;
+useful for searching and culling for example.</p>
+<pre class="literal-block">
+nodes = map(itemgetter('value'), treeLevelOrder(tree, itemgetter(children))) --&gt;
+[ 1, 2, 3, 4, 5, 6, 7 ]
+</pre>
+</blockquote>
+<p>
+<a name="fn-treepostorder"></a>
+<a class="mochidef reference external" href="#fn-treepostorder">treePostOrder(iterable, getChildeNodes)</a>:</p>
+<blockquote>
+<p>bottom-up iteration, leaf -&gt; parent
+ref &lt;a href=&quot;<a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a>&quot;&gt;tree traversal&lt;/a&gt;
+Useful for pruning for example.</p>
+<pre class="literal-block">
+nodes = map(itemgetter('value'), treePostOrder(tree, itemgetter(children))) --&gt;
+[ 6, 7, 5, 3, 4, 2, 1 ]
+</pre>
+</blockquote>
+</div>
+</div>
+<div class="section" id="see-also">
+<h1>See Also</h1>
+<table class="docutils footnote" frame="void" id="id1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>The iteration protocol is described in
+PEP 234 - Iterators: <a class="reference external" href="http://www.python.org/peps/pep-0234.html">http://www.python.org/peps/pep-0234.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td>Python's itertools
+module: <a class="reference external" href="http://docs.python.org/lib/module-itertools.html">http://docs.python.org/lib/module-itertools.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td>Iteration in JavaScript: <a class="reference external" href="http://bob.pythonmac.org/archives/2005/07/06/iteration-in-javascript/">http://bob.pythonmac.org/archives/2005/07/06/iteration-in-javascript/</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="authors">
+<h1>Authors</h1>
+<ul class="simple">
+<li>Fredrik Blomqvist &lt;fblomqvist at gmail.com&gt;</li>
+</ul>
+</div>
+<div class="section" id="copyright">
+<h1>Copyright</h1>
+<p>Copyright 2005 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
+dual-licensed free software; you can redistribute it and/or modify it
+under the terms of the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a> or the <a class="reference external" href="http://www.opensource.org/licenses/afl-2.1.php">Academic Free License
+v2.1</a>.</p>
+</div>
+</div>
+
+</body>
+</html>

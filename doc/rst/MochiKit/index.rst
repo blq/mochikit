@@ -23,6 +23,9 @@ MochiKit - makes JavaScript suck a bit less
 - :mochiref:`MochiKit.Sortable` - sortable
 - :mochiref:`MochiKit.Text` - string formatting and helper functions
 - :mochiref:`MochiKit.Visual` - visual effects
+- :mochiref:`MochiKit.Base-ext` - even more functional programming
+- :mochiref:`MochiKit.Iter-ext` - even more iterators
+- :mochiref:`MochiKit.Text-ext` - more text/string algorithms
 
 
 Notes
