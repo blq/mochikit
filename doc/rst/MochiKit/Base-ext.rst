@@ -59,6 +59,8 @@ Description
 
 Even more functional programming
 
+Extends the existing MochiKit.Base namespace
+
 
 Dependencies
 ============

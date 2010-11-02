@@ -4,7 +4,7 @@
  *
  */
 
-MochiKit.Base._module('Base-ext', '1.5', ['Base']);
+MochiKit.Base._module('Base_ext', '1.5', ['Base']);
 
 /**
  * @private
@@ -175,3 +175,16 @@ function context(context)
 {
 	return new _context(context);
 }
+
+
+
+MochiKit.Base_ext.__new__ = function()
+{
+	// NOP ...
+};
+
+
+MochiKit.Base_ext.__new__();
+
+MochiKit.Base._exportSymbols(this, MochiKit.Base); // ! since we add to the existing namespace we export it again here (ok?)
+
