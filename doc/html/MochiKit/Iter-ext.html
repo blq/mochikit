@@ -47,6 +47,7 @@ assert( perimeter == 3 + 4 + 5 );
 <div class="section" id="description">
 <h1>Description</h1>
 <p>Even more iterators</p>
+<p>Extends the existing MochiKit.Iter namespace</p>
 </div>
 <div class="section" id="dependencies">
 <h1>Dependencies</h1>
@@ -117,7 +118,7 @@ assert(  );
 <a class="mochidef reference external" href="#fn-treepreorder">treePreOrder(iterable, getChildeNodes)</a>:</p>
 <blockquote>
 <p>parent-&gt;child order (depth-first, preorder). &quot;standard&quot; recursive descent.
-ref &lt;a href=&quot;<a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a>&quot;&gt;tree traversal&lt;/a&gt;</p>
+see <a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a></p>
 <pre class="literal-block">
 nodes = map(itemgetter('value'), treePreOrder(tree, itemgetter(children))) --&gt;
 [ 1, 3, 6, 5, 7, 2, 4 ]
@@ -128,7 +129,7 @@ nodes = map(itemgetter('value'), treePreOrder(tree, itemgetter(children))) --&gt
 <a class="mochidef reference external" href="#fn-treelevelorder">treeLevelOrder(iterable, getChildeNodes)</a>:</p>
 <blockquote>
 <p>top-down, breadth-first, level-order traversal (parent-&gt;siblings order)
-ref &lt;a href=&quot;<a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a>&quot;&gt;tree traversal&lt;/a&gt;
+see <a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a>
 useful for searching and culling for example.</p>
 <pre class="literal-block">
 nodes = map(itemgetter('value'), treeLevelOrder(tree, itemgetter(children))) --&gt;
@@ -140,7 +141,7 @@ nodes = map(itemgetter('value'), treeLevelOrder(tree, itemgetter(children))) --&
 <a class="mochidef reference external" href="#fn-treepostorder">treePostOrder(iterable, getChildeNodes)</a>:</p>
 <blockquote>
 <p>bottom-up iteration, leaf -&gt; parent
-ref &lt;a href=&quot;<a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a>&quot;&gt;tree traversal&lt;/a&gt;
+see <a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a>
 Useful for pruning for example.</p>
 <pre class="literal-block">
 nodes = map(itemgetter('value'), treePostOrder(tree, itemgetter(children))) --&gt;
@@ -169,6 +170,12 @@ module: <a class="reference external" href="http://docs.python.org/lib/module-it
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label">[3]</td><td>Iteration in JavaScript: <a class="reference external" href="http://bob.pythonmac.org/archives/2005/07/06/iteration-in-javascript/">http://bob.pythonmac.org/archives/2005/07/06/iteration-in-javascript/</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[4]</td><td>Tree traversal: <a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a></td></tr>
 </tbody>
 </table>
 </div>

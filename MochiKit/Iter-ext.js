@@ -1,10 +1,12 @@
 /**
  *
+ * See <http://mochikit.com/> for documentation, downloads, license, etc.
+ *
  * @author Fredrik Blomqvist
  *
  */
 
-MochiKit.Base._module('Iter-ext', '1.5', ['Base', 'Iter']);
+MochiKit.Base._module('Iter_ext', '1.5', ['Base', 'Iter']);
 
 
 /**
@@ -45,7 +47,7 @@ MochiKit.Iter.treePreOrder = function(rootNode, getChildNodes)
  * (could be seen as an iterator version of <a href="http://mochikit.com/doc/html/MochiKit/Base.html#fn-nodewalk">MochiKit.Base.nodeWalk()</a>)
  * useful for searching and culling
  * todo: create version taking a descend-predicate if used for culling
- * todo: hmm, would be nice to have some version that would indicate each level (useful when doing searches for example)
+ * todo: hmm, would be nice to have some version that would indicate each level (callback?) (useful when doing searches for example)
  *
  * @param {*} rootNode
  * @param {function(*): !Iterable} getChildNodes should return an empty array if no children (ok? could add fallback ourselves also)
@@ -196,3 +198,15 @@ MochiKit.Iter.filterMap = function(mapFn, iterable) // ok name? (not to confuse 
 		)
 	);
 };
+
+
+
+MochiKit.Iter_ext.__new__ = function()
+{
+	// NOP ...
+};
+
+
+MochiKit.Iter_ext.__new__();
+
+MochiKit.Base._exportSymbols(this, MochiKit.Iter); // ! since we add to the existing namespace we export it again here (ok?)

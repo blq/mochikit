@@ -36,6 +36,8 @@ Description
 
 Even more iterators
 
+Extends the existing MochiKit.Iter namespace
+
 
 Dependencies
 ============
@@ -108,7 +110,7 @@ Functions
 :mochidef:`treePreOrder(iterable, getChildeNodes)`:
 
     parent->child order (depth-first, preorder). "standard" recursive descent.
-    ref <a href="http://en.wikipedia.org/wiki/Tree_traversal">tree traversal</a>
+    see http://en.wikipedia.org/wiki/Tree_traversal
 
     ::
 
@@ -119,7 +121,7 @@ Functions
 :mochidef:`treeLevelOrder(iterable, getChildeNodes)`:
 
     top-down, breadth-first, level-order traversal (parent->siblings order)
-    ref <a href="http://en.wikipedia.org/wiki/Tree_traversal">tree traversal</a>
+    see http://en.wikipedia.org/wiki/Tree_traversal
     useful for searching and culling for example.
 
     ::
@@ -131,7 +133,7 @@ Functions
 :mochidef:`treePostOrder(iterable, getChildeNodes)`:
 
     bottom-up iteration, leaf -> parent
-    ref <a href="http://en.wikipedia.org/wiki/Tree_traversal">tree traversal</a>
+    see http://en.wikipedia.org/wiki/Tree_traversal
     Useful for pruning for example.
 
     ::
@@ -149,6 +151,7 @@ See Also
 .. [2] Python's itertools
        module: http://docs.python.org/lib/module-itertools.html
 .. [3] Iteration in JavaScript: http://bob.pythonmac.org/archives/2005/07/06/iteration-in-javascript/
+.. [4] Tree traversal: http://en.wikipedia.org/wiki/Tree_traversal
 
 
 Authors
