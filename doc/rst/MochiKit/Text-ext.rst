@@ -3,7 +3,7 @@
 Name
 ====
 
-MochiKit.Text-ext - text processing algorithms
+MochiKit.Text-ext - various text processing algorithms
 
 *Availability*:
     Available in MochiKit 1.5+
@@ -34,6 +34,8 @@ Overview
 Text extensions
 ------------------------
 
+Extends the existing MochiKit.Text namespace
+
 ASDF ASDF ASDF
 
 
@@ -46,16 +48,29 @@ Functions
 
 :mochidef:`levenshteinDistance(s, t, allowTransposition)`:
 
-    Compute Levenshtein distance [1]_ between two strings.
+    Computes the Levenshtein distance [1]_ between two strings.
 
-	returns "distance" between the two strings. The larger the number, the bigger the difference.
+    returns "distance" between the two strings. The larger the number, the bigger the difference.
+
+
+
+:mochidef:`humanNumericStrCmp(a, b)`:
+
+    Human friendly string comparator. Makes 'abc9' be sorted *before* 'abc123'.
+    Not case sensitive (todo: add optional flag for this?).
+
+    Based on Michael Herf's http://stereopsis.com/strcmp4humans.html strcmp4humans
+
+    returns -1, 0, +1  (comparator)
+
 
 
 
 See Also
 ========
 
-.. [1] http://en.wikipedia.org/wiki/Levenshtein_distance
+.. [1] Levenshtein distance: http://en.wikipedia.org/wiki/Levenshtein_distance
+.. [2] Michael Herf's strcmp4humans: http://stereopsis.com/strcmp4humans.html
 
 
 Authors

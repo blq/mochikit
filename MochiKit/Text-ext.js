@@ -1,10 +1,10 @@
 /**
  *
  * @author Fredrik Blomqvist
- * 
+ *
  */
 
-MochiKit.Base._module('Text-ext', '1.5', ['Text']);
+MochiKit.Base._module('Text_ext', '1.5', ['Text']);
 
 
 /**
@@ -77,3 +77,83 @@ MochiKit.Text.levenshteinDistance = function(s, t, allowTransposition) // rename
 
 	return d[n][m];
 };
+
+
+/**
+ * @id MochiKit.Text.humanNumericStrCmp
+ * Makes 'abc9' be sorted _before_ 'abc123'
+ * not case sensitive
+ * based on Michael Herf's <a href="http://stereopsis.com/strcmp4humans.html">strcmp4humans</a>
+ * todo: ignore leading & trailing whitespace also?
+ * todo: flag for case sensitivity?
+ * @param {string} a
+ * @param {string} b
+ * @return { -1, 0, +1 }
+ * @type integer
+ */
+MochiKit.Text.humanNumericStrCmp = function(a, b) // ok name?
+{
+	if (a == b) return 0;
+
+	// or skip this?
+	var aIsNull = (typeof(a) == 'undefined' || a === null);
+	var bIsNull = (typeof(b) == 'undefined' || b === null);
+	if (aIsNull && bIsNull) {
+		return 0;
+	} else if (aIsNull) {
+		return -1;
+	} else if (bIsNull) {
+		return 1;
+	}
+
+	/**
+	 * internal function. better than parseInt since it doesn't get fooled by ex "10xy"..
+	 * todo: perhaps this is worth exposing?
+	 * @param {string} str
+	 * @retur {boolean}
+	 */
+	var _isDecimalNumber = function(str)
+	{
+		// todo: cache the regexp?
+		var re = /^\s*(\+|\-)?\d+\s*$/; // todo: add scientific format support? /^[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$/
+		return re.test(str);
+	};
+
+	for (var i = 0; i < a.length && i < b.length; ++i)
+	{
+		var sa = a[i]; var sb = b[i];
+
+		var a0 = sa.toLowerCase(); // will contain either a number or a letter
+		if (_isDecimalNumber(sa)) // hmm, could just listen for NaN from parseInt also
+		{
+			a0 = parseInt(sa, 10) + 256; // make any number bigger than any char
+		}
+
+		var b0 = sb.toLowerCase(); // will contain either a number or a letter
+		if (_isDecimalNumber(sb))
+		{
+			b0 = parseInt(sb, 10) + 256;
+		}
+
+		if (a0 < b0) return -1;
+		if (a0 > b0) return 1;
+	}
+
+	if (i < a.length) return 1; 	// a > b
+	if (i < b.length) return -1;	// a < b
+
+	return 0;
+};
+
+
+
+MochiKit.Text_ext.__new__ = function()
+{
+	// NOP ...
+};
+
+
+MochiKit.Text_ext.__new__();
+
+MochiKit.Base._exportSymbols(this, MochiKit.Text); // ! since we add to the existing namespace we export it again here (ok?)
+

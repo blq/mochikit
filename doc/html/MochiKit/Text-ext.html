@@ -17,7 +17,7 @@
 <div class="document">
 <div class="section" id="name">
 <h1>Name</h1>
-<p>MochiKit.Text-ext - text processing algorithms</p>
+<p>MochiKit.Text-ext - various text processing algorithms</p>
 <dl class="docutils">
 <dt><em>Availability</em>:</dt>
 <dd>Available in MochiKit 1.5+</dd>
@@ -43,6 +43,7 @@ todo: ...
 <h1>Overview</h1>
 <div class="section" id="text-extensions">
 <h2>Text extensions</h2>
+<p>Extends the existing MochiKit.Text namespace</p>
 <p>ASDF ASDF ASDF</p>
 </div>
 </div>
@@ -54,9 +55,17 @@ todo: ...
 <a name="fn-levenshteindistance"></a>
 <a class="mochidef reference external" href="#fn-levenshteindistance">levenshteinDistance(s, t, allowTransposition)</a>:</p>
 <blockquote>
-<p>Compute Levenshtein distance <a class="footnote-reference" href="#id2" id="id1">[1]</a> between two strings.</p>
+<p>Computes the Levenshtein distance <a class="footnote-reference" href="#id2" id="id1">[1]</a> between two strings.</p>
+<p>returns &quot;distance&quot; between the two strings. The larger the number, the bigger the difference.</p>
+</blockquote>
+<p>
+<a name="fn-humannumericstrcmp"></a>
+<a class="mochidef reference external" href="#fn-humannumericstrcmp">humanNumericStrCmp(a, b)</a>:</p>
 <blockquote>
-returns &quot;distance&quot; between the two strings. The larger the number, the bigger the difference.</blockquote>
+<p>Human friendly string comparator. Makes 'abc9' be sorted <em>before</em> 'abc123'.
+Not case sensitive (todo: add optional flag for this?).</p>
+<p>Based on Michael Herf's <a class="reference external" href="http://stereopsis.com/strcmp4humans.html">http://stereopsis.com/strcmp4humans.html</a> strcmp4humans</p>
+<p>returns -1, 0, +1  (comparator)</p>
 </blockquote>
 </div>
 </div>
@@ -65,7 +74,13 @@ returns &quot;distance&quot; between the two strings. The larger the number, the
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="http://en.wikipedia.org/wiki/Levenshtein_distance">http://en.wikipedia.org/wiki/Levenshtein_distance</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Levenshtein distance: <a class="reference external" href="http://en.wikipedia.org/wiki/Levenshtein_distance">http://en.wikipedia.org/wiki/Levenshtein_distance</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td>Michael Herf's strcmp4humans: <a class="reference external" href="http://stereopsis.com/strcmp4humans.html">http://stereopsis.com/strcmp4humans.html</a></td></tr>
 </tbody>
 </table>
 </div>
