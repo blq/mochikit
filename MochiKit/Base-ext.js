@@ -4,6 +4,12 @@
  *
  */
 
+if (typeof(goog) != 'undefined' && typeof goog.base != 'undefined') {
+	goog.provide('MochiKit.Base_ext');
+
+	goog.require('MochiKit.Base');
+}
+
 MochiKit.Base._module('Base_ext', '1.5', ['Base']);
 
 /**
@@ -187,4 +193,3 @@ MochiKit.Base_ext.__new__ = function()
 MochiKit.Base_ext.__new__();
 
 MochiKit.Base._exportSymbols(this, MochiKit.Base); // ! since we add to the existing namespace we export it again here (ok?)
-

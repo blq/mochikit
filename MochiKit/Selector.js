@@ -8,6 +8,14 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
+if (typeof goog != 'undefined' && typeof goog.provide != 'undefined') {
+	goog.provide('MochiKit.Selector');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.DOM');
+	goog.require('MochiKit.Iter');
+}
+
 MochiKit.Base._module('Selector', '1.5', ['Base', 'DOM', 'Iter']);
 
 /**

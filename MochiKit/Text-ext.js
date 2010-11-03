@@ -4,6 +4,12 @@
  *
  */
 
+if (typeof goog != 'undefined' && typeof goog.provide != 'undefined') {
+	goog.provide('MochiKit.Text_ext');
+
+	goog.require('MochiKit.Text');
+}
+
 MochiKit.Base._module('Text_ext', '1.5', ['Text']);
 
 
@@ -156,4 +162,3 @@ MochiKit.Text_ext.__new__ = function()
 MochiKit.Text_ext.__new__();
 
 MochiKit.Base._exportSymbols(this, MochiKit.Text); // ! since we add to the existing namespace we export it again here (ok?)
-

@@ -8,6 +8,12 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
+if (typeof goog != 'undefined' && typeof(goog.provide) != 'undefined') {
+	goog.provide('MochiKit.DateTime');
+
+	goog.require('MochiKit.Base');
+}
+
 MochiKit.Base._module('DateTime', '1.5', ['Base']);
 
 /** @id MochiKit.DateTime.isoDate */

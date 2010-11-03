@@ -8,6 +8,13 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
+if (typeof goog != 'undefined' && typeof goog.provide != 'undefined') {
+	goog.provide('MochiKit.Text');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.Format');
+}
+
 MochiKit.Base._module('Text', '1.5', ['Base', 'Format']);
 
 /**

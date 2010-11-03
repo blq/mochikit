@@ -9,6 +9,10 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
+if (typeof goog != 'undefined' && typeof goog.provide != 'undefined') {
+	goog.provide('MochiKit.Base');
+}
+
 var MochiKit = MochiKit || {};
 
 if (typeof(MochiKit.__export__) == "undefined") {
@@ -92,7 +96,7 @@ MochiKit.Base.update(MochiKit.Base, {
     /** @id MochiKit.Base.clone */
     clone: function (obj) {
         var me = arguments.callee;
-        if (arguments.length == 1) {
+        if (arguments.length == 1) { // why this check?
             me.prototype = obj;
             return new me();
         }
@@ -177,7 +181,7 @@ MochiKit.Base.update(MochiKit.Base, {
                 for (var k in o) {
                     var v = o[k];
                     if (typeof(self[k]) == 'object' && typeof(v) == 'object'
-						// @Franson edit todo: detect Array, RegExp and DOM objs also?
+						// todo: detect Array, RegExp and DOM objs also?
 						// todo: for maximum correctness we should first copy the object and _then_
 						// see if any custom properties have been added to Date and update them.
 						&& !MochiKit.Base.isDateLike(v)

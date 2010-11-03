@@ -8,10 +8,18 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
+if (typeof goog != 'undefined' && typeof(goog.provide) != 'undefined') {
+	goog.provide('MochiKit.Color');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.DOM');
+	goog.require('MochiKit.Style');
+}
+
 MochiKit.Base._module('Color', '1.5', ['Base', 'DOM', 'Style']);
 
-/** 
- * @id MochiKit.Color.Color 
+/**
+ * @id MochiKit.Color.Color
  * @constructor
  */
 MochiKit.Color.Color = function (red, green, blue, alpha) {

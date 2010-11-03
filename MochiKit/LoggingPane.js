@@ -8,6 +8,13 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
+if (typeof goog != 'undefined' && typeof goog.provide != 'undefined') {
+	goog.provide('MochiKit.LoggingPane');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.Logging');
+}
+
 MochiKit.Base._module('LoggingPane', '1.5', ['Base', 'Logging']);
 
 /** @id MochiKit.LoggingPane.createLoggingPane */

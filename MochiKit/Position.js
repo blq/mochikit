@@ -8,6 +8,14 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
+if (typeof goog != 'undefined' && typeof goog.provide != 'undefined') {
+	goog.provide('MochiKit.Position');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.DOM');
+	goog.require('MochiKit.Style');
+}
+
 MochiKit.Base._module('Position', '1.5', ['Base', 'DOM', 'Style']);
 
 MochiKit.Base.update(MochiKit.Position, {

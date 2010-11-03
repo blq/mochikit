@@ -8,6 +8,12 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
+if (typeof goog != 'undefined' && typeof goog.provide != 'undefined') {
+	goog.provide('MochiKit.Format');
+
+	goog.require('MochiKit.Base');
+}
+
 MochiKit.Base._module('Format', '1.5', ['Base']);
 
 MochiKit.Format._numberFormatter = function (placeholder, header, footer, locale, isPercent, precision, leadingZeros, separatorAt, trailingZeros) {

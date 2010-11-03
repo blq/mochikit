@@ -8,6 +8,13 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
+if (typeof goog != 'undefined' && typeof goog.provide != 'undefined') {
+	goog.provide('MochiKit.Signal');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.DOM');
+}
+
 MochiKit.Base._module('Signal', '1.5', ['Base', 'DOM'/*, 'Style'*/]);
 
 MochiKit.Signal._observers = [];
