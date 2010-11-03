@@ -6,6 +6,13 @@
  *
  */
 
+if (typeof goog != 'undefined' && typeof goog.base != 'undefined') {
+	goog.provide('MochiKit.Iter_ext');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.Iter');
+}
+
 MochiKit.Base._module('Iter_ext', '1.5', ['Base', 'Iter']);
 
 
@@ -22,11 +29,10 @@ MochiKit.Iter.treePreOrder = function(rootNode, getChildNodes)
 	var stack = [ rootNode ];
 
 	return {
-		repr: function () { return "treePreOrder(...)"; },
+		repr: function() { return "treePreOrder(...)"; },
 		toString: MochiKit.Base.forwardCall("repr"),
 
-		next: function()
-		{
+		next: function() {
 			if (stack.length == 0)
 				throw MochiKit.Iter.StopIteration;
 
@@ -58,11 +64,10 @@ MochiKit.Iter.treeLevelOrder = function(rootNode, getChildNodes)
 	var queue = [ rootNode ];
 
 	return {
-		repr: function () { return "treeLevelOrder(...)"; },
+		repr: function() { return "treeLevelOrder(...)"; },
 		toString: MochiKit.Base.forwardCall("repr"),
 
-		next: function()
-		{
+		next: function() {
 			if (queue.length == 0)
 				throw MochiKit.Iter.StopIteration;
 
@@ -91,13 +96,11 @@ MochiKit.Iter.treePostOrder = function(rootNode, getChildNodes)
 	var stack = [ [rootNode, false] ]; // [node, visited] (could use a queue also, only affects the order of nodes on each individual level)
 
 	return {
-		repr: function () { return "treePostOrder(...)"; },
+		repr: function() { return "treePostOrder(...)"; },
 		toString: MochiKit.Base.forwardCall("repr"),
 
-		next: function()
-		{
-			while (true) // loop until a visited node is returned or end of iteration
-			{
+		next: function() {
+			while (true) { // loop until a visited node is returned or end of iteration
 				if (stack.length == 0)
 					throw MochiKit.Iter.StopIteration;
 
@@ -150,8 +153,7 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
 			throw e;
 		// return empty dummy iter that re-throws the StopIter
 		return {
-			next: function()
-			{
+			next: function() {
 				throw e;
 			}
 		};
@@ -161,11 +163,10 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
 		it = MochiKit.Iter.chain(it, [ elem0 ]);
 
 	return {
-		repr: function () { return "pairView(...)"; },
+		repr: function() { return "pairView(...)"; },
 		toString: MochiKit.Base.forwardCall("repr"),
 
-		next: function()
-		{
+		next: function() {
 			var elem1 = it.next();
 			var pair = [ elem0, elem1 ];
 			elem0 = elem1;
@@ -188,9 +189,8 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
 MochiKit.Iter.filterMap = function(mapFn, iterable) // ok name? (not to confuse with a filter operation on a map(dictionary) object..)
 {
 	return MochiKit.Iter.ifilter(
-		function(item)
-		{
-			return typeof(item) !== 'undefined' && item !== null;
+		function(item) {
+			return typeof item !== 'undefined' && item !== null;
 		},
 		MochiKit.Iter.imap(
 			mapFn,
@@ -200,9 +200,37 @@ MochiKit.Iter.filterMap = function(mapFn, iterable) // ok name? (not to confuse 
 };
 
 
-
-MochiKit.Iter_ext.__new__ = function()
+/**
+ * extract only the leaves
+ * iterator vesion of MochiKit.Base.flattenArray
+ */
+MochiKit.Iter.iflattenArray = function(root)
 {
+	var queue = [ root ];
+
+	return {
+		next: function() {
+			while (true)
+			{
+				if (queue.length == 0)
+					throw MochiKit.Iter.StopIteration;
+
+				var node = queue.shift();
+
+				if (node instanceof Array) {
+					Array.prototype.splice.apply(queue, [0, 0].concat(node)); // insert elements at front of queue, in-place.
+				}
+				else {
+					return node;
+				}
+			}
+		}
+	};
+};
+
+
+
+MochiKit.Iter_ext.__new__ = function() {
 	// NOP ...
 };
 
