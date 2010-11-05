@@ -8,7 +8,7 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-if (typeof goog != 'undefined' && typeof goog.provide != 'undefined') {
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.provide('MochiKit.LoggingPane');
 
 	goog.require('MochiKit.Base');

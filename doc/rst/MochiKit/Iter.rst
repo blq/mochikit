@@ -217,6 +217,16 @@ Functions
         Available in MochiKit 1.3.1+
 
 
+:mochidef:`isIterable(obj)`:
+
+    Returns ``true`` if the given object is ``Iterable``-like (have a
+    ``.next()`` or ``.iter()`` method)
+    [todo: move this to Base? .. and this should return true for Array and Arguments, NodeList etc]
+
+    *Availability*:
+        Available in MochiKit 1.5+
+
+
 :mochidef:`islice(seq, [start,] stop[, step])`:
 
     ``islice(seq, [start,] stop[, step])`` --> elements from
@@ -238,7 +248,7 @@ Functions
        returned.
     3. If ``iterable`` is a JavaScript 1.7 iterator factory (implements
        ``.__iterable__()``), then the result of ``iterable.__iterable__()``
-       will be returned (MochiKit 1.4+). 
+       will be returned (MochiKit 1.4+).
     4. Otherwise, the iterator factory
        :mochiref:`MochiKit.Base.AdapterRegistry` is used to find a
        match.

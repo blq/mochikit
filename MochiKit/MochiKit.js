@@ -46,7 +46,11 @@ MochiKit.MochiKit.SUBMODULES = [
     "Position",
     "Visual",
     "DragAndDrop",
-    "Sortable"
+    "Sortable",
+
+	"Base-ext",
+	"Iter-ext",
+	"Text-ext"
 ];
 
 (function () {

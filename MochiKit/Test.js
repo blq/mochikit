@@ -8,6 +8,12 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.Test');
+
+	goog.require('MochiKit.Base');
+}
+
 MochiKit.Base._module('Test', '1.5', ['Base']);
 
 MochiKit.Test.runTests = function (obj) {
