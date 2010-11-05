@@ -8,6 +8,17 @@ Copyright (c) 2005 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 
 ***/
 
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.DragAndDrop');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.Iter');
+	goog.require('MochiKit.DOM');
+	goog.require('MochiKit.Signal');
+	goog.require('MochiKit.Visual');
+	goog.require('MochiKit.Position');
+}
+
 MochiKit.Base._module('DragAndDrop', '1.5', ['Base', 'Iter', 'DOM', 'Signal', 'Visual', 'Position']);
 
 MochiKit.DragAndDrop.Droppables = {

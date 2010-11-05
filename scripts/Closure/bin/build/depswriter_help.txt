@@ -1,0 +1,27 @@
+usage: Generates out a Closure deps.js file given a list of JavaScript sources.
+
+Paths can be specified as arguments or (more commonly) specifying trees
+with the flags (call with --help for descriptions).
+
+Usage: depswriter.py [path/to/js1.js [path/to/js2.js] ...]
+
+
+options:
+  -h, --help            show this help message and exit
+  --output_file=OUTPUT_FILE
+                        If specified, write output to this path instead of
+                        writing to standard output.
+  --root=ROOTS          A root directory to scan for JS source files. Paths of
+                        JS files in generated deps file will be relative to
+                        this path.  This flag may be specified multiple times.
+  --root_with_prefix=ROOTS_WITH_PREFIX
+                        A root directory to scan for JS source files, plus a
+                        prefix (if either contains a space, surround with
+                        quotes).  Paths in generated deps file will be
+                        relative to the root, but preceeded by the prefix.
+                        This flag may be specified multiple times.
+  --path_with_depspath=PATHS_WITH_DEPSPATH
+                        A path to a source file and an alternate path to the
+                        file in the generated deps file (if either contains a
+                        space, surround with whitespace). This flag may be
+                        specifified multiple times.

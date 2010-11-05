@@ -4,7 +4,7 @@
  *
  */
 
-if (typeof goog != 'undefined' && typeof goog.provide != 'undefined') {
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.provide('MochiKit.Text_ext');
 
 	goog.require('MochiKit.Text');
@@ -25,7 +25,6 @@ MochiKit.Base._module('Text_ext', '1.5', ['Text']);
  * todo: add a Wagner-Fisher
  * todo: generalize this to more than just strings? i.e allow any Iterable to be processed?
  *
- * @id MochiKit.Text.levenshteinDistance
  * @param {string} s
  * @param {string} t
  * @param {boolean=} [allowTransposition=false] optional, default false
@@ -86,67 +85,59 @@ MochiKit.Text.levenshteinDistance = function(s, t, allowTransposition) // rename
 
 
 /**
- * @id MochiKit.Text.humanNumericStrCmp
- * Makes 'abc9' be sorted _before_ 'abc123'
+ * Comparator function that makes '2' be sorted before '10' and 'abc9' be sorted before 'abc123'..
  * not case sensitive
  * based on Michael Herf's <a href="http://stereopsis.com/strcmp4humans.html">strcmp4humans</a>
  * todo: ignore leading & trailing whitespace also?
  * todo: flag for case sensitivity?
  * @param {string} a
  * @param {string} b
- * @return { -1, 0, +1 }
- * @type integer
+ * @return {integer} -1, 0, +1
  */
-MochiKit.Text.humanNumericStrCmp = function(a, b) // ok name?
+MochiKit.Text.humanStringCompare = function(a, b)
 {
 	if (a == b) return 0;
 
-	// or skip this?
-	var aIsNull = (typeof(a) == 'undefined' || a === null);
-	var bIsNull = (typeof(b) == 'undefined' || b === null);
-	if (aIsNull && bIsNull) {
-		return 0;
-	} else if (aIsNull) {
-		return -1;
-	} else if (bIsNull) {
-		return 1;
-	}
+	// todo: could cache these regexps?
+	var reNum = /^(\+|\-)?\d+/;
+	var reTxt = /^\D+/; // inverse of reNum
 
-	/**
-	 * internal function. better than parseInt since it doesn't get fooled by ex "10xy"..
-	 * todo: perhaps this is worth exposing?
-	 * @param {string} str
-	 * @retur {boolean}
-	 */
-	var _isDecimalNumber = function(str)
+	var ainc = 1; var binc = 1;
+	while (a.length > 0 && b.length > 0)
 	{
-		// todo: cache the regexp?
-		var re = /^\s*(\+|\-)?\d+\s*$/; // todo: add scientific format support? /^[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$/
-		return re.test(str);
-	};
-
-	for (var i = 0; i < a.length && i < b.length; ++i)
-	{
-		var sa = a[i]; var sb = b[i];
-
-		var a0 = sa.toLowerCase(); // will contain either a number or a letter
-		if (_isDecimalNumber(sa)) // hmm, could just listen for NaN from parseInt also
-		{
-			a0 = parseInt(sa, 10) + 256; // make any number bigger than any char
+		var ma = a.match(reNum);
+		var a0 = null;
+		if (ma != null) {
+			a0 = parseInt(ma[0], 10) + 2 << 15; // make any number bigger than any char (unicode)
+			ainc = ma[0].length;
+		}
+		else {
+			// todo: if both a & b are string-segments, we can run a second regexp that only matches non-digits here and use same delta increment
+			a0 = a.charAt(0).toLowerCase().charCodeAt(0);
+			ainc = 1;
 		}
 
-		var b0 = sb.toLowerCase(); // will contain either a number or a letter
-		if (_isDecimalNumber(sb))
-		{
-			b0 = parseInt(sb, 10) + 256;
+		// same as above
+		var mb = b.match(reNum);
+		var b0 = null;
+		if (mb != null) {
+			b0 = parseInt(mb[0], 10) + 2 << 15;
+			binc = mb[0].length;
+		}
+		else {
+			b0 = b.charAt(0).toLowerCase().charCodeAt(0);
+			binc = 1;
 		}
 
 		if (a0 < b0) return -1;
-		if (a0 > b0) return 1;
+		if (a0 > b0) return +1;
+
+		a = a.substring(ainc);
+		b = b.substring(binc);
 	}
 
-	if (i < a.length) return 1; 	// a > b
-	if (i < b.length) return -1;	// a < b
+	if (a.length > 0) return +1; 	// a > b
+	if (b.length > 0) return -1;	// a < b
 
 	return 0;
 };

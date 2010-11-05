@@ -16,6 +16,12 @@
 var integer;
 
 /**
+ * used in a couple of places (drop?)
+ * @typedef {integer}
+ */
+var Int;
+
+/**
  * @see http://mochikit.com/doc/html/MochiKit/Iter.html#fn-iter
  * @see MochiKit.Iter.isIterable
  * @typedef {(Array|{next: function(): *}|{iter: function(): {next: function(): *}}|Arguments|NodeList)} // add {length: number} (simpy add ArrayLike?) also? (and __iterator__?).

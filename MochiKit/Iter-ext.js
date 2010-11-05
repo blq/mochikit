@@ -6,7 +6,7 @@
  *
  */
 
-if (typeof goog != 'undefined' && typeof goog.base != 'undefined') {
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.provide('MochiKit.Iter_ext');
 
 	goog.require('MochiKit.Base');
