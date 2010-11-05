@@ -1,5 +1,7 @@
 /**
  *
+ * See <http://mochikit.com/> for documentation, downloads, license, etc.
+ *
  * @author Fredrik Blomqvist
  *
  */
@@ -98,40 +100,54 @@ MochiKit.Text.humanStringCompare = function(a, b)
 {
 	if (a == b) return 0;
 
-	// todo: could cache these regexps?
+	// todo: cache these RegExp?
 	var reNum = /^(\+|\-)?\d+/;
 	var reTxt = /^\D+/; // inverse of reNum
 
-	var ainc = 1; var binc = 1;
 	while (a.length > 0 && b.length > 0)
 	{
-		var ma = a.match(reNum);
-		var a0 = null;
-		if (ma != null) {
-			a0 = parseInt(ma[0], 10) + 2 << 15; // make any number bigger than any char (unicode)
-			ainc = ma[0].length;
-		}
-		else {
-			// todo: if both a & b are string-segments, we can run a second regexp that only matches non-digits here and use same delta increment
-			a0 = a.charAt(0).toLowerCase().charCodeAt(0);
-			ainc = 1;
+		var a0 = null, ainc = -1;
+		var b0 = null, binc = -1;
+
+		var ma = a.match(reTxt);
+		var mb = b.match(reTxt);
+
+		if (ma != null && mb != null) { // fast path, both segments are text
+			a0 = ma[0].toLowerCase();
+			ainc = a0.length;
+
+			b0 = mb[0].toLowerCase();
+			binc = b0.length;
+		} else {
+			// possibly mixed string vs number case
+
+			if (ma == null) {
+				ma = a.match(reNum); // this _will_ now match (empty strings not possible either)
+				a0 = parseInt(ma[0], 10) + 2 << 15; // make any number bigger than any char (unicode)
+				ainc = ma[0].length;
+			} else {
+				a0 = a.charAt(0).toLowerCase().charCodeAt(0);
+				ainc = 1;
+			}
+
+			if (mb == null) {
+				mb = b.match(reNum);
+				b0 = parseInt(mb[0], 10) + 2 << 15;
+				binc = mb[0].length;
+			} else {
+				b0 = b.charAt(0).toLowerCase().charCodeAt(0);
+				binc = 1;
+			}
 		}
 
-		// same as above
-		var mb = b.match(reNum);
-		var b0 = null;
-		if (mb != null) {
-			b0 = parseInt(mb[0], 10) + 2 << 15;
-			binc = mb[0].length;
-		}
-		else {
-			b0 = b.charAt(0).toLowerCase().charCodeAt(0);
-			binc = 1;
-		}
+		// a0 and b0 now both have same type, either string (lowercase) or integer, and can be compared safely
+		if (typeof a0 != typeof b0)
+			logDebug('strcmp4humans: BUG! both segments must have same type');
 
 		if (a0 < b0) return -1;
 		if (a0 > b0) return +1;
 
+		// increment to next segment
 		a = a.substring(ainc);
 		b = b.substring(binc);
 	}
