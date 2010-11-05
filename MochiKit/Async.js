@@ -558,7 +558,7 @@ MochiKit.Async.DeferredLock.prototype.toString = MochiKit.Base.forwardCall("repr
 
 /**
  * @id MochiKit.Async.DeferredList
- * @extends MochiKit.Async.Deferred
+ * @extends {MochiKit.Async.Deferred}
  * @constructor
  */
 MochiKit.Async.DeferredList = function (list, /* optional */fireOnOneCallback, fireOnOneErrback, consumeErrors, canceller) {

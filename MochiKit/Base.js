@@ -1403,7 +1403,7 @@ MochiKit.Base.__new__ = function () {
 
     /**
      * @id MochiKit.Base.NamedError
-     * @extends Error
+     * @extends {Error}
      * @constructor
      */
     m.NamedError = function (name) {
