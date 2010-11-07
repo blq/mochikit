@@ -1,10 +1,12 @@
 /**
  *
+ * See <http://mochikit.com/> for documentation, downloads, license, etc.
+ *
  * @author Fredrik Blomqvist
  *
  */
 
-if (typeof(goog) != 'undefined' && typeof goog.base == 'function') {
+if (typeof goog != 'undefined' && typeof goog.base == 'function') {
 	goog.provide('MochiKit.Base_ext');
 
 	goog.require('MochiKit.Base');
@@ -17,33 +19,34 @@ MochiKit.Base._module('Base_ext', '1.5', ['Base']);
  * @constructor
  * @param {integer} index
  */
-function _arg_placeholder(index)
+MochiKit.Base._arg_placeholder = function(index)
 {
 	/** @type {integer} */
 	this.index = index;
 }
 
+// following boost's convention of using 1-based indices
 // todo: decide on placeholder name. (@1, #1, $1 €1, p1 ?!)
 /** @const */
-var _1 = new _arg_placeholder(0);
+var _1 = new MochiKit.Base._arg_placeholder(0);
 /** @const */
-var _2 = new _arg_placeholder(1);
+var _2 = new MochiKit.Base._arg_placeholder(1);
 /** @const */
-var _3 = new _arg_placeholder(2);
+var _3 = new MochiKit.Base._arg_placeholder(2);
 /** @const */
-var _4 = new _arg_placeholder(3);
+var _4 = new MochiKit.Base._arg_placeholder(3);
 /** @const */
-var _5 = new _arg_placeholder(4);
+var _5 = new MochiKit.Base._arg_placeholder(4);
 /** @const */
-var _6 = new _arg_placeholder(5);
+var _6 = new MochiKit.Base._arg_placeholder(5);
 /** @const */
-var _7 = new _arg_placeholder(6);
+var _7 = new MochiKit.Base._arg_placeholder(6);
 /** @const */
-var _8 = new _arg_placeholder(7);
+var _8 = new MochiKit.Base._arg_placeholder(7);
 /** @const */
-var _9 = new _arg_placeholder(8);
+var _9 = new MochiKit.Base._arg_placeholder(8);
 /** @const */
-var _10 = new _arg_placeholder(9);
+var _10 = new MochiKit.Base._arg_placeholder(9);
 // ...
 
 
@@ -57,24 +60,22 @@ var _10 = new _arg_placeholder(9);
  * @param {...*} var_args
  * @return {!Function}
  */
-MochiKit.Base.lambda = function(func, var_args)
+MochiKit.Base.lambda = function(func, var_args) // or just "bind2"?
 {
 	// precompute mapping table. use hardcoded closures for speed (?)
-	// todo: could detect some common cases and return custom case code paths (i.e bind with not placeholders ("old bind") etc)
+	// todo: could detect some common cases and return custom case code paths (i.e bind without placeholders -> "old bind" etc)
+	// todo: or is this optimization worth it? skipping this allows simpler handling of re-binding case, can use logic very similar to "old" bind and be compatible(?)
 
 	var argmap = [];
 	var allowTrailingArgs = true;
-	for (var i = 1; i < arguments.length; ++i)
-	{
+	for (var i = 1; i < arguments.length; ++i) {
 		var a = arguments[i];
 
-		if (i == 1 && a instanceof _context)
-		{
+		if (i == 1 && a instanceof _context) {
 			func = MochiKit.Base.bind(func, a.context);
 		}
 		else
-		if (a instanceof _arg_placeholder) // or use a.constructor == _arg_placeholder? (todo: profile)
-		{
+		if (a instanceof MochiKit.Base._arg_placeholder) { // or use a.constructor == _arg_placeholder? (todo: profile)
 			// todo: should we range check? (I'd say not)
 			argmap.push((function(idx) {
 				return function() {
@@ -84,17 +85,14 @@ MochiKit.Base.lambda = function(func, var_args)
 			allowTrailingArgs = false; // ok?
 		}
 		else // see the "protect" function if you don't want this expansion to occur
-		if (typeof a == 'function' && (a._is_bound || a.im_func)) // detects existing mochikit.bind also! (todo: should rather use same signature but then we must make sure compatibility)
-		{
+		if (typeof a == 'function' && (a._is_bound || a.im_func)) { // detects existing mochikit.bind also! (todo: should rather use same signature but then we must make sure compatibility)
 			argmap.push((function(bf) {
 				return function() {
 					return bf.apply(this, arguments); // recurse!
 				};
 			})(a));
 			allowTrailingArgs = false; // ok?
-		}
-		else
-		{
+		} else {
 			// default, store input arg (or handle this even more special cased?)
 			argmap.push((function(arg) {
 				return function() {
@@ -104,15 +102,12 @@ MochiKit.Base.lambda = function(func, var_args)
 		}
 	}
 
-	var newfunc = function(/* arguments */)
-	{
+	var newfunc = function(/* arguments */) {
 		var args = [];
-		for (var i = 0; i < argmap.length; ++i)
-		{
+		for (var i = 0; i < argmap.length; ++i)	{
 			args.push(argmap[i].apply(this, arguments));
 		}
-		if (allowTrailingArgs) for (var j = i; j < arguments.length; ++j)
-		{
+		if (allowTrailingArgs) for (var j = i; j < arguments.length; ++j) {
 			args.push(arguments[j]);
 		}
 		return func.apply(this, args);
@@ -136,23 +131,21 @@ MochiKit.Base.lambda = function(func, var_args)
  */
 function protect(boundFn)
 {
-	return function()
-	{
+	return function() {
 		return boundFn.apply(this, arguments);
 	};
 }
 
 
 /**
- * assumes first arg is a function,
- * calls it with the rest of the arguments applied.
+ * assumes first arg is a function, calls it with the rest of the arguments applied.
  * @see http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds
  *
  * @param {!Function}
  * @param {...*} var_args
  * return ...
  */
-function apply(fn, var_args)
+function apply(fn, var_args) // todo: name.. NS!
 {
 	// or return a wrapper fn..?
 
@@ -162,11 +155,14 @@ function apply(fn, var_args)
 
 
 /**
+ * experiment in creating a special-purposed _parameter_ object
+ * that indicates context, 'self/this'. Mostly to help syntax.
+ * todo: test variant that binds function+context in tuple-object?
  * @private
  * @constructor
  * @param {Object} context
  */
-function _context(context)
+function _context(context) // todo: NS!
 {
 	/** @type {Object} */
 	this.context = context;
@@ -177,15 +173,76 @@ function _context(context)
  * @param {Object} context
  * @return {!_context}
  */
-function context(context)
+function context(context) // todo: NS!
 {
 	return new _context(context);
 }
 
+//-----------
 
 
-MochiKit.Base_ext.__new__ = function()
+/**
+ * Shuffles an array using the Fisher-Yates algorithm (Knuth). O(N)
+ * in-place algorithm. (todo: a functional version?)
+ *
+ * @see http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ * Thou shalt not shuffle using a random comparator!
+ * - You don't want to make same mistake M$ did ;) http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
+ *
+ * todo: take optional range, start & end, indices?
+ * todo: create an iterator based impl. ishuffle
+ * todo: take a custom getter and setter funcs instead of just whole elem swaps?
+ * todo: support a generator?
+ *
+ * @id MochiKit.Base.shuffle
+ * @param {!Array} values
+ * @return {!Array} chained, values array shuffled
+ */
+MochiKit.Base.shuffleArray = function(values)
 {
+	// Durstenfeld's algorithm
+	for (var i = values.length - 1; i > 0; --i) {
+		var j = Math.floor(Math.random() * (i + 1));
+		// swap elems at i and j
+		var tmp = values[i];
+		values[i] = values[j];
+		values[j] = tmp;
+	}
+	return values; // ok? enable chaining
+};
+
+
+/**
+ * Generates a unique random range of numbers from 0..N-1 (or rather f(0)..f(N-1) ) (no number occurs twice) (think dealing a deck of cards)
+ * O(N)
+ *
+ * todo: create an iterator based impl? (needs a quite different algo though, using a specific rand method)
+ * todo: create an in-place version (taking an array)?
+ *
+ * @id MochiKit.Base.deal
+ * @param {integer} numItems
+ * @param {Function=} [func] Optional. function receiving the index.nr and producing a result. default identity.
+ * @return {!Array}
+ */
+MochiKit.Base.deal = function(numItems, func)
+{
+	func = func || MochiKit.Base.operator.identity; // default pass-through, function(i) { return i; }
+
+	var deck = new Array(numItems);
+
+	for (var i = 0; i < numItems; ++i) {
+		var j = Math.floor(Math.random() * (i + 1));
+		deck[j] = func(i);
+		deck[i] = deck[j];
+	}
+
+	return deck;
+};
+
+
+// todo: partition, binarySearch, isSorted, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
+
+MochiKit.Base_ext.__new__ = function() {
 	// NOP ...
 };
 
