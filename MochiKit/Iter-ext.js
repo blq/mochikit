@@ -209,6 +209,9 @@ MochiKit.Iter.iflattenArray = function(root)
 	var queue = [ root ];
 
 	return {
+		repr: function() { return "iflattenArray(...)"; },
+		toString: MochiKit.Base.forwardCall("repr"),
+
 		next: function() {
 			while (true)
 			{
@@ -222,6 +225,43 @@ MochiKit.Iter.iflattenArray = function(root)
 				}
 				else {
 					return node;
+				}
+			}
+		}
+	};
+};
+
+
+/**
+ * one level flattening of a sequence of iterables
+ * generalized chain (intended for larger volumes, think nodes->values of a tree-structure)
+ * @param {!Iterable} seq
+ * @param {(function(*): !Iterable)=} [getIter] get second level iterator. optional, default iter.
+ * @return {!Iterable}
+ */
+MochiKit.Iter.indirectChain = function(seq, getIter) // .. ok name?
+{
+	getIter = getIter || MochiKit.Iter.iter;
+
+	var it = MochiKit.Iter.iter(seq);
+	var jt = null;
+
+	return {
+		repr: function() { return "indirectChain(...)"; },
+		toString: MochiKit.Base.forwardCall("repr"),
+
+		next: function() {
+			if (jt == null)
+				jt = MochiKit.Iter.iter(getIter(it.next())); // wrap once more in iter since getIter might return an Array for example
+
+			while (true) {
+				try {
+					var val = jt.next();
+					return val;
+				} catch (e) {
+					if (e != MochiKit.Iter.StopIteration)
+						throw e;
+					jt = MochiKit.Iter.iter(getIter(it.next()));
 				}
 			}
 		}
