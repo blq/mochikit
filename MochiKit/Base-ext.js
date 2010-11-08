@@ -50,76 +50,6 @@ var _10 = new MochiKit.Base._arg_placeholder(9);
 // ...
 
 
-// todo: name?
-// todo: should use same convention for allowing detection and un-binding as MochiKit.Base.bind
-// only other javascript reference I found was: http://gfaraj.wordpress.com/2008/01/18/boostbind-ala-javascript/
-
-/**
- * @see http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html
- * @param {!Function} fn
- * @param {...*} var_args
- * @return {!Function}
- */
-MochiKit.Base.lambda = function(func, var_args) // or just "bind2"?
-{
-	// precompute mapping table. use hardcoded closures for speed (?)
-	// todo: could detect some common cases and return custom case code paths (i.e bind without placeholders -> "old bind" etc)
-	// todo: or is this optimization worth it? skipping this allows simpler handling of re-binding case, can use logic very similar to "old" bind and be compatible(?)
-
-	var argmap = [];
-	var allowTrailingArgs = true;
-	for (var i = 1; i < arguments.length; ++i) {
-		var a = arguments[i];
-
-		if (i == 1 && a instanceof _context) {
-			func = MochiKit.Base.bind(func, a.context);
-		}
-		else
-		if (a instanceof MochiKit.Base._arg_placeholder) { // or use a.constructor == _arg_placeholder? (todo: profile)
-			// todo: should we range check? (I'd say not)
-			argmap.push((function(idx) {
-				return function() {
-					return arguments[idx];
-				};
-			})(a.index));
-			allowTrailingArgs = false; // ok?
-		}
-		else // see the "protect" function if you don't want this expansion to occur
-		if (typeof a == 'function' && (a._is_bound || a.im_func)) { // detects existing mochikit.bind also! (todo: should rather use same signature but then we must make sure compatibility)
-			argmap.push((function(bf) {
-				return function() {
-					return bf.apply(this, arguments); // recurse!
-				};
-			})(a));
-			allowTrailingArgs = false; // ok?
-		} else {
-			// default, store input arg (or handle this even more special cased?)
-			argmap.push((function(arg) {
-				return function() {
-					return arg;
-				};
-			})(a));
-		}
-	}
-
-	var newfunc = function(/* arguments */) {
-		var args = [];
-		for (var i = 0; i < argmap.length; ++i)	{
-			args.push(argmap[i].apply(this, arguments));
-		}
-		if (allowTrailingArgs) for (var j = i; j < arguments.length; ++j) {
-			args.push(arguments[j]);
-		}
-		return func.apply(this, args);
-	};
-
-	newfunc._is_bound = true; // tag ourself as bound
-
-	return newfunc;
-}
-
-//-----------------------
-
 
 /**
  * should be fully compatible with the existing bind! passes all existing bind() test + my placeholder tests
@@ -225,7 +155,7 @@ MochiKit.Base.bindLate2 = function(func, self/* args... */)
  * to be used in cases where you don't want to evaluate a nested bind
  * @see http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds
  *
- * @param {!Function}
+ * @param {!Function} boundFn
  * @return {!Function}
  */
 function protect(boundFn) // todo: NS!
@@ -240,7 +170,7 @@ function protect(boundFn) // todo: NS!
  * assumes first arg is a function, calls it with the rest of the arguments applied.
  * @see http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds
  *
- * @param {!Function}
+ * @param {!Function} fn
  * @param {...*} var_args
  * return ...
  */
@@ -253,29 +183,6 @@ function apply(fn, var_args) // todo: name.. NS!
 }
 
 
-/**
- * experiment in creating a special-purposed _parameter_ object
- * that indicates context, 'self/this'. Mostly to help syntax.
- * todo: test variant that binds function+context in pair/tuple-object?
- * @private
- * @constructor
- * @param {Object} context
- */
-function _context(context) // todo: NS!
-{
-	/** @type {Object} */
-	this.context = context;
-}
-
-/**
- * factory to remove need for "new" in the expressions
- * @param {Object} context
- * @return {!_context}
- */
-function context(context) // todo: NS!
-{
-	return new _context(context);
-}
 
 //-----------
 
