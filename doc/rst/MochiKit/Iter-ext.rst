@@ -36,7 +36,7 @@ Description
 
 Even more iterators
 
-Extends the existing MochiKit.Iter namespace
+Extends the existing :mochiref:`MochiKit.Iter` namespace
 
 
 Dependencies

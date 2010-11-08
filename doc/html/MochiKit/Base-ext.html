@@ -52,19 +52,19 @@ function test(f)
 }
 
 // compose_f_gx
-t.is(test( bind2(f, bind2(g, _1)) ), 'f(g(x))');
+t.is(test( partial2(f, partial2(g, _1)) ), 'f(g(x))');
 
 // compose_f_hxy
-t.is(test( bind2(f, bind2(h, _1, _2)) ), 'f(h(x, y))');
+t.is(test( partial2(f, partial2(h, _1, _2)) ), 'f(h(x, y))');
 
 // compose_h_fx_gx
-t.is(test( bind2(h, bind2(f, _1), bind2(g, _1)) ), 'h(f(x), g(x))');
+t.is(test( partial2(h, partial2(f, _1), partial2(g, _1)) ), 'h(f(x), g(x))');
 
 // compose_h_fx_gy
-t.is(test( bind2(h, bind2(f, _1), bind2(g, _2)) ), 'h(f(x), g(y))');
+t.is(test( partial2(h, partial2(f, _1), partial2(g, _2)) ), 'h(f(x), g(y))');
 
 // compose_f_k
-t.is(test( bind2(f, bind2(k)) ), 'f(k())');
+t.is(test( partial2(f, partial2(k)) ), 'f(k())');
 </pre>
 </div>
 <div class="section" id="description">
@@ -93,39 +93,88 @@ t.is(test( bind2(f, bind2(k)) ), 'f(k())');
 <a name="fn-bind2"></a>
 <a class="mochidef reference external" href="#fn-bind2">bind2(fn, self, a, b, ...)</a>:</p>
 <blockquote>
-<p>inspired by the C++ boost bind: <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html</a></p>
+<p>&quot;Bind 2.0&quot;.</p>
+<p>Apart from the functionality offered by <a class="mochiref reference external" href="#fn-bind">bind</a>, <a class="mochiref reference external" href="#fn-bind2">bind2</a> also supports
+binding with placeholder arguments, inspired by the C++ Boost bind <a class="footnote-reference" href="#id5" id="id1">[1]</a>.</p>
 <pre class="literal-block">
-bind2(...)
+bind(f, _2, _1)(x, y);                 // f(y, x)
+bind(g, _1, 9, _1)(x);                 // g(x, 9, x)
+bind(g, _3, _3, _3)(x, y, z);          // g(z, z, z)
+bind(g, _1, _1, _1)(x, y, z);          // g(x, x, x)
+</pre>
+<p>Furthermore it allows nested binds <a class="footnote-reference" href="#id6" id="id2">[2]</a>
+This enables in-order function composition, as opposed to the RTL order of <a class="mochiref reference external" href="#fn-compose">compose</a></p>
+<pre class="literal-block">
+bind(f, _2, bind(g, _1))(x, y);               // f(y, g(x))
 </pre>
 </blockquote>
+<p>
+<a name="fn-bindlate2"></a>
+<a class="mochidef reference external" href="#fn-bindlate2">bindLate2(func, self[, arg, ...])</a>:</p>
+<blockquote>
+a version of <a class="mochiref reference external" href="#fn-bindlate">bindLate</a> that handles placeholders (based on <a class="mochiref reference external" href="#fn-bind2">bind2</a>)</blockquote>
+<p>
+<a name="fn-method2"></a>
+<a class="mochidef reference external" href="#fn-method2">method2(self, func, ...)</a>:</p>
+<blockquote>
+a version of <a class="mochiref reference external" href="#fn-method">method</a> that handles placeholders (based on <a class="mochiref reference external" href="#fn-bind2">bind2</a>)</blockquote>
+<p>
+<a name="fn-partial2"></a>
+<a class="mochidef reference external" href="#fn-partial2">partial2(func, arg[, ...])</a>:</p>
+<blockquote>
+a version of <a class="mochiref reference external" href="#fn-partial">partial</a> that handles placeholders (based on <a class="mochiref reference external" href="#fn-bind2">bind2</a>)</blockquote>
 <p>
 <a name="fn-protect"></a>
 <a class="mochidef reference external" href="#fn-protect">protect(boundFn)</a>:</p>
 <blockquote>
 simple wrapper to mask the fact that a fn is bound.
-to be used in cases where you don't want to evaluate a nested bind
-see <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds</a></blockquote>
+to be used in cases where you don't want to evaluate a nested bind</blockquote>
 <p>
 <a name="fn-apply"></a>
 <a class="mochidef reference external" href="#fn-apply">apply(fn, a, b, ...)</a>:</p>
 <blockquote>
 assumes first arg is a function,
-calls it with the rest of the arguments applied.
-see <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds</a></blockquote>
+calls it with the rest of the arguments applied.</blockquote>
+<p>
+<a name="fn-shufflearray"></a>
+<a class="mochidef reference external" href="#fn-shufflearray">shuffleArray(values)</a>:</p>
+<blockquote>
+<p>Shuffles an array using the Fisher-Yates algorithm <a class="footnote-reference" href="#id7" id="id3">[3]</a> (Knuth). O(N)
+(in-place algorithm)</p>
+<p>Returns the shuffled input array to enable chaining.</p>
+<p>(..shuffling an array by sorting using a random comparator is a Bad idea <a class="footnote-reference" href="#id8" id="id4">[4]</a>)</p>
+</blockquote>
+<p>
+<a name="fn-deal"></a>
+<a class="mochidef reference external" href="#fn-deal">deal(numItems, opt_func)</a>:</p>
+<blockquote>
+Generates a unique random range of numbers from 0..N-1 (or rather f(0)..f(N-1) ) (no number occurs twice) (think dealing a deck of cards)</blockquote>
 </div>
 </div>
 <div class="section" id="see-also">
 <h1>See Also</h1>
-<table class="docutils footnote" frame="void" id="id1" rules="none">
+<table class="docutils footnote" frame="void" id="id5" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[1]</td><td>C++ Boost bind: <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>C++ Boost bind: <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html</a></td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
+<table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[2]</td><td>Nested bind: <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Nested bind: <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Fisher-Yates shuffle: <a class="reference external" href="http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle">http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Microsoft: <a class="reference external" href="http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html">http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html</a></td></tr>
 </tbody>
 </table>
 </div>

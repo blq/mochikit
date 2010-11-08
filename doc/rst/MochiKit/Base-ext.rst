@@ -39,19 +39,19 @@ Synopsis
     }
 
     // compose_f_gx
-    t.is(test( bind2(f, bind2(g, _1)) ), 'f(g(x))');
+    t.is(test( partial2(f, partial2(g, _1)) ), 'f(g(x))');
 
     // compose_f_hxy
-    t.is(test( bind2(f, bind2(h, _1, _2)) ), 'f(h(x, y))');
+    t.is(test( partial2(f, partial2(h, _1, _2)) ), 'f(h(x, y))');
 
     // compose_h_fx_gx
-    t.is(test( bind2(h, bind2(f, _1), bind2(g, _1)) ), 'h(f(x), g(x))');
+    t.is(test( partial2(h, partial2(f, _1), partial2(g, _1)) ), 'h(f(x), g(x))');
 
     // compose_h_fx_gy
-    t.is(test( bind2(h, bind2(f, _1), bind2(g, _2)) ), 'h(f(x), g(y))');
+    t.is(test( partial2(h, partial2(f, _1), partial2(g, _2)) ), 'h(f(x), g(y))');
 
     // compose_f_k
-    t.is(test( bind2(f, bind2(k)) ), 'f(k())');
+    t.is(test( partial2(f, partial2(k)) ), 'f(k())');
 
 
 Description
@@ -86,25 +86,70 @@ Functions
 
 :mochidef:`bind2(fn, self, a, b, ...)`:
 
-    inspired by the C++ boost bind: http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html
+    "Bind 2.0".
+
+    Apart from the functionality offered by :mochiref:`bind`, :mochiref:`bind2` also supports
+    binding with placeholder arguments, inspired by the C++ Boost bind [1]_.
 
     ::
 
-        bind2(...)
+        bind(f, _2, _1)(x, y);                 // f(y, x)
+        bind(g, _1, 9, _1)(x);                 // g(x, 9, x)
+        bind(g, _3, _3, _3)(x, y, z);          // g(z, z, z)
+        bind(g, _1, _1, _1)(x, y, z);          // g(x, x, x)
+
+
+    Furthermore it allows nested binds [2]_
+    This enables in-order function composition, as opposed to the RTL order of :mochiref:`compose`
+
+    ::
+
+        bind(f, _2, bind(g, _1))(x, y);               // f(y, g(x))
+
+
+
+:mochidef:`bindLate2(func, self[, arg, ...])`:
+
+    a version of :mochiref:`bindLate` that handles placeholders (based on :mochiref:`bind2`)
+
+
+:mochidef:`method2(self, func, ...)`:
+
+    a version of :mochiref:`method` that handles placeholders (based on :mochiref:`bind2`)
+
+
+:mochidef:`partial2(func, arg[, ...])`:
+
+    a version of :mochiref:`partial` that handles placeholders (based on :mochiref:`bind2`)
 
 
 :mochidef:`protect(boundFn)`:
 
     simple wrapper to mask the fact that a fn is bound.
     to be used in cases where you don't want to evaluate a nested bind
-    see http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds
 
 
 :mochidef:`apply(fn, a, b, ...)`:
 
     assumes first arg is a function,
     calls it with the rest of the arguments applied.
-    see http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds
+
+
+
+:mochidef:`shuffleArray(values)`:
+
+    Shuffles an array using the Fisher-Yates algorithm [3]_ (Knuth). O(N)
+    (in-place algorithm)
+
+    Returns the shuffled input array to enable chaining.
+
+    (..shuffling an array by sorting using a random comparator is a Bad idea [4]_)
+
+
+:mochidef:`deal(numItems, opt_func)`:
+
+    Generates a unique random range of numbers from 0..N-1 (or rather f(0)..f(N-1) ) (no number occurs twice) (think dealing a deck of cards)
+
 
 
 See Also
@@ -112,6 +157,8 @@ See Also
 
 .. [1] C++ Boost bind: http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html
 .. [2] Nested bind: http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds
+.. [3] Fisher-Yates shuffle: http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+.. [4] Microsoft: http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
 
 
 Authors

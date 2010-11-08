@@ -54,15 +54,14 @@ Functions
 
 
 
-:mochidef:`humanNumericStrCmp(a, b)`:
+:mochidef:`humanStringCompare(a, b)`:
 
     Human friendly string comparator. Makes 'abc9' be sorted *before* 'abc123'.
     Not case sensitive (todo: add optional flag for this?).
 
-    Based on Michael Herf's http://stereopsis.com/strcmp4humans.html strcmp4humans
+    Based on Michael Herf's ``strcmp4humans`` [2]_
 
     returns -1, 0, +1  (comparator)
-
 
 
 
