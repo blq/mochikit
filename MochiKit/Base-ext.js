@@ -169,7 +169,7 @@ MochiKit.Base.bind2 = function (func, self/* args... */)
 					imax = Math.max(imax, pa.index + 1);
 					pa = arguments[pa.index];
 				} else
-				if (typeof pa == 'function' && pa.im_func) {
+				if (typeof pa == 'function' && typeof pa.im_func == 'function') {
 					pa = pa.apply(self, arguments); // recurse for nested evaluation!
 				}
 				args.push(pa);
@@ -193,6 +193,30 @@ MochiKit.Base.bind2 = function (func, self/* args... */)
 	return newfunc;
 };
 
+
+MochiKit.Base.partial2 = function(func)
+{
+	var m = MochiKit.Base;
+	return m.bind2.apply(this, m.extend([func, undefined], arguments, 1));
+};
+
+MochiKit.Base.method2 = function(self, func)
+{
+	var m = MochiKit.Base;
+	return m.bind2.apply(this, m.extend([func, self], arguments, 2));
+};
+
+
+MochiKit.Base.bindLate2 = function(func, self/* args... */)
+{
+	var m = MochiKit.Base;
+	var args = arguments;
+	if (typeof(func) === "string") {
+		args = m.extend([m.forwardCall(func)], arguments, 1);
+		return m.bind2.apply(this, args);
+	}
+	return m.bind2.apply(this, args);
+};
 
 //---------------------------------
 
