@@ -23,7 +23,7 @@ MochiKit.Base._arg_placeholder = function(index)
 {
 	/** @type {integer} */
 	this.index = index;
-}
+};
 
 // following boost's convention of using 1-based indices
 // todo: decide on placeholder name. (@1, #1, $1 €1, p1 ?!)
@@ -118,8 +118,83 @@ MochiKit.Base.lambda = function(func, var_args) // or just "bind2"?
 	return newfunc;
 }
 
-//------
+//-----------------------
 
+
+/**
+ * should be fully compatible with the existing bind! passes all existing bind() test + my placeholder tests
+ * (though not optimized)
+ */
+MochiKit.Base.bind2 = function (func, self/* args... */)
+{
+	if (typeof(func) == "string") {
+		func = self[func];
+	}
+	var im_func = func.im_func;
+	var im_preargs = func.im_preargs;
+	var im_self = func.im_self;
+	var m = MochiKit.Base;
+	if (typeof(func) == "function" && typeof(func.apply) == "undefined") {
+		// this is for cases where JavaScript sucks ass and gives you a
+		// really dumb built-in function like alert() that doesn't have
+		// an apply
+		func = m._wrapDumbFunction(func);
+	}
+	if (typeof(im_func) != 'function') {
+		im_func = func;
+	}
+	if (typeof(self) != 'undefined') {
+		im_self = self;
+	}
+	if (typeof(im_preargs) == 'undefined') {
+		im_preargs = [];
+	} else  {
+		im_preargs = im_preargs.slice();
+	}
+	m.extend(im_preargs, arguments, 2);
+
+	var newfunc = function () {
+		var me = arguments.callee;
+		var self = me.im_self;
+		if (!self) {
+			self = this;
+		}
+
+		var args = [];
+		if (me.im_preargs.length > 0) {
+			var imax = -1;
+			for (var i = 0; i < me.im_preargs.length; ++i) {
+				var pa = me.im_preargs[i];
+				if (pa instanceof MochiKit.Base._arg_placeholder) {
+					pa = arguments[pa.index];
+					imax = Math.max(imax, pa.index);
+				} else
+				if (typeof pa == 'function' && pa.im_func) {
+					pa = pa.apply(self, arguments); // recurse for nested evaluation!
+				}
+				args.push(pa);
+			}
+			for (var j = imax < 0 ? 0 : imax+1; j < arguments.length; ++j) {
+				args.push(arguments[j]);
+			}
+		} else {
+			args = arguments;
+		}
+
+		return me.im_func.apply(self, args);
+	};
+
+	newfunc.im_self = im_self;
+	newfunc.im_func = im_func;
+	newfunc.im_preargs = im_preargs;
+	if (typeof(im_func.NAME) == 'string') {
+		newfunc.NAME = "bind2(" + im_func.NAME + ",...)";
+	}
+	return newfunc;
+};
+
+
+//---------------------------------
 
 /**
  * simple wrapper to mask the fact that a fn is bound.
@@ -129,7 +204,7 @@ MochiKit.Base.lambda = function(func, var_args) // or just "bind2"?
  * @param {!Function}
  * @return {!Function}
  */
-function protect(boundFn)
+function protect(boundFn) // todo: NS!
 {
 	return function() {
 		return boundFn.apply(this, arguments);
@@ -157,7 +232,7 @@ function apply(fn, var_args) // todo: name.. NS!
 /**
  * experiment in creating a special-purposed _parameter_ object
  * that indicates context, 'self/this'. Mostly to help syntax.
- * todo: test variant that binds function+context in tuple-object?
+ * todo: test variant that binds function+context in pair/tuple-object?
  * @private
  * @constructor
  * @param {Object} context
