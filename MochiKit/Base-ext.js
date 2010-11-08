@@ -162,19 +162,19 @@ MochiKit.Base.bind2 = function (func, self/* args... */)
 
 		var args = [];
 		if (me.im_preargs.length > 0) {
-			var imax = -1;
+			var imax = 0;
 			for (var i = 0; i < me.im_preargs.length; ++i) {
 				var pa = me.im_preargs[i];
 				if (pa instanceof MochiKit.Base._arg_placeholder) {
+					imax = Math.max(imax, pa.index + 1);
 					pa = arguments[pa.index];
-					imax = Math.max(imax, pa.index);
 				} else
 				if (typeof pa == 'function' && pa.im_func) {
 					pa = pa.apply(self, arguments); // recurse for nested evaluation!
 				}
 				args.push(pa);
 			}
-			for (var j = imax < 0 ? 0 : imax+1; j < arguments.length; ++j) {
+			for (var j = imax; j < arguments.length; ++j) {
 				args.push(arguments[j]);
 			}
 		} else {
