@@ -187,7 +187,7 @@ tests.test_Base_ext = function (t) {
 		t.is(fbb(2), 12, 're-bind');
 
 
-		// these combose are verified from C++ boost
+		// these combos are verified from C++ boost
 		t.is( partial2(f, _1, 2)(2), 4);
 
 		t.is( partial2(partial2(f, _1, 2), 3)(), 5);
@@ -207,9 +207,22 @@ tests.test_Base_ext = function (t) {
 
 		t.is( partial2(partial2(f, _2, partial2(f, _1, _2)), _1, _1)(1, 123), 3, 'also nested binds have their slots replaced');
 
+
+		//--- cases boost bind doesn't support...
+
+		t.is( partial2(f, _1, _3)(1, 2, 3), 4, 'sparse placeholder + extending the fn arity..');
+		t.is( partial2(partial2(f, _1, _3), 1, 2, 3)(), 4, 'same as above, fully bound');
+		t.is( partial2(partial2(f, _1, _3), 1, 2, _1)(3), 4);
+
+		t.is( partial2(f, _2, _4)(1, 2, 3, 4), 6, 'sparse placeholder + extending the fn arity..');
+
+		t.is( partial2(g, _1, _3)(1, 2, 3, 4), 4+4, 'sparse placeholder + continuing bind after max placeholder');
+		t.is( partial2(g, _3, _1)(1, 2, 3, 4), 4+4, 'same as above. swapped placeholders');
+
+		// todo: even odder cases..
+	//	t.is( partial2(partial2(g, _1, _3), 1, 2, 3)(4), 4+4, '');
+
 	})();
-
-
 
 
 };
