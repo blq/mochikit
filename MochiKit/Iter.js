@@ -643,13 +643,13 @@ MochiKit.Base.update(MochiKit.Iter, {
         function fetch() {
             v = iterable.next();
             k = keyfunc(v);
-        };
+        }
 
         function eat() {
             var ret = v;
             v = undefined;
             return ret;
-        };
+        }
 
         var first = true;
         var compare = m.compare;
