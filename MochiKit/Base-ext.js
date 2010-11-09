@@ -52,7 +52,12 @@ var _10 = new MochiKit.Base._arg_placeholder(9);
 
 
 /**
+ * internal helper for bind2
+ * todo: perhaps generalize to a visit interface? http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#visit_each
  * @private
+ * @param {!Array} im_preargs
+ * @param {!Array} args
+ * @param {!Object=} [filledSlots]
  * @return {!Object} dictionary of which empty slot indices that were used by args
  */
 MochiKit.Base._rebind_preargs = function(im_preargs, args, filledSlots)
@@ -114,7 +119,6 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 	var args = Array.prototype.slice.call(arguments, 2);
 
 	var filledSlots = MochiKit.Base._rebind_preargs(im_preargs, args);
-
 	// remove possibly filled placeholders (need to remove afterwards to not mess up indices)
 	for (var index in filledSlots) {
 		args.splice(filledSlots[index], 1);
@@ -123,7 +127,6 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 	// 1. shouldn't we decrement indices for remaining slots? keep track of min/max?
 	// 2. what about gaps between slots? store counter to nr of args bound? (even if they won't be used due to gaps)
 	// 3. what should calling a function with less args than the slots indicate mean? throw? undefined?
-	// 4. you re-bind with another placeholder? collision? mixing? -> boost: simply replace slot, no changes
 	// todo: dig deeper into how Boost bind handles these cases.
 	m.extend(im_preargs, args);
 
@@ -134,8 +137,8 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 			self = this;
 		}
 
-		// todo: profile this, could precalculate (as the previous experimental imple did) the placeholders and nested bind etc but need to be sure it's worth it.
-		// (also shouldn't forget this impl. which doesn't use "naive" nested closures might be faster by default)
+		// todo: profile this, could precalculate (as the previous experimental impl did) the placeholders and nested bind etc but need to be sure it's worth it.
+		// (also shouldn't forget this impl. which doesn't use "naive" nested closures might be faster by default!)
 		var args = [];
 		if (me.im_preargs.length > 0) {
 			var imax = 0;
@@ -170,19 +173,31 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 };
 
 
-MochiKit.Base.partial2 = function(func)
+/**
+ * ...
+ * @param {...*} var_args
+ */
+MochiKit.Base.partial2 = function(func, var_args)
 {
 	var m = MochiKit.Base;
 	return m.bind2.apply(this, m.extend([func, undefined], arguments, 1));
 };
 
-MochiKit.Base.method2 = function(self, func)
+/**
+ * ...
+ * @param {...*} var_args
+ */
+MochiKit.Base.method2 = function(self, func, var_args)
 {
 	var m = MochiKit.Base;
 	return m.bind2.apply(this, m.extend([func, self], arguments, 2));
 };
 
-MochiKit.Base.bindLate2 = function(func, self/* args... */)
+/**
+ * ...
+ * @param {...*} var_args
+ */
+MochiKit.Base.bindLate2 = function(func, self, var_args)
 {
 	var m = MochiKit.Base;
 	var args = arguments;
