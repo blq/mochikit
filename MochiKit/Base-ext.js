@@ -25,7 +25,7 @@ MochiKit.Base._arg_placeholder = function(index)
 	this.index = index;
 };
 
-// following boost's convention of using 1-based indices
+// following Boost's convention of using 1-based indices
 // todo: decide on placeholder name. (@1, #1, $1 €1, p1 ?!)
 /** @const */
 var _1 = new MochiKit.Base._arg_placeholder(0);
@@ -78,10 +78,34 @@ MochiKit.Base.bind2 = function (func, self/* args... */)
 	}
 	if (typeof(im_preargs) == 'undefined') {
 		im_preargs = [];
-	} else  {
+	} else {
 		im_preargs = im_preargs.slice();
 	}
-	m.extend(im_preargs, arguments, 2);
+	// fill any placeholder prearg slots
+	var filledSlots = {}; // dictionary of placeholder slots being filled
+	var args = Array.prototype.slice.call(arguments, 2);
+	for (var i = 0; i < im_preargs.length; ++i) {
+		var pa = im_preargs[i];
+		if (pa instanceof m._arg_placeholder) {
+			if (pa.index < args.length) {
+				im_preargs[i] = args[pa.index];
+				filledSlots[pa.index] = pa.index;
+			}
+			// ..else? (see "discussion" below)
+		}
+	}
+	// remove possibly filled placeholders (need to remove afterwards to not mess up indices)
+	for (var index in filledSlots) {
+		args.splice(filledSlots[index], 1);
+	}
+	// todo: remaining more or less subtle issues to be decided on and tested:
+	// 1. shouldn't we decrement indices for remaining slots? keep track of min/max?
+	// 2. what about gaps between slots? store counter to nr of args bound? (even if they won't be used due to gaps)
+	// 3. what should calling a function with less args than the slots indicate mean? throw? undefined?
+	// 4. you re-bind with another placeholder? collision? mixing?
+	// 5. shouldn't re-binding examine possibly nested binds also and handle their slots same way?
+	// todo: dig deeper into how Boost bind handles these cases.
+	m.extend(im_preargs, args);
 
 	var newfunc = function () {
 		var me = arguments.callee;
@@ -90,12 +114,14 @@ MochiKit.Base.bind2 = function (func, self/* args... */)
 			self = this;
 		}
 
+		// todo: profile this, could precalculate (as the previous experimental imple did) the placeholders and nested bind etc but need to be sure it's worth it.
+		// (also shouldn't forget this impl. which doesn't use "naive" nested closures might be faster by default)
 		var args = [];
 		if (me.im_preargs.length > 0) {
 			var imax = 0;
 			for (var i = 0; i < me.im_preargs.length; ++i) {
 				var pa = me.im_preargs[i];
-				if (pa instanceof MochiKit.Base._arg_placeholder) {
+				if (pa instanceof m._arg_placeholder) {
 					imax = Math.max(imax, pa.index + 1);
 					pa = arguments[pa.index];
 				} else
@@ -135,7 +161,6 @@ MochiKit.Base.method2 = function(self, func)
 	var m = MochiKit.Base;
 	return m.bind2.apply(this, m.extend([func, self], arguments, 2));
 };
-
 
 MochiKit.Base.bindLate2 = function(func, self/* args... */)
 {
@@ -192,7 +217,7 @@ function apply(fn, var_args) // todo: name.. NS!
  * in-place algorithm. (todo: a functional version?)
  *
  * @see http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
- * Thou shalt not shuffle using a random comparator!
+ * Thou shalt not shuffle by sorting using a random comparator!
  * - You don't want to make same mistake M$ did ;) http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
  *
  * todo: take optional range, start & end, indices?
