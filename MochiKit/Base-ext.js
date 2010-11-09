@@ -27,6 +27,7 @@ MochiKit.Base._arg_placeholder = function(index)
 
 // following Boost's convention of using 1-based indices
 // todo: decide on placeholder name. (@1, #1, $1 €1, p1 ?!)
+// todo: could perhaps put these in an optional block? and expose the placeholder class to allow users to create their own.
 /** @const */
 var _1 = new MochiKit.Base._arg_placeholder(0);
 /** @const */
@@ -50,12 +51,40 @@ var _10 = new MochiKit.Base._arg_placeholder(9);
 // ...
 
 
+/**
+ * @private
+ * @return {!Object} dictionary of which empty slot indices that were used by args
+ */
+MochiKit.Base._rebind_preargs = function(im_preargs, args, filledSlots)
+{
+	filledSlots = filledSlots || {}; // should only be empty on first, non recursive, entry.
+
+	// fill any placeholder prearg slots
+	for (var i = 0; i < im_preargs.length; ++i) {
+		var pa = im_preargs[i];
+		if (pa instanceof MochiKit.Base._arg_placeholder) {
+			if (pa.index < args.length) {
+				im_preargs[i] = args[pa.index];
+				filledSlots[pa.index] = pa.index;
+			}
+			// ..else? (see "discussion" below)
+		} else
+		if (typeof pa == 'function' && typeof pa.im_func == 'function') {
+			MochiKit.Base._rebind_preargs(pa.im_preargs, args, filledSlots); // recurse nested binds
+		}
+	}
+	return filledSlots;
+};
 
 /**
  * should be fully compatible with the existing bind! passes all existing bind() test + my placeholder tests
  * (though not optimized)
+ * @param {!Function|string} func
+ * @param {Object|undefined} self
+ * @param {...*} var_args
+ * @return {!Function}
  */
-MochiKit.Base.bind2 = function (func, self/* args... */)
+MochiKit.Base.bind2 = function (func, self, var_args)
 {
 	if (typeof(func) == "string") {
 		func = self[func];
@@ -81,19 +110,11 @@ MochiKit.Base.bind2 = function (func, self/* args... */)
 	} else {
 		im_preargs = im_preargs.slice();
 	}
-	// fill any placeholder prearg slots
-	var filledSlots = {}; // dictionary of placeholder slots being filled
+
 	var args = Array.prototype.slice.call(arguments, 2);
-	for (var i = 0; i < im_preargs.length; ++i) {
-		var pa = im_preargs[i];
-		if (pa instanceof m._arg_placeholder) {
-			if (pa.index < args.length) {
-				im_preargs[i] = args[pa.index];
-				filledSlots[pa.index] = pa.index;
-			}
-			// ..else? (see "discussion" below)
-		}
-	}
+
+	var filledSlots = MochiKit.Base._rebind_preargs(im_preargs, args);
+
 	// remove possibly filled placeholders (need to remove afterwards to not mess up indices)
 	for (var index in filledSlots) {
 		args.splice(filledSlots[index], 1);
@@ -102,8 +123,7 @@ MochiKit.Base.bind2 = function (func, self/* args... */)
 	// 1. shouldn't we decrement indices for remaining slots? keep track of min/max?
 	// 2. what about gaps between slots? store counter to nr of args bound? (even if they won't be used due to gaps)
 	// 3. what should calling a function with less args than the slots indicate mean? throw? undefined?
-	// 4. you re-bind with another placeholder? collision? mixing?
-	// 5. shouldn't re-binding examine possibly nested binds also and handle their slots same way?
+	// 4. you re-bind with another placeholder? collision? mixing? -> boost: simply replace slot, no changes
 	// todo: dig deeper into how Boost bind handles these cases.
 	m.extend(im_preargs, args);
 

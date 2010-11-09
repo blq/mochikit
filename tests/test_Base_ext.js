@@ -170,5 +170,46 @@ tests.test_Base_ext = function (t) {
 
 	//----
 
+	(function(){
+
+		function f(a, b) {
+			return a + b;
+		}
+
+		function g(a, b, c) {
+			return a + b + c;
+		}
+
+		var fb = partial2(f, _1, _2);
+
+		var fbb = partial2(fb, _1, 10);
+
+		t.is(fbb(2), 12, 're-bind');
+
+
+		// these combose are verified from C++ boost
+		t.is( partial2(f, _1, 2)(2), 4);
+
+		t.is( partial2(partial2(f, _1, 2), 3)(), 5);
+
+		t.is( partial2(partial2(f, _1, 2), _2)(3, 13), 15, '_1 slot -> _2 slot. rebinding replaces placeholder slots.');
+		t.is( partial2(partial2(partial2(f, _1, 2), _2), 3, 13)(), 15, 'same as above but fully bound');
+
+		t.is( partial2(partial2(f, _1, _1), _2)(1, 3), 6, 'double _1 slots -> single _2 slot');
+		t.is( partial2(partial2(partial2(f, _1, _1), _2), 1, 3)(), 6, 'same as above but fully bound');
+
+		t.is( partial2(partial2(f, _2, _2), 123, _1)(1, 3), 2, 'double _2 slots -> single _1 slot');
+		t.is( partial2(partial2(partial2(f, _2, _2), 123, _1), 1, 3)(), 2, 'same as above but fully bound');
+
+		t.is( partial2(f, _2, partial2(f, _1, _2))(1, 2), 5);
+
+		t.is( partial2(partial2(f, _2, partial2(f, _1, _2)), 1, 2)(), 5);
+
+		t.is( partial2(partial2(f, _2, partial2(f, _1, _2)), _1, _1)(1, 123), 3, 'also nested binds have their slots replaced');
+
+	})();
+
+
+
 
 };
