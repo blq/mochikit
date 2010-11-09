@@ -126,7 +126,13 @@ tests.test_Iter_ext = function (t) {
 
 	//---------
 
+	// copy from test_Base.js
+    var flat = list(iflattenArray([1, "2", 3, [4, [5, [6, 7], 8, [], 9]]]));
+    var expect = [1, "2", 3, 4, 5, 6, 7, 8, 9];
+    t.is( repr(flat), repr(expect), "iflattenArray" );
+
 	t.eq(list(MochiKit.Iter.iflattenArray([ [1], [4,[5]], [],[[[]]],[9], [[4]] ])), [1,4,5,9,4], 'iflattenArray ok');
+
 
 	t.eq(list(MochiKit.Iter.indirectChain([ [1], [4,5], [9] ])), [1,4,5,9]);
 	t.eq(list(MochiKit.Iter.indirectChain([ iter([1]), iter([4,5]), [9] ])), [1,4,5,9]);
