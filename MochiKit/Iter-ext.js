@@ -269,6 +269,15 @@ MochiKit.Iter.indirectChain = function(seq, getIter) // .. ok name?
 };
 
 
+/**
+ * useful convenience(?)
+ */
+MochiKit.Iter.breakIt = function()
+{
+	throw MochiKit.Iter.StopIteration;
+};
+
+
 
 MochiKit.Iter_ext.__new__ = function() {
 	// NOP ...
