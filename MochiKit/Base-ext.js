@@ -130,6 +130,7 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 	// todo: dig deeper into how Boost bind handles these cases.
 	m.extend(im_preargs, args);
 
+	// todo: could easily optimize a fast path version (i.e identical to existing bind) here in the case no placeholders were used
 	var newfunc = function () {
 		var me = arguments.callee;
 		var self = me.im_self;
@@ -264,7 +265,7 @@ function apply(fn, var_args) // todo: name.. NS!
  * @param {!Array} values
  * @return {!Array} chained, values array shuffled
  */
-MochiKit.Base.shuffleArray = function(values)
+MochiKit.Base.shuffleArray = function(values) // support a sub-range?
 {
 	// Durstenfeld's algorithm
 	for (var i = values.length - 1; i > 0; --i) {
@@ -281,9 +282,7 @@ MochiKit.Base.shuffleArray = function(values)
 /**
  * Generates a unique random range of numbers from 0..N-1 (or rather f(0)..f(N-1) ) (no number occurs twice) (think dealing a deck of cards)
  * O(N)
- *
  * todo: create an iterator based impl? (needs a quite different algo though, using a specific rand method)
- * todo: create an in-place version (taking an array)?
  *
  * @id MochiKit.Base.deal
  * @param {integer} numItems
@@ -295,18 +294,55 @@ MochiKit.Base.deal = function(numItems, func)
 	func = func || MochiKit.Base.operator.identity; // default pass-through, function(i) { return i; }
 
 	var deck = new Array(numItems);
-
 	for (var i = 0; i < numItems; ++i) {
 		var j = Math.floor(Math.random() * (i + 1));
 		deck[j] = func(i);
 		deck[i] = deck[j];
 	}
-
 	return deck;
 };
 
 
-// todo: partition, binarySearch, isSorted, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
+/**
+ * in-place partitioning (not stable). O(N)
+ * @param {!Array} array
+ * @param {?(function(*, *): boolean)=} [cmp=<] ordering, default <  (or allow acomplete comparator with -1, 0, +1 return?)
+ * @param {integer=} [left=0]
+ * @param {integer=} [right=array.length-1]
+ * @param {integer=} [pivotIndex=middle] // or move this to an optional pickPivot(array, left, right) function?
+ * @return {integer} location of the pivot element. todo: hmm, or return a tuple with the array + index? (would allow functional use also)
+ */
+MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
+{
+	cmp = cmp || MochiKit.Base.operator.le; // todo: ! default < is not very useful, should default to a mochikit.compare based ordering operator instead
+	left = left || 0;
+	right = right || array.length - 1;
+	pivotIndex = pivotIndex || (left + Math.floor((right - left) / 2)); // middle elem, could use median of three, random etc
+
+	function swap(i, j) {
+		var tmp = array[i];
+		array[i] = array[j];
+		array[j] = tmp;
+	}
+
+	var pivotValue = array[pivotIndex];
+	swap(pivotIndex, right); // Move pivot to end
+
+	var storeIndex = left;
+	for (var i = left; i <= right; ++i) {
+		if (cmp(array[i], pivotValue)) {
+			swap(i, storeIndex);
+			++storeIndex;
+		}
+	}
+
+	swap(storeIndex, right); // Move pivot to its final place
+	return storeIndex;
+};
+
+
+// todo: stablePartition, binarySearch, isSorted, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
+
 
 MochiKit.Base_ext.__new__ = function() {
 	// NOP ...
