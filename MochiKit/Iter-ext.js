@@ -177,13 +177,15 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
  * sliding-window iterator, generalized pairView
  * tood: decide on howto handle ending, need logic caese to handle clamping, wraparound etc (see pairView and wrapLast for example)
  * @param {!Iterable} iterable
- * @param {integer} windowSize
+ * @param {integer=} [windowSize=2] defaults to pair-size
  * @param {integer=} [stepSize=1]
- * @return {!Iterable}
+ * @return {!Iterable.<!Array>}
  */
 MochiKit.Iter.windowView = function(iterable, windowSize, stepSize)
 {
+	windowSize = windowSize || 2;
 	stepSize = stepSize || 1;
+
 	var it = MochiKit.Iter.iter(iterable);
 	var win = [];
 
