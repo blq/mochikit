@@ -270,7 +270,8 @@ MochiKit.Iter.iflattenArray = function(root)
 
 /**
  * one level flattening of a sequence of iterables
- * generalized chain (intended for larger volumes, think nodes->values of a tree-structure)
+ * generalized chain (intended for larger volumes, think nodes->values of a tree-structure).
+ * Can be used to traverse grouby sequences: indirectChain(groupby([1,1,1,2,2,3,3]), function(v) { return v[1]; }) -> [1,1,1,2,2,3,3] i.e an inverse of the groupby)
  * @param {!Iterable} seq
  * @param {(function(*): !Iterable)=} [getIter] get second level iterator. optional, default iter.
  * @return {!Iterable}
@@ -308,6 +309,7 @@ MochiKit.Iter.indirectChain = function(seq, getIter) // .. ok name?
 /**
  * filters out adjacent equal elements.
  * kindof equivalent to: imap(function(v){ return v[0]; }, groupby(iterable))
+ * @see http://www.sgi.com/tech/stl/unique.html
  * @param {!Iterable} iterable
  * @param {(function(*, *): boolean)=} [pred=eq]
  * @return {!Iterable}
@@ -330,7 +332,7 @@ MochiKit.Iter.uniqueView = function(iterable, pred)
 				prev = it.next();
 				return prev;
 			}
-
+			// todo: optimize by swapping impl by setting this.next?
 			var val = it.next();
 			while (pred(prev, val))
 				val = it.next();
@@ -339,6 +341,50 @@ MochiKit.Iter.uniqueView = function(iterable, pred)
 		}
 	};
 };
+
+
+/**
+ * resembles nested loops over the input sequences
+ * @see http://docs.python.org/library/itertools.html#itertools.product
+ * @param {!Iterable} iterable
+ * @param {...!Iterable} var_args // ! observe that subsequent iterables must be _iterables_, Mot _iterators_ so that the sequences can be "restarted"!
+ * @return {}
+ * .. will Apple sue us for this name? ;)
+ */
+MochiKit.Iter.iproduct = function(iterable, var_args)
+{
+	// first impl. only supports two args
+	var sa = arguments[0], sb = arguments[1];
+
+	var it = MochiKit.Iter.iter(sa);
+	var jt = null;
+
+	var a, b;
+
+	return {
+		repr: function() { return "iproduct(...)"; },
+		toString: MochiKit.Base.forwardCall("repr"),
+
+		next: function() {
+			while (true) {
+				if (jt == null) {
+					a = it.next();
+					jt = MochiKit.Iter.iter(sb); // ! here we assume 'sb' will return a _new_ iterator
+				}
+
+				try {
+					b = jt.next();
+					return [a, b];
+				} catch (e) {
+					if (e != MochiKit.Iter.StopIteration)
+						throw e;
+					jt = null;
+				}
+			}
+		}
+	};
+};
+
 
 
 /**

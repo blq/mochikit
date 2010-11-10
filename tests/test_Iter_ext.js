@@ -156,7 +156,7 @@ tests.test_Iter_ext = function (t) {
 	t.eq(list(MochiKit.Iter.indirectChain([ [1], [4,5], [9] ])), [1,4,5,9]);
 	t.eq(list(MochiKit.Iter.indirectChain([ iter([1]), iter([4,5]), [9] ])), [1,4,5,9]);
 
-
+	t.eq(list(indirectChain(groupby([1,1,1,2,2,3,3]), function(v) { return v[1]; })), [1,1,1,2,2,3,3], 'indirectChain complements groupby');
 	//------
 
 	t.eq( list(uniqueView([1,2,3,4])), [1,2,3,4]);
@@ -164,5 +164,8 @@ tests.test_Iter_ext = function (t) {
 	t.eq( list(uniqueView([1])), [1]);
 	t.eq( list(uniqueView([])), []);
 	t.eq( list(uniqueView([1,1,1,1])), [1]);
+
+	//----
+	t.eq( list(iproduct([1, 2, 3], ['a', 'b'])), [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b'], [3, 'a'], [3, 'b']], '');
 
 };
