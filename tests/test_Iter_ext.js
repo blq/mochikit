@@ -117,11 +117,30 @@ tests.test_Iter_ext = function (t) {
 */
 	}
 
+	function testWindowIter()
+	{
+		var range = [ 1, 2, 3, 4, 5 ];
+
+		var values = MochiKit.Iter.list(
+			MochiKit.Iter.windowView(range)
+		);
+
+		t.is(MochiKit.Base.compare(values, [ [1, 2], [2, 3], [3, 4], [4, 5] ]), 0, 'windowView(nonEmpty)');
+
+
+		var singlePair = MochiKit.Iter.list(
+			MochiKit.Iter.windowView([1, 2])
+		);
+
+		t.is(MochiKit.Base.compare(singlePair, [ [1, 2] ]), 0, 'windowView(singlePair)');
+	}
+
 	// run tests
 	testTreePreOrderIter();
 	testTreeLevelOrderIter();
 	testTreePostOrderIter();
 	testPairIter();
+	testWindowIter();
 	// todo: leafParentIter
 
 	//---------
