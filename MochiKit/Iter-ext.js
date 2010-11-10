@@ -143,12 +143,9 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
 
 	// grab first element and handle case of empty input (mustn't throw StopIter until in the actual iter object)
 	// (we do this stuff up-front to reduce amount of logic in the main iter .next below. hmm, or change this? not quite sure if one might expect any iter err to only show up on first .next?)
-	try
-	{
+	try {
 		var elem0 = it.next();
-	}
-	catch (e)
-	{
+	} catch (e) {
 		if (e != MochiKit.Iter.StopIteration)
 			throw e;
 		// return empty dummy iter that re-throws the StopIter
@@ -171,6 +168,44 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
 			var pair = [ elem0, elem1 ];
 			elem0 = elem1;
 			return pair;
+		}
+	};
+};
+
+
+/**
+ * sliding-window iterator, generalized pairView
+ * tood: decide on howto handle ending, need logic caese to handle clamping, wraparound etc (see pairView and wrapLast for example)
+ * @param {!Iterable} iterable
+ * @param {integer} windowSize
+ * @param {integer=} [stepSize=1]
+ * @return {!Iterable}
+ */
+MochiKit.Iter.windowView = function(iterable, windowSize, stepSize)
+{
+	stepSize = stepSize || 1;
+	var it = MochiKit.Iter.iter(iterable);
+	var win = [];
+
+	// naive impementation. could add fast-path for Array input, if stepSize is "large" window should be rebuilt etc.
+	return {
+		repr: function() { return "windowView(...)"; },
+		toString: MochiKit.Base.forwardCall("repr"),
+
+		next: function() {
+			if (win.length < windowSize) {
+				// first call, fill window
+				while (win.length < windowSize)
+					win.push(it.next());
+			} else {
+				// slide
+				for (var i = 0; i < stepSize; ++i) {
+					win.shift();
+					win.push(it.next());
+				}
+			}
+
+			return win.slice();
 		}
 	};
 };
@@ -213,8 +248,7 @@ MochiKit.Iter.iflattenArray = function(root)
 		toString: MochiKit.Base.forwardCall("repr"),
 
 		next: function() {
-			while (true)
-			{
+			while (true) {
 				if (queue.length == 0)
 					throw MochiKit.Iter.StopIteration;
 
