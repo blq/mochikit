@@ -157,4 +157,12 @@ tests.test_Iter_ext = function (t) {
 	t.eq(list(MochiKit.Iter.indirectChain([ iter([1]), iter([4,5]), [9] ])), [1,4,5,9]);
 
 
+	//------
+
+	t.eq( list(uniqueView([1,2,3,4])), [1,2,3,4]);
+	t.eq( list(uniqueView([1,1, 2,3,4,4,4])), [1,2,3,4]);
+	t.eq( list(uniqueView([1])), [1]);
+	t.eq( list(uniqueView([])), []);
+	t.eq( list(uniqueView([1,1,1,1])), [1]);
+
 };

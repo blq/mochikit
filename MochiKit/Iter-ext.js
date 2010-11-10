@@ -306,6 +306,42 @@ MochiKit.Iter.indirectChain = function(seq, getIter) // .. ok name?
 
 
 /**
+ * filters out adjacent equal elements.
+ * kindof equivalent to: imap(function(v){ return v[0]; }, groupby(iterable))
+ * @param {!Iterable} iterable
+ * @param {(function(*, *): boolean)=} [pred=eq]
+ * @return {!Iterable}
+ */
+MochiKit.Iter.uniqueView = function(iterable, pred)
+{
+	pred = pred || MochiKit.Base.operator.eq;
+
+	var it = MochiKit.Iter.iter(iterable);
+	var first = true;
+	var prev;
+
+	return {
+		repr: function() { return "uniqueView(...)"; },
+		toString: MochiKit.Base.forwardCall("repr"),
+
+		next: function() {
+			if (first) {
+				first = false;
+				prev = it.next();
+				return prev;
+			}
+
+			var val = it.next();
+			while (pred(prev, val))
+				val = it.next();
+			prev = val;
+			return val;
+		}
+	};
+};
+
+
+/**
  * useful convenience(?)
  */
 MochiKit.Iter.breakIt = function()
