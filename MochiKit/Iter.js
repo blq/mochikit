@@ -75,7 +75,11 @@ MochiKit.Base.update(MochiKit.Iter, {
         };
     },
 
-    /** @id MochiKit.Iter.cycle */
+    /**
+     * @id MochiKit.Iter.cycle
+     * todo: add a fast path for Array?
+     * todo: should indicate the additional memory in the docs
+     */
     cycle: function (p) {
         var self = MochiKit.Iter;
         var m = MochiKit.Base;
@@ -258,7 +262,10 @@ MochiKit.Base.update(MochiKit.Iter, {
         };
     },
 
-    /** @id MochiKit.Iter.applymap */
+    /**
+	 * side note: in Python this is called 'starmap'.
+     * @id MochiKit.Iter.applymap
+     */
     applymap: function (fun, seq, self) {
         seq = MochiKit.Iter.iter(seq);
         var m = MochiKit.Base;
