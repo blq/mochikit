@@ -217,7 +217,7 @@ MochiKit.Base.bindLate2 = function(func, self, var_args)
  */
 MochiKit.Base.isBoundFunction = function(fn)
 {
-	return typeof fn.im_func == 'function'; // && fn.im_preargs != 'undefined' ?
+	return typeof fn == 'function' && typeof fn.im_func == 'function'; // && fn.im_preargs != 'undefined' ?
 };
 
 //---------------------------------
