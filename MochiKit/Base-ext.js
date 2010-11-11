@@ -6,7 +6,7 @@
  *
  */
 
-if (typeof goog != 'undefined' && typeof goog.base == 'function') {
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.provide('MochiKit.Base_ext');
 
 	goog.require('MochiKit.Base');
