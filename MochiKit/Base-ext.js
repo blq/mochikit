@@ -268,15 +268,14 @@ function apply(fn, var_args) // todo: name.. NS!
  * - You don't want to make same mistake M$ did ;) http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
  *
  * todo: take optional range, start & end, indices?
- * todo: create an iterator based impl. ishuffle
- * todo: take a custom getter and setter funcs instead of just whole elem swaps?
- * todo: support a generator?
+ * todo: take a custom getter and setter funcs instead of just whole elem swaps? (though this yearns for a custom iterator concept..)
+ * todo: support a generator? custom rand fn?
  *
  * @id MochiKit.Base.shuffle
  * @param {!Array} values
  * @return {!Array} chained, values array shuffled
  */
-MochiKit.Base.shuffleArray = function(values) // support a sub-range?
+MochiKit.Base.shuffleArray = function(values)
 {
 	// Durstenfeld's algorithm
 	for (var i = values.length - 1; i > 0; --i) {
@@ -338,7 +337,7 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 	}
 
 	var pivotValue = array[pivotIndex];
-	swap(pivotIndex, right); // Move pivot to end
+	swap(pivotIndex, right); // move pivot to end
 
 	var storeIndex = left;
 	for (var i = left; i <= right; ++i) {
@@ -348,7 +347,7 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 		}
 	}
 
-	swap(storeIndex, right); // Move pivot to its final place
+	swap(storeIndex, right); // move pivot to its final place
 	return storeIndex;
 };
 
