@@ -46,7 +46,7 @@ API Reference
 Functions
 ---------
 
-:mochidef:`levenshteinDistance(s, t, allowTransposition)`:
+:mochidef:`levenshteinDistance(s, t, allowTransposition=false)`:
 
     Computes the Levenshtein distance [1]_ between two strings.
 
