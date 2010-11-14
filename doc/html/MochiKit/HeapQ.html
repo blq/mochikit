@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.8: http://docutils.sourceforge.net/" />
+<title>MochiKit.HeapQ - Heap queue algorithm</title>
+
+<link rel="stylesheet" href="../../../include/css/documentation.css" type="text/css" />
+<script type="text/javascript" src="../../../MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="../../js/toc.js"></script>
+</head>
+<body>
+<a href="http://mochikit.com"><img id="mainlink" src="../../../include/img/g_logo_doc.gif" alt="MochiKit" /></a>
+<a class='indexlink' href='index.html'>Back to docs index</a>
+<div class="document">
+<div class="section" id="name">
+<h1>Name</h1>
+<p>MochiKit.HeapQ - Heap queue algorithm</p>
+<dl class="docutils">
+<dt><em>Availability</em>:</dt>
+<dd>Available in MochiKit 1.5+</dd>
+</dl>
+</div>
+<div class="section" id="synopsis">
+<h1>Synopsis</h1>
+<pre class="literal-block">
+var h = [];
+heapPush(h, [5, 'write code']);
+heapPush(h, [7, 'release product']);
+heapPush(h, [1, 'write spec']);
+heapPush(h, [3, 'create tests']);
+heapPop(h);
+-&gt; [1, 'write spec']
+</pre>
+</div>
+<div class="section" id="description">
+<h1>Description</h1>
+<p>This module provides an implementation of the heap queue algorithm, also known as the priority queue algorithm.
+Currently this is basically a clone/port of the Python heapq module, <a class="reference external" href="http://docs.python.org/library/heapq.html">http://docs.python.org/library/heapq.html</a></p>
+</div>
+<div class="section" id="dependencies">
+<h1>Dependencies</h1>
+<ul class="simple">
+<li><a class="mochiref reference external" href="Base.html">MochiKit.Base</a></li>
+<li><a class="mochiref reference external" href="Iter.html">MochiKit.Iter</a></li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h1>Overview</h1>
+<p>ASDF ASDF</p>
+</div>
+<div class="section" id="api-reference">
+<h1>API Reference</h1>
+<div class="section" id="functions">
+<h2>Functions</h2>
+<p>
+<a name="fn-heappush"></a>
+<a class="mochidef reference external" href="#fn-heappush">heapPush(heap, item[, cmp])</a>:</p>
+<blockquote>
+Push the value <tt class="docutils literal">item</tt> onto the <tt class="docutils literal">heap</tt>, maintaining the heap invariant.</blockquote>
+<p>
+<a name="fn-heappop"></a>
+<a class="mochidef reference external" href="#fn-heappop">heapPop(heap[, cmp])</a>:</p>
+<blockquote>
+Pop the smallest item off the <tt class="docutils literal">heap</tt>, maintaining the heap invariant.</blockquote>
+<p>
+<a name="fn-heappushpop"></a>
+<a class="mochidef reference external" href="#fn-heappushpop">heapPushPop(heap, item[, cmp])</a>:</p>
+<blockquote>
+Push <tt class="docutils literal">item</tt> on the <tt class="docutils literal">heap</tt>, then pop and return the smallest item from the heap. The combined action runs more
+efficiently than <a class="mochiref reference external" href="#fn-heappush">heapPush()</a> followed by a separate call to <a class="mochiref reference external" href="#fn-heappop">heapPop()</a>.</blockquote>
+<p>
+<a name="fn-heapify"></a>
+<a class="mochidef reference external" href="#fn-heapify">heapify(x[, cmp])</a>:</p>
+<blockquote>
+Transform array <tt class="docutils literal">x</tt> into a heap, in-place, in linear time.</blockquote>
+<p>
+<a name="fn-heapreplace"></a>
+<a class="mochidef reference external" href="#fn-heapreplace">heapReplace(heap, item[, cmp])</a>:</p>
+<blockquote>
+<p>Pop and return the smallest item from the heap, and also push the new item. The heap size doesn’t change. If the heap is empty, IndexError is raised.</p>
+<p>This one step operation is more efficient than a <a class="mochiref reference external" href="#fn-heappop">heapPop()</a> followed by <a class="mochiref reference external" href="#fn-heappush">heapPush()</a> and can be
+more appropriate when using a fixed-size heap. The pop/push combination always returns an element from the heap and replaces it with item.</p>
+<p>The value returned may be larger than the item added. If that isn’t desired, consider using <a class="mochiref reference external" href="#fn-heappushpop">heapPushPop()</a> instead. Its push/pop
+combination returns the smaller of the two values, leaving the larger value on the heap.</p>
+</blockquote>
+<p>
+<a name="fn-imergesorted"></a>
+<a class="mochidef reference external" href="#fn-imergesorted">imergeSorted(iterables[, cmp])</a>:</p>
+<blockquote>
+<p>Merge multiple sorted inputs into a single sorted output (for example, merge timestamped entries from multiple log files).
+Returns an iterator over the sorted values.</p>
+<p>Similar to <tt class="docutils literal">sorted(chain(iterables))</tt> but returns an iterable, does not pull the data into memory all at once, and
+assumes that each of the input streams is already sorted (smallest to largest).</p>
+</blockquote>
+</div>
+</div>
+<div class="section" id="see-also">
+<h1>See Also</h1>
+<table class="docutils footnote" frame="void" id="id1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>Heap: <a class="reference external" href="http://en.wikipedia.org/wiki/Heap_(data_structure">http://en.wikipedia.org/wiki/Heap_(data_structure</a>)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td>Python's heapq module: <a class="reference external" href="http://docs.python.org/library/heapq.html">http://docs.python.org/library/heapq.html</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="authors">
+<h1>Authors</h1>
+<ul class="simple">
+<li>Fredrik Blomqvist &lt;fblomqvist at gmail.com&gt;</li>
+</ul>
+</div>
+<div class="section" id="copyright">
+<h1>Copyright</h1>
+<p>Copyright 2005 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
+dual-licensed free software; you can redistribute it and/or modify it
+under the terms of the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a> or the <a class="reference external" href="http://www.opensource.org/licenses/afl-2.1.php">Academic Free License
+v2.1</a>.</p>
+</div>
+</div>
+
+</body>
+</html>

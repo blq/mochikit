@@ -26,6 +26,7 @@ MochiKit - makes JavaScript suck a bit less
 - :mochiref:`MochiKit.Base-ext` - even more functional programming
 - :mochiref:`MochiKit.Iter-ext` - even more iterators
 - :mochiref:`MochiKit.Text-ext` - more text/string algorithms
+- :mochiref:`MochiKit.HeapQ` - Heap queue algorithm
 
 
 Notes
