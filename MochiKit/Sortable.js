@@ -7,7 +7,6 @@ See scriptaculous.js for full license.
 ***/
 
 if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
-{
 	goog.provide('MochiKit.Sortable');
 
 	goog.require('MochiKit.Base');
