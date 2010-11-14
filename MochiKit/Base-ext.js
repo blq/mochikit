@@ -6,7 +6,7 @@
  *
  */
 
-if (typeof goog != 'undefined' && typeof goog.base == 'function') {
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.provide('MochiKit.Base_ext');
 
 	goog.require('MochiKit.Base');
@@ -280,6 +280,7 @@ MochiKit.Base.shuffleArray = function(values) // support a sub-range?
 
 
 /**
+ * todo: drop? no significant advantage of this compared to (mapping) a shuffle..
  * Generates a unique random range of numbers from 0..N-1 (or rather f(0)..f(N-1) ) (no number occurs twice) (think dealing a deck of cards)
  * O(N)
  * todo: create an iterator based impl? (needs a quite different algo though, using a specific rand method)
@@ -296,8 +297,8 @@ MochiKit.Base.deal = function(numItems, func)
 	var deck = new Array(numItems);
 	for (var i = 0; i < numItems; ++i) {
 		var j = Math.floor(Math.random() * (i + 1));
-		deck[j] = func(i);
 		deck[i] = deck[j];
+		deck[j] = func(i);
 	}
 	return deck;
 };
@@ -314,7 +315,7 @@ MochiKit.Base.deal = function(numItems, func)
  */
 MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 {
-	cmp = cmp || MochiKit.Base.operator.le; // todo: ! default < is not very useful, should default to a mochikit.compare based ordering operator instead
+	cmp = cmp || MochiKit.Base.operator.cle; // or clt?
 	left = left || 0;
 	right = right || array.length - 1;
 	pivotIndex = pivotIndex || (left + Math.floor((right - left) / 2)); // middle elem, could use median of three, random etc
@@ -342,6 +343,10 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 
 
 // todo: stablePartition, binarySearch, isSorted, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
+
+
+//------------------
+
 
 
 MochiKit.Base_ext.__new__ = function() {
