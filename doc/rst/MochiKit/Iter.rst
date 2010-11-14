@@ -80,6 +80,8 @@ Functions
     ``applymap(fun, seq)`` -->
     fun.apply(self, seq0), fun.apply(self, seq1), ...
 
+    (In Python this is called ``starmap``)
+
     *Availability*:
         Available in MochiKit 1.3.1+
 
