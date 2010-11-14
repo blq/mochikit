@@ -15,7 +15,7 @@ TEMPLATE = u"""%(html_prolog)s
 <head>
 %(html_head)s
 <link rel="stylesheet" href="../../../include/css/documentation.css" type="text/css" />
-<script type="text/javascript" src="../../../packed/MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="../../../MochiKit/MochiKit.js"></script>
 <script type="text/javascript" src="../../js/toc.js"></script>
 </head>
 <body>
@@ -66,7 +66,7 @@ def role_mochidef(role, rawtext, text, lineno, inliner, options=None, content=[]
     return [anchor, node], []
 
 roles.register_canonical_role('mochidef', role_mochidef)
-        
+
 
 
 def main():
