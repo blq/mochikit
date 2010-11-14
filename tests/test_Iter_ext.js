@@ -153,10 +153,10 @@ tests.test_Iter_ext = function (t) {
 	t.eq(list(MochiKit.Iter.iflattenArray([ [1], [4,[5]], [],[[[]]],[9], [[4]] ])), [1,4,5,9,4], 'iflattenArray ok');
 
 
-	t.eq(list(MochiKit.Iter.indirectChain([ [1], [4,5], [9] ])), [1,4,5,9]);
-	t.eq(list(MochiKit.Iter.indirectChain([ iter([1]), iter([4,5]), [9] ])), [1,4,5,9]);
+	t.eq(list(MochiKit.Iter.chainFromIter([ [1], [4,5], [9] ])), [1,4,5,9]);
+	t.eq(list(MochiKit.Iter.chainFromIter([ iter([1]), iter([4,5]), [9] ])), [1,4,5,9]);
 
-	t.eq(list(indirectChain(groupby([1,1,1,2,2,3,3]), function(v) { return v[1]; })), [1,1,1,2,2,3,3], 'indirectChain complements groupby');
+	t.eq(list(chainFromIter(groupby([1,1,1,2,2,3,3]), function(v) { return v[1]; })), [1,1,1,2,2,3,3], 'indirectChain complements groupby');
 	//------
 
 	t.eq( list(uniqueView([1,2,3,4])), [1,2,3,4]);
