@@ -42,6 +42,7 @@ Extends the existing :mochiref:`MochiKit.Iter` namespace
 Dependencies
 ============
 
+- :mochiref:`MochiKit.Base`
 - :mochiref:`MochiKit.Iter`
 
 
