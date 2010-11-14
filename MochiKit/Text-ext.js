@@ -141,9 +141,6 @@ MochiKit.Text.humanStringCompare = function(a, b)
 		}
 
 		// a0 and b0 now both have same type, either string (lowercase) or integer, and can be compared safely
-		if (typeof a0 != typeof b0)
-			logDebug('strcmp4humans: BUG! both segments must have same type');
-
 		if (a0 < b0) return -1;
 		if (a0 > b0) return +1;
 

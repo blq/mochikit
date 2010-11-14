@@ -209,6 +209,17 @@ MochiKit.Base.bindLate2 = function(func, self, var_args)
 	return m.bind2.apply(this, args);
 };
 
+
+/**
+ * name too similar to ES5?
+ * @param {!Function} fn
+ * @return {boolean}
+ */
+MochiKit.Base.isBoundFunction = function(fn)
+{
+	return typeof fn == 'function' && typeof fn.im_func == 'function'; // && fn.im_preargs != 'undefined' ?
+};
+
 //---------------------------------
 
 /**
@@ -343,6 +354,7 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 
 
 // todo: stablePartition, binarySearch, isSorted, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
+// makeHeap, popHeap, pushHeap, sortHeap, isHeap (+ prio queue)
 
 
 //------------------

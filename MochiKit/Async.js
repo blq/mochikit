@@ -18,6 +18,7 @@ MochiKit.Base._module('Async', '1.5', ['Base']);
 
 /**
  * @id MochiKit.Async.Deferred
+ * @param {Function=} [canceller]
  * @constructor
  */
 MochiKit.Async.Deferred = function (/* optional */ canceller) {
@@ -32,7 +33,7 @@ MochiKit.Async.Deferred = function (/* optional */ canceller) {
     this.finalized = false;
 };
 
-    /** @id MochiKit.Async.Deferred.prototype.repr */
+/** @id MochiKit.Async.Deferred.prototype.repr */
 MochiKit.Async.Deferred.prototype.repr = function () {
 	return 'Deferred(' + this.id + ', ' + this.state() + ')';
 };

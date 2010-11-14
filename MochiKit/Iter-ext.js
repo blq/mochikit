@@ -348,9 +348,10 @@ MochiKit.Iter.uniqueView = function(iterable, pred)
  * todo: ! this version currently only supports two input sequences
  * resembles nested loops over the input sequences
  * @see http://docs.python.org/library/itertools.html#itertools.product
+ * ! currently only supports two input ranges
  * @param {!Iterable} iterable
  * @param {...!Iterable} var_args // ! observe that subsequent iterables must be _iterables_, Mot _iterators_ so that the sequences can be "restarted"!
- * @return {}
+ * @return {!Iterable.<!Array>}
  * .. will Apple sue us for this name? ;)
  */
 MochiKit.Iter.iproduct = function(iterable, var_args)
@@ -371,7 +372,7 @@ MochiKit.Iter.iproduct = function(iterable, var_args)
 			while (true) {
 				if (jt == null) {
 					a = it.next();
-					jt = MochiKit.Iter.iter(sb); // ! here we assume 'sb' will return a _new_ iterator
+					jt = MochiKit.Iter.iter(sb); // ! here we assume 'sb' will return a _new_ iterator to the beginning
 				}
 
 				try {
