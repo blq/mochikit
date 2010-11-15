@@ -353,11 +353,8 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 
 
 // todo: stablePartition, binarySearch, isSorted, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
-// makeHeap, popHeap, pushHeap, sortHeap, isHeap (+ prio queue)
-
 
 //------------------
-
 
 
 MochiKit.Base_ext.__new__ = function() {
