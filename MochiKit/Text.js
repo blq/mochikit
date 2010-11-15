@@ -134,13 +134,13 @@ MochiKit.Text.truncate = function (str, maxLength, tail) {
  * max + 1 elements in the returned list.
  *
  * @param {string} str the string to split
- * @param {string} [separator] the separator character to use,
+ * @param {String|RegExp} [separator] the separator char or regexp to use,
  *            defaults to newline
- * @param {Int} [max] the maximum number of parts to return
+ * @param {Number} [max] the maximum number of parts to return
  * @return {Array} an array of parts of the string
  */
 MochiKit.Text.split = function (str, separator, max) {
-    if (str == null || str.length == 0) {
+    if (str == null) {
         return str;
     }
     separator = separator || '\n';
@@ -158,13 +158,13 @@ MochiKit.Text.split = function (str, separator, max) {
  * using splits from the right
  *
  * @param {string} str the string to split
- * @param {string} [separator] the separator character to use,
+ * @param {String|RegExp} [separator] the separator char or regexp to use,
  *            defaults to newline
- * @param {Int} [max] the maximum number of parts to return
+ * @param {Number} [max] the maximum number of parts to return
  * @return {Array} an array of parts of the string
  */
 MochiKit.Text.rsplit = function (str, separator, max) {
-    if (str == null || str.length == 0) {
+    if (str == null) {
         return str;
     }
     separator = separator || '\n';
@@ -231,7 +231,7 @@ MochiKit.Text.format = function (pattern/*, ...*/) {
 /**
  * Format a value with the specified format specifier.
  *
- * @param {string/Object} spec the format specifier string or parsed
+ * @param {string|Object} spec the format specifier string or parsed
  *            format specifier object
  * @param {Object} value the value to format
  * @param {Object} [locale] the locale to use, defaults to
@@ -570,7 +570,7 @@ MochiKit.Text._truncToPercent = function (value, precision) {
  * @property {string} pattern The format pattern string.
  * @property {number} pos The position of the error.
  * @property {string} message The error message text.
- * @extends MochiKit.Base.NamedError
+ * @extends {MochiKit.Base.NamedError}
  * @constructor
  */
 MochiKit.Text.FormatPatternError = function (pattern, pos, message) {
