@@ -1,5 +1,5 @@
 /**
- * example PrioQueue with interface from http://hepunx.rl.ac.uk/BFROOT/dist/packages/boost/V01-27-00-04/libs/pri_queue/p_queue.html
+ * example priority-queue class with interface from http://hepunx.rl.ac.uk/BFROOT/dist/packages/boost/V01-27-00-04/libs/pri_queue/p_queue.html
  * (apart from value return in pop)
  * Shows how to create a wrapper around the heap functions.
  * todo: parametrice on heap algorithm (now uses HeapQ)
@@ -33,6 +33,7 @@ PriorityQueue.prototype.size = function()
 
 
 /**
+ * enqueue
  * @param {*} item
  */
 PriorityQueue.prototype.push = function(item)
@@ -41,6 +42,7 @@ PriorityQueue.prototype.push = function(item)
 };
 
 /**
+ * dequeue
  * @return {*}
  */
 PriorityQueue.prototype.pop = function()
@@ -75,4 +77,3 @@ PriorityQueue.prototype.__iterable__ = function()
 };
 
 // .. + sorted?
-
