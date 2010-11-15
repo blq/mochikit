@@ -254,18 +254,44 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 
 
 /**
- * example code for heap sort
+ * Test if Array lst fulfills the heap invariant
+ * @param {!Array} lst
+ * @param {BinaryComparator=} [cmp]
+ * @return {boolean}
+ */
+MochiKit.HeapQ.isHeap = function(lst, cmp)
+{
+	cmp = cmp || MochiKit.Base.operator.clt;
+
+	var n = Math.floor(lst.length / 2) - 1;
+	if (n <= 0)
+		return true;
+
+	for (var i = 0; i < n; ++i) {
+		if (!(cmp(lst[i], lst[2*i+1]) && cmp(lst[i], lst[2*i+2])))
+			return false;
+	}
+	return true;
+};
+
+
+// todo: heapMerge? useful? or just "misleading"? since it's O(N) in this case, since we simply need to re-heapify the two heaps anyway..
+
+
+/**
+ * example code for heap sort.
+ * Does Not run in-place.
  * Equivalent to sorted(iterable)
  * @param {!Iterable} iterable
  * @return {!Array}
  */
-MochiKit.HeapQ.heapsort = function(iterable)
+MochiKit.HeapQ.heapSort = function(iterable, cmp)
 {
 	var m = MochiKit;
 
-	var h = [];
-	m.Iter.forEach(iterable, m.Base.partial(m.HeapQ.heapPush, h)); // todo: isn't it better to use heapify?
-	return m.Base.map(m.Base.partial(m.HeapQ.heapPop, h), m.Iter.range(h.length));
+	var h = m.Iter.list(iterable);
+	m.HeapQ.heapify(h, cmp);
+	return m.Base.map(m.Base.partial(m.HeapQ.heapPop, h, cmp), m.Iter.range(h.length));
 };
 
 
