@@ -173,12 +173,19 @@ Functions
      see also http://www.sgi.com/tech/stl/unique.html
 
 
-:mochidef:`iproduct = function(a, b[, ...])`:
+:mochidef:`iproduct(a, b[, ...])`:
 
     resembles nested loops over the input sequences
     see http://docs.python.org/library/itertools.html#itertools.product
 
-    todo: ! currently only supports two input ranges
+    todo: ! currently only supports two input sequences
+
+
+:mochidef:`enumerate(sequence[, start=0])`:
+
+    Convenience wrapper for :mochiref:`MochiKit.Iter.izip` and :mochiref:`MochiKit.Iter.count`.
+    Returns an iterator over ``[index, seqence{i}]`` pairs.
+
 
 
 
@@ -202,7 +209,7 @@ Authors
 Copyright
 =========
 
-Copyright 2005 Bob Ippolito <bob@redivi.com>. This program is
+Copyright 2005-2010 Bob Ippolito <bob@redivi.com>. This program is
 dual-licensed free software; you can redistribute it and/or modify it
 under the terms of the `MIT License`_ or the `Academic Free License
 v2.1`_.

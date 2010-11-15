@@ -181,12 +181,18 @@ kindof equivalent to: <tt class="docutils literal">imap(function(v){ return v[0]
 see also <a class="reference external" href="http://www.sgi.com/tech/stl/unique.html">http://www.sgi.com/tech/stl/unique.html</a></blockquote>
 <p>
 <a name="fn-iproduct"></a>
-<a class="mochidef reference external" href="#fn-iproduct">iproduct = function(a, b[, ...])</a>:</p>
+<a class="mochidef reference external" href="#fn-iproduct">iproduct(a, b[, ...])</a>:</p>
 <blockquote>
 <p>resembles nested loops over the input sequences
 see <a class="reference external" href="http://docs.python.org/library/itertools.html#itertools.product">http://docs.python.org/library/itertools.html#itertools.product</a></p>
-<p>todo: ! currently only supports two input ranges</p>
+<p>todo: ! currently only supports two input sequences</p>
 </blockquote>
+<p>
+<a name="fn-enumerate"></a>
+<a class="mochidef reference external" href="#fn-enumerate">enumerate(sequence[, start=0])</a>:</p>
+<blockquote>
+Convenience wrapper for <a class="mochiref reference external" href="Iter.html#fn-izip">MochiKit.Iter.izip</a> and <a class="mochiref reference external" href="Iter.html#fn-count">MochiKit.Iter.count</a>.
+Returns an iterator over <tt class="docutils literal">[index, seqence{i}]</tt> pairs.</blockquote>
 </div>
 </div>
 <div class="section" id="see-also">
@@ -226,7 +232,7 @@ module: <a class="reference external" href="http://docs.python.org/lib/module-it
 </div>
 <div class="section" id="copyright">
 <h1>Copyright</h1>
-<p>Copyright 2005 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
+<p>Copyright 2005-2010 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
 dual-licensed free software; you can redistribute it and/or modify it
 under the terms of the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a> or the <a class="reference external" href="http://www.opensource.org/licenses/afl-2.1.php">Academic Free License
 v2.1</a>.</p>
