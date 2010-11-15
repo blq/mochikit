@@ -388,6 +388,20 @@ MochiKit.Iter.iproduct = function(iterable, var_args)
 };
 
 
+/**
+ * convenience wrapper for izip/count.
+ * usage: forEach(enumerate(seq), function(i_val) { var i = i_val[0], val = i_val[1]; ... });
+ * this is a very common request, FAQ I'd say
+ * (a pity JS doesn't (yet?) have tuple unfolds in assignments)
+ * @param {!Iterable.<*>} iterable
+ * @param {integer=} [start=0]
+ * @return {!Iterable.<[integer, *]>}  iterator over [index, itervalue] pairs
+ */
+MochiKit.Iter.enumerate = function(iterable, start)
+{
+	return MochiKit.Iter.izip(MochiKit.Iter.count(start), iterable);
+};
+
 
 /**
  * useful convenience(?)
