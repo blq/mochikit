@@ -9,6 +9,11 @@
  *
  * the impl. is almost a line-by-line(!) port of http://docs.python.org/library/heapq.html
  *
+ * todo: separate imergeSorted? could drop dep on Iter
+ * todo: isHeap?
+ * todo: explicit prio queue class (see /examples/PrioQueue.js)
+ *
+ *
  * @author Fredrik Blomqvist
  *
  */
@@ -251,13 +256,15 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 /**
  * example code for heap sort
  * Equivalent to sorted(iterable)
+ * @param {!Iterable} iterable
+ * @return {!Array}
  */
 MochiKit.HeapQ.heapsort = function(iterable)
 {
 	var m = MochiKit;
 
 	var h = [];
-	m.Iter.forEach(iterable, m.Base.partial(m.HeapQ.heapPush, h));
+	m.Iter.forEach(iterable, m.Base.partial(m.HeapQ.heapPush, h)); // todo: isn't it better to use heapify?
 	return m.Base.map(m.Base.partial(m.HeapQ.heapPop, h), m.Iter.range(h.length));
 };
 
@@ -273,4 +280,3 @@ MochiKit.HeapQ.__new__ = function()
 MochiKit.HeapQ.__new__();
 
 MochiKit.Base._exportSymbols(this, MochiKit.HeapQ);
-
