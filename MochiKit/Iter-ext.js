@@ -274,7 +274,7 @@ MochiKit.Iter.iflattenArray = function(root)
  * generalized chain (intended for larger volumes, think nodes->values of a tree-structure).
  * Can be used to traverse grouby sequences: indirectChain(groupby([1,1,1,2,2,3,3]), function(v) { return v[1]; }) -> [1,1,1,2,2,3,3] i.e an inverse of the groupby)
  * @param {!Iterable.<!Iterable>} seq
- * @param {(function(*): !Iterable)=} [getIter] get second level iterator. optional, default iter.
+ * @param {(function(*): !Iterable)=} [getIter] get second level iterator. optional, default iter. // todo: hmm, could skip this? could obtain using imap also
  * @return {!Iterable}
  */
 MochiKit.Iter.chainFromIter = function(seq, getIter)

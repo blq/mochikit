@@ -1411,6 +1411,7 @@ MochiKit.Base.__new__ = function () {
         this.name = name;
     };
     m.NamedError.prototype = new Error();
+	// todo: ok to set .constructor from Error here also?
     m.NamedError.prototype.repr = function() {
 		if (this.message && this.message != this.name) {
 			return this.name + "(" + m.repr(this.message) + ")";
