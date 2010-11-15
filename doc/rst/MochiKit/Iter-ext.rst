@@ -184,7 +184,7 @@ Functions
 :mochidef:`enumerate(sequence[, start=0])`:
 
     Convenience wrapper for :mochiref:`MochiKit.Iter.izip` and :mochiref:`MochiKit.Iter.count`.
-    Returns an iterator over ``[index, seqence{i}]`` pairs.
+    Returns an iterator over ``[index, sequence{i}]`` pairs.
 
 
 
