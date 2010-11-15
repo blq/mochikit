@@ -143,6 +143,44 @@ Functions
         [ 6, 7, 5, 3, 4, 2, 1 ]
 
 
+:mochidef:`windowView(iterable, windowSize=2, stepSize=1)`:
+
+    sliding-window iterator, generalized pairView
+
+
+:mochidef:`filterMap(mapFn, iterable)`:
+
+    convenience in the common(?) case where you need to do a mapping but also discard certain elements (when mapFn returns null/undefined)
+
+
+:mochidef:`iflattenArray(root)`:
+
+    iterator vesion of :mochiref:`MochiKit.Base.flattenArray`
+
+
+:mochidef:`chainFromIter(seq[, getIter])`:
+
+    Resembles Python's ``chain.from_iter``
+    one level flattening of a sequence of iterables
+    generalized chain (intended for larger volumes, think nodes->values of a tree-structure).
+    Can be used to traverse :mochiref:`groupby` sequences: ``indirectChain(groupby([1,1,1,2,2,3,3]), function(v) { return v[1]; })`` -> ``[1,1,1,2,2,3,3]`` i.e an inverse of the groupby)
+
+
+:mochidef:`uniqueView(iterable[, pred])`:
+
+     filters out adjacent equal elements.
+     kindof equivalent to: ``imap(function(v){ return v[0]; }, groupby(iterable))``
+     see also http://www.sgi.com/tech/stl/unique.html
+
+
+:mochidef:`iproduct = function(a, b[, ...])`:
+
+    resembles nested loops over the input sequences
+    see http://docs.python.org/library/itertools.html#itertools.product
+
+    todo: ! currently only supports two input ranges
+
+
 
 See Also
 ========

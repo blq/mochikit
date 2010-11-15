@@ -149,6 +149,44 @@ nodes = map(itemgetter('value'), treePostOrder(tree, itemgetter(children))) --&g
 [ 6, 7, 5, 3, 4, 2, 1 ]
 </pre>
 </blockquote>
+<p>
+<a name="fn-windowview"></a>
+<a class="mochidef reference external" href="#fn-windowview">windowView(iterable, windowSize=2, stepSize=1)</a>:</p>
+<blockquote>
+sliding-window iterator, generalized pairView</blockquote>
+<p>
+<a name="fn-filtermap"></a>
+<a class="mochidef reference external" href="#fn-filtermap">filterMap(mapFn, iterable)</a>:</p>
+<blockquote>
+convenience in the common(?) case where you need to do a mapping but also discard certain elements (when mapFn returns null/undefined)</blockquote>
+<p>
+<a name="fn-iflattenarray"></a>
+<a class="mochidef reference external" href="#fn-iflattenarray">iflattenArray(root)</a>:</p>
+<blockquote>
+iterator vesion of <a class="mochiref reference external" href="Base.html#fn-flattenarray">MochiKit.Base.flattenArray</a></blockquote>
+<p>
+<a name="fn-chainfromiter"></a>
+<a class="mochidef reference external" href="#fn-chainfromiter">chainFromIter(seq[, getIter])</a>:</p>
+<blockquote>
+Resembles Python's <tt class="docutils literal">chain.from_iter</tt>
+one level flattening of a sequence of iterables
+generalized chain (intended for larger volumes, think nodes-&gt;values of a tree-structure).
+Can be used to traverse <a class="mochiref reference external" href="#fn-groupby">groupby</a> sequences: <tt class="docutils literal"><span class="pre">indirectChain(groupby([1,1,1,2,2,3,3]),</span> function(v) { return v[1]; })</tt> -&gt; <tt class="docutils literal">[1,1,1,2,2,3,3]</tt> i.e an inverse of the groupby)</blockquote>
+<p>
+<a name="fn-uniqueview"></a>
+<a class="mochidef reference external" href="#fn-uniqueview">uniqueView(iterable[, pred])</a>:</p>
+<blockquote>
+filters out adjacent equal elements.
+kindof equivalent to: <tt class="docutils literal">imap(function(v){ return v[0]; }, groupby(iterable))</tt>
+see also <a class="reference external" href="http://www.sgi.com/tech/stl/unique.html">http://www.sgi.com/tech/stl/unique.html</a></blockquote>
+<p>
+<a name="fn-iproduct"></a>
+<a class="mochidef reference external" href="#fn-iproduct">iproduct = function(a, b[, ...])</a>:</p>
+<blockquote>
+<p>resembles nested loops over the input sequences
+see <a class="reference external" href="http://docs.python.org/library/itertools.html#itertools.product">http://docs.python.org/library/itertools.html#itertools.product</a></p>
+<p>todo: ! currently only supports two input ranges</p>
+</blockquote>
 </div>
 </div>
 <div class="section" id="see-also">
