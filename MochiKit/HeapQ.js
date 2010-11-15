@@ -256,18 +256,18 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 /**
  * Test if Array lst fulfills the heap invariant
  * @param {!Array} lst
- * @param {BinaryComparator=} [cmp]
+ * @param {BinaryComparator=} [cmp] observe that this, in contrats to the cmp in heap creation functions, must return true for equal elements also
  * @return {boolean}
  */
 MochiKit.HeapQ.isHeap = function(lst, cmp)
 {
-	cmp = cmp || MochiKit.Base.operator.clt;
+	cmp = cmp || MochiKit.Base.operator.cle;
 
-	var n = Math.floor(lst.length / 2) - 1;
-	if (n <= 0)
+	var n = Math.floor(lst.length / 2);
+	if (n == 0)
 		return true;
 
-	for (var i = 0; i < n; ++i) {
+	for (var i = 0; i < n - 1; ++i) {
 		if (!(cmp(lst[i], lst[2*i+1]) && cmp(lst[i], lst[2*i+2])))
 			return false;
 	}
@@ -283,6 +283,7 @@ MochiKit.HeapQ.isHeap = function(lst, cmp)
  * Does Not run in-place.
  * Equivalent to sorted(iterable)
  * @param {!Iterable} iterable
+ * @param {BinaryComparator=} [cmp]
  * @return {!Array}
  */
 MochiKit.HeapQ.heapSort = function(iterable, cmp)
