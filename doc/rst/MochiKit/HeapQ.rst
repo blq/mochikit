@@ -26,8 +26,8 @@ Synopsis
 Description
 ===========
 
-This module provides an implementation of the heap queue algorithm, also known as the priority queue algorithm.
-Currently this is basically a clone/port of the Python heapq module, http://docs.python.org/library/heapq.html
+This module provides an implementation of the heap [1]_ queue algorithm, also known as the priority queue algorithm.
+Currently this is basically a clone/port of the Python heapq [2]_ module, http://docs.python.org/library/heapq.html
 
 
 Dependencies
