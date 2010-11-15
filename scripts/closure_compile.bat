@@ -25,4 +25,5 @@ java -jar Closure/compiler.jar ^
 	^
 	--externs closure_externs/mochikit_extern.js ^
 	--externs closure_externs/webkit_console.js ^
-	--externs closure_externs/json.js
+	--externs closure_externs/json.js ^
+	%*
