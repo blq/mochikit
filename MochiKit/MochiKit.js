@@ -50,7 +50,8 @@ MochiKit.MochiKit.SUBMODULES = [
 
 	"Base-ext",
 	"Iter-ext",
-	"Text-ext"
+	"Text-ext",
+	"HeapQ"
 ];
 
 (function () {
