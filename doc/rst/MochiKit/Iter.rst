@@ -249,7 +249,7 @@ Functions
        ``.iter()``), then the result of ``iterable.iter()`` will be
        returned.
     3. If ``iterable`` is a JavaScript 1.7 iterator factory (implements
-       ``.__iterable__()``), then the result of ``iterable.__iterable__()``
+       ``.__iterator__()``), then the result of ``iterable.__iterator__()``
        will be returned (MochiKit 1.4+).
     4. Otherwise, the iterator factory
        :mochiref:`MochiKit.Base.AdapterRegistry` is used to find a
