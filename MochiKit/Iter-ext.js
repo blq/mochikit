@@ -274,7 +274,7 @@ MochiKit.Iter.iflattenArray = function(root)
  * generalized chain (intended for larger volumes, think nodes->values of a tree-structure).
  * Can be used to traverse grouby sequences: indirectChain(groupby([1,1,1,2,2,3,3]), function(v) { return v[1]; }) -> [1,1,1,2,2,3,3] i.e an inverse of the groupby)
  * @param {!Iterable.<!Iterable>} seq
- * @param {(function(*): !Iterable)=} [getIter] get second level iterator. optional, default iter. // hmm, could skip this if using imap also
+ * @param {(function(*): !Iterable)=} [getIter] get second level iterator. optional, default iter.
  * @return {!Iterable}
  */
 MochiKit.Iter.chainFromIter = function(seq, getIter)
@@ -285,7 +285,7 @@ MochiKit.Iter.chainFromIter = function(seq, getIter)
 	var jt = null;
 
 	return {
-		repr: function() { return "indirectChain(...)"; },
+		repr: function() { return "chainFromIter(...)"; },
 		toString: MochiKit.Base.forwardCall("repr"),
 
 		next: function() {
@@ -348,7 +348,6 @@ MochiKit.Iter.uniqueView = function(iterable, pred)
  * todo: ! this version currently only supports two input sequences
  * resembles nested loops over the input sequences
  * @see http://docs.python.org/library/itertools.html#itertools.product
- * ! currently only supports two input ranges
  * @param {!Iterable} iterable
  * @param {...!Iterable} var_args // ! observe that subsequent iterables must be _iterables_, Mot _iterators_ so that the sequences can be "restarted"!
  * @return {!Iterable.<!Array>}
