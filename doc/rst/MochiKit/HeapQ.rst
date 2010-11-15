@@ -96,6 +96,7 @@ See Also
 
 .. [1] Heap: http://en.wikipedia.org/wiki/Heap_(data_structure)
 .. [2] Python's heapq module: http://docs.python.org/library/heapq.html
+.. [3] Priority queue: http://en.wikipedia.org/wiki/Priority_queue
 
 
 Authors
@@ -107,7 +108,7 @@ Authors
 Copyright
 =========
 
-Copyright 2005 Bob Ippolito <bob@redivi.com>. This program is
+Copyright 2005-2010 Bob Ippolito <bob@redivi.com>. This program is
 dual-licensed free software; you can redistribute it and/or modify it
 under the terms of the `MIT License`_ or the `Academic Free License
 v2.1`_.

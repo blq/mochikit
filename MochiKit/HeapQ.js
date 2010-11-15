@@ -10,9 +10,7 @@
  * the impl. is almost a line-by-line(!) port of http://docs.python.org/library/heapq.html
  *
  * todo: separate imergeSorted? could drop dep on Iter
- * todo: isHeap?
  * todo: explicit prio queue class (see /examples/PrioQueue.js)
- *
  *
  * @author Fredrik Blomqvist
  *
@@ -256,7 +254,7 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 /**
  * Test if Array lst fulfills the heap invariant
  * @param {!Array} lst
- * @param {BinaryComparator=} [cmp] observe that this, in contrats to the cmp in heap creation functions, must return true for equal elements also
+ * @param {BinaryComparator=} [cmp] observe that this, in contrast to the default cmp in heap creation functions, must return true for equal elements also
  * @return {boolean}
  */
 MochiKit.HeapQ.isHeap = function(lst, cmp)
