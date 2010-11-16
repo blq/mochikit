@@ -37,7 +37,7 @@ function sub(a, b) {
 var polyline = [{x: 0, y: 0}, {x: 3, y: 0}, {x: 3, y: 4}]; // right triangle
 
 var perimeter = sum(imap(
-    function(pair) { return length(sub(pair[1], pair[0])); }, // could do in to map steps also; pair-&gt;segment vector-&gt;length
+    function(pair) { return length(sub(pair[1], pair[0])); }, // could do in two map steps also; pair-&gt;segment vector-&gt;length
     pairView(polyline, true)
 ));
 
@@ -97,8 +97,6 @@ var tree = {
 forEach(treeLevelOrder(root, itemgetter('childnodes')), function(node) {
     ....
 });
-
-assert(  );
 </pre>
 </div>
 </div>
@@ -111,42 +109,40 @@ assert(  );
 <a class="mochidef reference external" href="#fn-pairview">pairView(iterable)</a>:</p>
 <blockquote>
 <p>Pairwise view of an iterable (overlapping)</p>
-<p><tt class="docutils literal">pairView(iterable)</tt> --&gt;
-[a, b, c, d, ...] -&gt; [[a,b],[b,c],[c,d], ...], ...</p>
+<pre class="literal-block">
+pairView([a, b, c, d, ...]) --&gt; [ [a,b], [b,c], [c,d], ...]
+</pre>
 </blockquote>
 <p>
 <a name="fn-treepreorder"></a>
-<a class="mochidef reference external" href="#fn-treepreorder">treePreOrder(iterable, getChildeNodes)</a>:</p>
+<a class="mochidef reference external" href="#fn-treepreorder">treePreOrder(iterable, getChildNodes)</a>:</p>
 <blockquote>
 <p>parent-&gt;child order (depth-first, preorder). &quot;standard&quot; recursive descent.
 see <a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a></p>
 <pre class="literal-block">
-nodes = map(itemgetter('value'), treePreOrder(tree, itemgetter(children))) --&gt;
-[ 1, 3, 6, 5, 7, 2, 4 ]
+nodes = map(itemgetter('value'), treePreOrder(tree, itemgetter(children))) --&gt; [ 1, 3, 6, 5, 7, 2, 4 ]
 </pre>
 </blockquote>
 <p>
 <a name="fn-treelevelorder"></a>
-<a class="mochidef reference external" href="#fn-treelevelorder">treeLevelOrder(iterable, getChildeNodes)</a>:</p>
+<a class="mochidef reference external" href="#fn-treelevelorder">treeLevelOrder(iterable, getChildNodes)</a>:</p>
 <blockquote>
 <p>top-down, breadth-first, level-order traversal (parent-&gt;siblings order)
 see <a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a>
 useful for searching and culling for example.</p>
 <pre class="literal-block">
-nodes = map(itemgetter('value'), treeLevelOrder(tree, itemgetter(children))) --&gt;
-[ 1, 2, 3, 4, 5, 6, 7 ]
+nodes = map(itemgetter('value'), treeLevelOrder(tree, itemgetter(children))) --&gt; [ 1, 2, 3, 4, 5, 6, 7 ]
 </pre>
 </blockquote>
 <p>
 <a name="fn-treepostorder"></a>
-<a class="mochidef reference external" href="#fn-treepostorder">treePostOrder(iterable, getChildeNodes)</a>:</p>
+<a class="mochidef reference external" href="#fn-treepostorder">treePostOrder(iterable, getChildNodes)</a>:</p>
 <blockquote>
 <p>bottom-up iteration, leaf -&gt; parent
 see <a class="reference external" href="http://en.wikipedia.org/wiki/Tree_traversal">http://en.wikipedia.org/wiki/Tree_traversal</a>
 Useful for pruning for example.</p>
 <pre class="literal-block">
-nodes = map(itemgetter('value'), treePostOrder(tree, itemgetter(children))) --&gt;
-[ 6, 7, 5, 3, 4, 2, 1 ]
+nodes = map(itemgetter('value'), treePostOrder(tree, itemgetter(children))) --&gt; [ 6, 7, 5, 3, 4, 2, 1 ]
 </pre>
 </blockquote>
 <p>
@@ -158,7 +154,8 @@ sliding-window iterator, generalized pairView</blockquote>
 <a name="fn-filtermap"></a>
 <a class="mochidef reference external" href="#fn-filtermap">filterMap(mapFn, iterable)</a>:</p>
 <blockquote>
-convenience in the common(?) case where you need to do a mapping but also discard certain elements (when mapFn returns null/undefined)</blockquote>
+convenience in the common(?) case where you need to do a mapping but also discard certain elements (when mapFn returns null/undefined)
+i.e if mapFn null/undefined is treated as false</blockquote>
 <p>
 <a name="fn-iflattenarray"></a>
 <a class="mochidef reference external" href="#fn-iflattenarray">iflattenArray(root)</a>:</p>
@@ -176,9 +173,13 @@ Can be used to traverse <a class="mochiref reference external" href="#fn-groupby
 <a name="fn-uniqueview"></a>
 <a class="mochidef reference external" href="#fn-uniqueview">uniqueView(iterable[, pred])</a>:</p>
 <blockquote>
-filters out adjacent equal elements.
+<p>filters out adjacent equal elements.
 kindof equivalent to: <tt class="docutils literal">imap(function(v){ return v[0]; }, groupby(iterable))</tt>
-see also <a class="reference external" href="http://www.sgi.com/tech/stl/unique.html">http://www.sgi.com/tech/stl/unique.html</a></blockquote>
+see also <a class="reference external" href="http://www.sgi.com/tech/stl/unique.html">http://www.sgi.com/tech/stl/unique.html</a></p>
+<pre class="literal-block">
+uniqueView([1, 1, 2, 3, 4, 4, 4]) --&gt; [1, 2, 3, 4]
+</pre>
+</blockquote>
 <p>
 <a name="fn-iproduct"></a>
 <a class="mochidef reference external" href="#fn-iproduct">iproduct(a, b[, ...])</a>:</p>
@@ -191,8 +192,22 @@ see <a class="reference external" href="http://docs.python.org/library/itertools
 <a name="fn-enumerate"></a>
 <a class="mochidef reference external" href="#fn-enumerate">enumerate(sequence[, start=0])</a>:</p>
 <blockquote>
-Convenience wrapper for <a class="mochiref reference external" href="Iter.html#fn-izip">MochiKit.Iter.izip</a> and <a class="mochiref reference external" href="Iter.html#fn-count">MochiKit.Iter.count</a>.
-Returns an iterator over <tt class="docutils literal">[index, sequence{i}]</tt> pairs.</blockquote>
+<p>Convenience wrapper for <a class="mochiref reference external" href="Iter.html#fn-izip">MochiKit.Iter.izip</a> and <a class="mochiref reference external" href="Iter.html#fn-count">MochiKit.Iter.count</a>.
+Returns an iterator over <tt class="docutils literal">[index, sequence{i}]</tt> pairs.</p>
+<pre class="literal-block">
+forEach(enumerate(seq), function(i_val) {
+    var i = i_val[0], val = i_val[1];
+    ...
+});
+</pre>
+</blockquote>
+<p>
+<a name="fn-breakit"></a>
+<a class="mochidef reference external" href="#fn-breakit">breakIt</a>:</p>
+<blockquote>
+<p>Experimental. Equivalent to the <tt class="docutils literal">break</tt> statement, but for iterator traversal loops.</p>
+<p>(convenience for throwing the <a class="mochiref reference external" href="Iter.html#fn-stopiteration">MochiKit.Iter.StopIteration</a> exception)</p>
+</blockquote>
 </div>
 </div>
 <div class="section" id="see-also">

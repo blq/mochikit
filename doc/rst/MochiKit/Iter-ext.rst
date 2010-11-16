@@ -24,7 +24,7 @@ Synopsis
     var polyline = [{x: 0, y: 0}, {x: 3, y: 0}, {x: 3, y: 4}]; // right triangle
 
     var perimeter = sum(imap(
-        function(pair) { return length(sub(pair[1], pair[0])); }, // could do in to map steps also; pair->segment vector->length
+        function(pair) { return length(sub(pair[1], pair[0])); }, // could do in two map steps also; pair->segment vector->length
         pairView(polyline, true)
     ));
 
@@ -91,8 +91,6 @@ Iterator extensions
         ....
     });
 
-    assert(  );
-
 
 API Reference
 =============
@@ -104,22 +102,22 @@ Functions
 
     Pairwise view of an iterable (overlapping)
 
-    ``pairView(iterable)`` -->
-    [a, b, c, d, ...] -> [[a,b],[b,c],[c,d], ...], ...
+    ::
+
+        pairView([a, b, c, d, ...]) --> [ [a,b], [b,c], [c,d], ...]
 
 
-:mochidef:`treePreOrder(iterable, getChildeNodes)`:
+:mochidef:`treePreOrder(iterable, getChildNodes)`:
 
     parent->child order (depth-first, preorder). "standard" recursive descent.
     see http://en.wikipedia.org/wiki/Tree_traversal
 
     ::
 
-        nodes = map(itemgetter('value'), treePreOrder(tree, itemgetter(children))) -->
-        [ 1, 3, 6, 5, 7, 2, 4 ]
+        nodes = map(itemgetter('value'), treePreOrder(tree, itemgetter(children))) --> [ 1, 3, 6, 5, 7, 2, 4 ]
 
 
-:mochidef:`treeLevelOrder(iterable, getChildeNodes)`:
+:mochidef:`treeLevelOrder(iterable, getChildNodes)`:
 
     top-down, breadth-first, level-order traversal (parent->siblings order)
     see http://en.wikipedia.org/wiki/Tree_traversal
@@ -127,11 +125,10 @@ Functions
 
     ::
 
-        nodes = map(itemgetter('value'), treeLevelOrder(tree, itemgetter(children))) -->
-        [ 1, 2, 3, 4, 5, 6, 7 ]
+        nodes = map(itemgetter('value'), treeLevelOrder(tree, itemgetter(children))) --> [ 1, 2, 3, 4, 5, 6, 7 ]
 
 
-:mochidef:`treePostOrder(iterable, getChildeNodes)`:
+:mochidef:`treePostOrder(iterable, getChildNodes)`:
 
     bottom-up iteration, leaf -> parent
     see http://en.wikipedia.org/wiki/Tree_traversal
@@ -139,8 +136,7 @@ Functions
 
     ::
 
-        nodes = map(itemgetter('value'), treePostOrder(tree, itemgetter(children))) -->
-        [ 6, 7, 5, 3, 4, 2, 1 ]
+        nodes = map(itemgetter('value'), treePostOrder(tree, itemgetter(children))) --> [ 6, 7, 5, 3, 4, 2, 1 ]
 
 
 :mochidef:`windowView(iterable, windowSize=2, stepSize=1)`:
@@ -151,6 +147,7 @@ Functions
 :mochidef:`filterMap(mapFn, iterable)`:
 
     convenience in the common(?) case where you need to do a mapping but also discard certain elements (when mapFn returns null/undefined)
+    i.e if mapFn null/undefined is treated as false
 
 
 :mochidef:`iflattenArray(root)`:
@@ -172,6 +169,10 @@ Functions
      kindof equivalent to: ``imap(function(v){ return v[0]; }, groupby(iterable))``
      see also http://www.sgi.com/tech/stl/unique.html
 
+     ::
+
+        uniqueView([1, 1, 2, 3, 4, 4, 4]) --> [1, 2, 3, 4]
+
 
 :mochidef:`iproduct(a, b[, ...])`:
 
@@ -185,6 +186,20 @@ Functions
 
     Convenience wrapper for :mochiref:`MochiKit.Iter.izip` and :mochiref:`MochiKit.Iter.count`.
     Returns an iterator over ``[index, sequence{i}]`` pairs.
+
+    ::
+
+        forEach(enumerate(seq), function(i_val) {
+            var i = i_val[0], val = i_val[1];
+            ...
+        });
+
+
+:mochidef:`breakIt`:
+
+    Experimental. Equivalent to the ``break`` statement, but for iterator traversal loops.
+
+    (convenience for throwing the :mochiref:`MochiKit.Iter.StopIteration` exception)
 
 
 
