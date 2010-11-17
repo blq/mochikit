@@ -273,6 +273,7 @@ MochiKit.Iter.iflattenArray = function(root)
  * one level flattening of a sequence of iterables
  * generalized chain (intended for larger volumes, think nodes->values of a tree-structure).
  * Can be used to traverse grouby sequences: indirectChain(groupby([1,1,1,2,2,3,3]), function(v) { return v[1]; }) -> [1,1,1,2,2,3,3] i.e an inverse of the groupby)
+ * @see http://docs.python.org/library/itertools.html#itertools.chain.from_iterable
  * @param {!Iterable.<!Iterable>} seq
  * @param {(function(*): !Iterable)=} [getIter] get second level iterator. optional, default iter. // todo: hmm, could skip this? could obtain using imap also
  * @return {!Iterable}
@@ -348,8 +349,9 @@ MochiKit.Iter.uniqueView = function(iterable, pred)
  * todo: ! this version currently only supports two input sequences
  * resembles nested loops over the input sequences
  * @see http://docs.python.org/library/itertools.html#itertools.product
+ * note: doesn't support the 'repeat' param that Python's version has
  * @param {!Iterable} iterable
- * @param {...!Iterable} var_args // ! observe that subsequent iterables must be _iterables_, Mot _iterators_ so that the sequences can be "restarted"!
+ * @param {...!Iterable} var_args // ! observe that subsequent iterables must be _iterables_, Not _iterators_ so that the sequences can be "restarted"!
  * @return {!Iterable.<!Array>}
  * .. will Apple sue us for this name? ;)
  */
@@ -393,6 +395,7 @@ MochiKit.Iter.iproduct = function(iterable, var_args)
  * usage: forEach(enumerate(seq), function(i_val) { var i = i_val[0], val = i_val[1]; ... });
  * this is a very common request, FAQ I'd say
  * (a pity JS doesn't (yet?) have tuple unfolds in assignments)
+ * @see http://docs.python.org/library/functions.html#enumerate
  * @param {!Iterable.<*>} iterable
  * @param {integer=} [start=0]
  * @return {!Iterable.<[integer, *]>}  iterator over [index, itervalue] pairs
@@ -405,12 +408,68 @@ MochiKit.Iter.enumerate = function(iterable, start)
 
 /**
  * useful convenience(?)
+ * ... or will it just confuse? in a deeper iterator hierachy (nested) this might not do what the user believes, i.e the exception is caught earlier and interpreted wrongly..
  */
 MochiKit.Iter.breakIt = function()
 {
 	throw MochiKit.Iter.StopIteration;
 };
 
+
+/**
+ * @see http://docs.python.org/library/itertools.html#itertools.izip_longest
+ * note: slightly different (I'd say better) handling of single and empty iterables compared to Python itertools
+ * ex:
+ * izipLongest([]) -> []
+ * izipLongest([[]]) -> []
+ * izipLongest([[1]]) -> [1], Not [1,fillValue]
+ * i.e similar to MK.izip Not Python
+ * @param {!Iterable.<!Iterable>} iterables
+ * @param {*=} [fillValue=null]
+ */
+MochiKit.Iter.izipLongest = function(iterables, fillValue)
+{
+	fillValue = fillValue || null;
+	iterables = MochiKit.Base.map(MochiKit.Iter.iter, iterables);
+
+	if (iterables.length == 0) {
+		return {
+			next: function() { throw MochiKit.Iter.StopIteration; }
+		};
+	}
+
+	var numActive = iterables.length;
+
+	return {
+		repr: function() { return "izipLongest(...)"; },
+		toString: MochiKit.Base.forwardCall("repr"),
+
+		next: function() {
+			var result = new Array(iterables.length);
+			for (var i = 0; i < iterables.length; ++i) {
+				try {
+					result[i] = iterables[i].next();
+				} catch (e) {
+					if (e != MochiKit.Iter.StopIteration)
+						throw e;
+
+					iterables[i] = MochiKit.Iter.repeat(fillValue);
+					result[i] = fillValue;
+					--numActive;
+				}
+			}
+			if (numActive == 0)
+				throw MochiKit.Iter.StopIteration;
+			return result;
+		}
+	};
+};
+
+
+// todo: combinations, permutations, compress(?)
+
+
+//--------------------------------
 
 
 MochiKit.Iter_ext.__new__ = function() {

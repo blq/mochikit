@@ -202,6 +202,10 @@ Functions
     (convenience for throwing the :mochiref:`MochiKit.Iter.StopIteration` exception)
 
 
+:mochidef:`izipLongest(iterables, fillValue=null)`:
+
+    Similar to :mochiref:`MochiKit.Iter.izip` but continues until the longest iterator is exhausted, filling missing values with ``fillValue``, default ``null``
+
 
 
 See Also
