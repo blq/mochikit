@@ -562,6 +562,7 @@ MochiKit.Base.update(MochiKit.Iter, {
         } else {
             self.exhaust(self.imap(func, iterable));
         }
+		return func; // .. useful? this way you could use the fn as an accumulator (example in EoP suggest this also)
     },
 
     /** @id MochiKit.Iter.every */
