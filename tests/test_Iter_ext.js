@@ -168,4 +168,11 @@ tests.test_Iter_ext = function (t) {
 	//----
 	t.eq( list(iproduct([1, 2, 3], ['a', 'b'])), [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b'], [3, 'a'], [3, 'b']], '');
 
+	//---
+	t.eq( list( izipLongest([]) ), [], '');
+	t.eq( list( izipLongest([ [] ]) ), [], '');
+	t.eq( list( izipLongest([ [1] ]) ), [[1]], '');
+	t.eq( list( izipLongest([ [1], [2] ]) ), [[1, 2]], '');
+	t.eq( list( izipLongest([ [1], [2, 3] ]) ), [[1, 2], [null, 3]], '');
+
 };
