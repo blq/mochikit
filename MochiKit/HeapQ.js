@@ -29,6 +29,7 @@ MochiKit.Base._module('HeapQ', '1.5', ['Base', 'Iter']);
 
 /**
  * Transform list x into a heap, in-place, in linear time.
+ * @see http://docs.python.org/library/heapq.html#heapq.heapify
  * @param {!Array} x
  * @param {Function=} [cmp]
  */
@@ -66,7 +67,7 @@ MochiKit.HeapQ._siftdown = function(heap, startpos, pos, cmp)
     // Follow the path to the root, moving parents down until finding a place
     // newitem fits.
     while (pos > startpos) {
-        var parentpos = (pos - 1) >> 1
+        var parentpos = (pos - 1) >> 1;
         var parent = heap[parentpos];
         if (cmp(newitem, parent)) {
             heap[pos] = parent;
@@ -113,6 +114,7 @@ MochiKit.HeapQ._siftup = function(heap, pos, cmp)
 
 /**
  * Push the value item onto the heap, maintaining the heap invariant.
+ * @see http://docs.python.org/library/heapq.html#heapq.heappush
  * @param {!Array} heap
  * @param {*} item
  * @param {Function=} cmp
@@ -127,6 +129,7 @@ MochiKit.HeapQ.heapPush = function(heap, item, cmp)
 
 /**
  * Pop the smallest item off the heap, maintaining the heap invariant.
+ * @see http://docs.python.org/library/heapq.html#heapq.heappop
  * @param {!Array} heap
  * @param {Function=} cmp
  * @return {*}
@@ -138,7 +141,7 @@ MochiKit.HeapQ.heapPop = function(heap, cmp)
     var lastelt = heap.pop(); // raises appropriate IndexError if heap is empty
 	var returnitem;
     if (heap.length > 0) {
-        returnitem = heap[0]
+        returnitem = heap[0];
         heap[0] = lastelt;
         MochiKit.HeapQ._siftup(heap, 0, cmp);
 	} else {
@@ -159,6 +162,7 @@ MochiKit.HeapQ.heapPop = function(heap, cmp)
  *      if (item > heap[0])
  *          item = heapReplace(heap, item)
  *
+ * @see http://docs.python.org/library/heapq.html#heapq.heapreplace
  * @param {!Array} heap
  * @param {*} item
  * @param {Function=} cmp
@@ -177,6 +181,7 @@ MochiKit.HeapQ.heapReplace = function(heap, item, cmp)
 
 /**
  * Fast version of a heappush followed by a heappop.
+ * @see http://docs.python.org/library/heapq.html#heapq.heappushpop
  * @param {!Array} heap
  * @param {*} item
  * @param {Function=} cmp
@@ -200,6 +205,7 @@ MochiKit.HeapQ.heapPushPop = function(heap, item, cmp)
  * todo: name? Python only calls this 'merge'.
  * todo: would have been nice with variable nr of arguments (as the Python equiv)
  * But, then it would be difficult to support the cmp.. hmm?
+ * @see http://docs.python.org/library/heapq.html#heapq.merge
  * @param {!Iterable} iterables
  * @param {Function=} cmp // todo: custom cmp not quite ready
  * @return {!Iterable}
@@ -212,8 +218,7 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 
     var h = [];
     m.Iter.forEach(m.Iter.izip(m.Iter.count(), m.Iter.imap(m.Iter.iter, iterables)), function(pair) {
-		var itnum = pair[0];
-		var it = pair[1];
+		var itnum = pair[0], it = pair[1];
         try {
             var next = it.next;
             h.push([next(), itnum, next]);
@@ -278,7 +283,7 @@ MochiKit.HeapQ.isHeap = function(lst, cmp)
 
 /**
  * example code for heap sort.
- * Does Not run in-place.
+ * Does Not run in-place. (hmm, perhaps call it heapSorteD?) (in-place version possible, but more code)
  * Equivalent to sorted(iterable)
  * @param {!Iterable} iterable
  * @param {BinaryComparator=} [cmp]
