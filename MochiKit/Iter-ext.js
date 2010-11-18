@@ -431,13 +431,6 @@ MochiKit.Iter.izipLongest = function(iterables, fillValue)
 {
 	fillValue = fillValue || null;
 	iterables = MochiKit.Base.map(MochiKit.Iter.iter, iterables);
-
-	if (iterables.length == 0) {
-		return {
-			next: function() { throw MochiKit.Iter.StopIteration; }
-		};
-	}
-
 	var numActive = iterables.length;
 
 	return {
@@ -464,6 +457,17 @@ MochiKit.Iter.izipLongest = function(iterables, fillValue)
 		}
 	};
 };
+
+
+/**
+ * alias for MochiKit.Iter.some (to match Python)
+ */
+MochiKit.Iter.any = MochiKit.Iter.some;
+
+/**
+ * alias for MochiKit.Iter.every (to match Python)
+ */
+MochiKit.Iter.all = MochiKit.Iter.every;
 
 
 // todo: combinations, permutations, compress(?)
