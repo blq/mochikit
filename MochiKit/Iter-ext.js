@@ -461,16 +461,18 @@ MochiKit.Iter.izipLongest = function(iterables, fillValue)
 
 /**
  * alias for MochiKit.Iter.some (to match Python)
+ * @see http://docs.python.org/library/functions.html#any
  */
 MochiKit.Iter.any = MochiKit.Iter.some;
 
 /**
  * alias for MochiKit.Iter.every (to match Python)
+ * @see http://docs.python.org/library/functions.html#all
  */
 MochiKit.Iter.all = MochiKit.Iter.every;
 
 
-// todo: combinations, permutations, compress(?)
+// todo: combinations, permutations, compress(?), sorted?
 
 
 //--------------------------------
