@@ -71,9 +71,13 @@ PriorityQueue.prototype.changeTop = function(item)
  * ! this is Not the prio-ordered data! only intended for *logical-inspection* http://hepunx.rl.ac.uk/BFROOT/dist/packages/boost/V01-27-00-04/libs/pri_queue/logical-inspectability.html
  * @return {!Iterable}
  */
-PriorityQueue.prototype.__iterable__ = function()
+PriorityQueue.prototype.__iterator__ = function()
 {
-	return this._heap; // wrap in iter? (or just anal? interface spec forbids user to explicitly use Array, but compiler should benefit)
+	return MochiKit.Iter.iter(this._heap);
 };
+
+// necessary to support current MK impl.
+PriorityQueue.prototype.iter = PriorityQueue.prototype.__iterator__;
+
 
 // .. + sorted?
