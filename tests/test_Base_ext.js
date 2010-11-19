@@ -168,6 +168,11 @@ tests.test_Base_ext = function (t) {
 	var n = MochiKit.Base.map(bind2(apply, null, _1, 'X'), m);
 	t.eq(n, [ 'X0', 'X1' ]);
 
+	// todo: more tests involving self
+	var objs = [ 'asdf', 'zxc', 'qwe' ];
+	var uobjs = map(bind2(String.prototype.toUpperCase, _1), objs);
+	t.eq(uobjs, [ 'ASDF', 'ZXC', 'QWE' ], 'bind2 with a placeholder as self ok');
+
 	//----
 
 	(function(){

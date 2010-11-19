@@ -74,7 +74,7 @@ MochiKit.Base._rebind_preargs = function(im_preargs, args, filledSlots)
 			}
 			// ..else? (see "discussion" below)
 		} else
-		if (typeof pa == 'function' && typeof pa.im_func == 'function') {
+		if (typeof pa == 'function' && typeof pa.im_func == 'function') { // == isBoundFunction
 			MochiKit.Base._rebind_preargs(pa.im_preargs, args, filledSlots); // recurse nested binds
 		}
 	}
@@ -116,7 +116,7 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 		im_preargs = im_preargs.slice();
 	}
 
-	var args = Array.prototype.slice.call(arguments, 2);
+	var args = Array.prototype.slice.call(arguments, self instanceof m._arg_placeholder ? 1 : 2);
 
 	var filledSlots = MochiKit.Base._rebind_preargs(im_preargs, args);
 	// remove possibly filled placeholders (need to remove afterwards to not mess up indices)
@@ -149,7 +149,7 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 					imax = Math.max(imax, pa.index + 1);
 					pa = arguments[pa.index];
 				} else
-				if (typeof pa == 'function' && typeof pa.im_func == 'function') {
+				if (typeof pa == 'function' && typeof pa.im_func == 'function') { // == isBoundFunction
 					pa = pa.apply(self, arguments); // recurse for nested evaluation!
 				}
 				args.push(pa);
@@ -160,6 +160,9 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 		} else {
 			args = arguments;
 		}
+
+		if (self instanceof m._arg_placeholder)
+			self = arguments[self.index];
 
 		return me.im_func.apply(self, args);
 	};
@@ -230,12 +233,12 @@ MochiKit.Base.isBoundFunction = function(fn)
  * @param {!Function} boundFn
  * @return {!Function}
  */
-function protect(boundFn) // todo: NS!
+MochiKit.Base.protect = function(boundFn)
 {
 	return function() {
 		return boundFn.apply(this, arguments);
 	};
-}
+};
 
 
 /**
@@ -246,13 +249,13 @@ function protect(boundFn) // todo: NS!
  * @param {...*} var_args
  * return ...
  */
-function apply(fn, var_args) // todo: name.. NS!
+MochiKit.Base.apply = function(fn, var_args) // todo: name.. dangerous.
 {
 	// or return a wrapper fn..?
 
 	var args = MochiKit.Base.extend([], arguments, 1);
 	return arguments[0].apply(this, args);
-}
+};
 
 
 
@@ -264,8 +267,8 @@ function apply(fn, var_args) // todo: name.. NS!
  * in-place algorithm. (todo: a functional version?)
  *
  * @see http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
- * Thou shalt not shuffle by sorting using a random comparator!
- * - You don't want to make same mistake M$ did ;) http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
+ * - Thou shalt not shuffle by sorting using a random comparator!
+ * .. you don't want to make same mistake M$ did ;) http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
  *
  * todo: take optional range, start & end, indices?
  * todo: take a custom getter and setter funcs instead of just whole elem swaps? (though this yearns for a custom iterator concept..)
