@@ -3,6 +3,8 @@
 Name
 ====
 
+*THIS IS NOT YET AN OFFICIAL MOCHIKIT COMPONENT*
+
 MochiKit.Iter-ext - even more iterators
 
 *Availability*:
@@ -195,7 +197,7 @@ Functions
         });
 
 
-:mochidef:`breakIt`:
+:mochidef:`breakIt()`:
 
     Experimental. Equivalent to the ``break`` statement, but for iterator traversal loops.
 
@@ -205,6 +207,8 @@ Functions
 :mochidef:`izipLongest(iterables, fillValue=null)`:
 
     Similar to :mochiref:`MochiKit.Iter.izip` but continues until the longest iterator is exhausted, filling missing values with ``fillValue``, default ``null``
+
+
 
 
 
