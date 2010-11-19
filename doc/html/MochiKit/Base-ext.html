@@ -131,6 +131,7 @@ a version of <a class="mochiref reference external" href="#fn-partial">partial</
 <a class="mochidef reference external" href="#fn-apply">apply(fn, a, b, ...)</a>:</p>
 <blockquote>
 <p>assumes first arg is a function, calls it with the rest of the arguments applied.</p>
+<p>note: might change name of this fn..</p>
 <pre class="literal-block">
 var lst = [ function(a) { return a + '0'; }, function(a) { return a + '1'; } ];
 MochiKit.Base.map(bind2(apply, null, _1, 'X'), m); -&gt; [ 'X0', 'X1' ]
@@ -187,7 +188,7 @@ Generates a unique random range of numbers from 0..N-1 (or rather f(0)..f(N-1) )
 </div>
 <div class="section" id="copyright">
 <h1>Copyright</h1>
-<p>Copyright 2005 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
+<p>Copyright 2005-2010 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
 dual-licensed free software; you can redistribute it and/or modify it
 under the terms of the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a> or the <a class="reference external" href="http://www.opensource.org/licenses/afl-2.1.php">Academic Free License
 v2.1</a>.</p>

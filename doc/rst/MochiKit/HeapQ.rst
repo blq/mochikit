@@ -103,8 +103,8 @@ Functions
 See Also
 ========
 
-.. [1] Heap: http://en.wikipedia.org/wiki/Heap_(data_structure)
-.. [2] Python's heapq module: http://docs.python.org/library/heapq.html
+.. [1] Heap: http://en.wikipedia.org/wiki/Heap_(data_structure), http://en.wikipedia.org/wiki/Binary_heap
+.. [2] Python heapq module: http://docs.python.org/library/heapq.html
 .. [3] Priority queue: http://en.wikipedia.org/wiki/Priority_queue
 
 

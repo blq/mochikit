@@ -8,7 +8,7 @@
 <title></title>
 
 <link rel="stylesheet" href="../../../include/css/documentation.css" type="text/css" />
-<script type="text/javascript" src="../../../packed/MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="../../../MochiKit/MochiKit.js"></script>
 <script type="text/javascript" src="../../js/toc.js"></script>
 </head>
 <body>
@@ -53,6 +53,37 @@ Note that this affects Date object serialization is some browsers.</li>
 <li>Added state() method for MochiKit.Async.Deferred. Also clarified docs on
 available properties.</li>
 <li>Added MochiKit.DOM.IFRAME, LINK and SCRIPT functions.</li>
+<li><em>https://github.com/blq/mochikit fork changes start here</em></li>
+<li>Made all module have Google Closure module dependency specifications</li>
+<li>Added Base-ext module</li>
+<li>Added &quot;bind 2.0&quot;. Support for placeholder arguments and nesting</li>
+<li>Added bind2, partial2, method2, bindLate2,</li>
+<li>Added protect, apply</li>
+<li>Added isBoundFunction</li>
+<li>Added shuffleArray</li>
+<li>Added partition</li>
+<li>Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat</li>
+<li>Added Iter-ext module</li>
+<li>Added Iter.treePreOrder, treeLevelOrder, treePostOrder</li>
+<li>Added Iter.pairIter</li>
+<li>Added Iter.windowView</li>
+<li>Added Iter.uniqueView</li>
+<li>Added Iter.izipLongest</li>
+<li>Added Iter.iproduct</li>
+<li>Added Iter.enumerate</li>
+<li>Added Iter.chainFromIter</li>
+<li>Added Iter.iflattenArray</li>
+<li>Added Iter.filterMap</li>
+<li>Added alias to Iter.any=some, all=every, starmap=applymap</li>
+<li>Added Text-ext module</li>
+<li>Added humanStringCompare</li>
+<li>Added levenshteinDistance</li>
+<li>Added HeapQ module</li>
+<li>Added heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort</li>
+<li>Added imergeSorted</li>
+<li>Added DOM.TEXT alias function</li>
+<li>Made DOM.removeElement silently handle null, as well as already removed elements</li>
+<li>Changed Async.addCallback/addErrback to interpret no return value as piping, i.e pass on the last value.</li>
 </ul>
 <p>2009-XX-YY      v1.4.3 (bug fix release)</p>
 <ul class="simple">

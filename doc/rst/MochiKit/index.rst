@@ -75,7 +75,7 @@ Version History
 Copyright
 =========
 
-Copyright 2005-2008 Bob Ippolito <bob@redivi.com>. This program is
+Copyright 2005-2010 Bob Ippolito <bob@redivi.com>. This program is
 dual-licensed free software; you can redistribute it and/or modify it
 under the terms of the `MIT License`_ or the `Academic Free License
 v2.1`_.

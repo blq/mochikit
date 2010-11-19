@@ -37,6 +37,46 @@
   available properties.
 - Added MochiKit.DOM.IFRAME, LINK and SCRIPT functions.
 
+- *https://github.com/blq/mochikit fork changes start here*
+
+- Made all module have Google Closure module dependency specifications
+
+- Added Base-ext module
+- Added "bind 2.0". Support for placeholder arguments and nesting
+- Added bind2, partial2, method2, bindLate2,
+- Added protect, apply
+- Added isBoundFunction
+- Added shuffleArray
+- Added partition
+- Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat
+
+- Added Iter-ext module
+- Added Iter.treePreOrder, treeLevelOrder, treePostOrder
+- Added Iter.pairIter
+- Added Iter.windowView
+- Added Iter.uniqueView
+- Added Iter.izipLongest
+- Added Iter.iproduct
+- Added Iter.enumerate
+- Added Iter.chainFromIter
+- Added Iter.iflattenArray
+- Added Iter.filterMap
+- Added alias to Iter.any=some, all=every, starmap=applymap
+
+- Added Text-ext module
+- Added humanStringCompare
+- Added levenshteinDistance
+
+- Added HeapQ module
+- Added heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort
+- Added imergeSorted
+
+- Added DOM.TEXT alias function
+- Made DOM.removeElement silently handle null, as well as already removed elements
+
+- Changed Async.addCallback/addErrback to interpret no return value as piping, i.e pass on the last value.
+
+
 2009-XX-YY      v1.4.3 (bug fix release)
 
 - Fixed MochiKit.Logging usage of map without a namespace (#338).
@@ -131,7 +171,7 @@
 - New MochiKit.Base.operator.seq and sne to support strict comparison
 - MochiKit.Base.isArrayLike no longer returns true for DOM text nodes
 - Added readonly-readOnly to the list of DOM renames for Internet Explorer
-- New MochiKit.Signal event method: confirmUnload (sets returnValue for 
+- New MochiKit.Signal event method: confirmUnload (sets returnValue for
   onbeforeunload)
 - Fix interpreter help() function for Firefox and IE
 - API version compatibility notes added
@@ -211,7 +251,7 @@
 - isDateLike no longer throws error on null
 - New MochiKit.Signal module, modeled after the slot/signal mechanism in Qt
 - updated elementDimensions to calculate width from offsetWidth instead
-  of clientWidth 
+  of clientWidth
 - formContents now works with FORM tags that have a name attribute
 - Documentation now uses MochiKit to generate a function index
 
@@ -259,7 +299,7 @@
 - New groupby and groupby_as_array in MochiKit.Iter
 - Added iterator factory adapter for objects that implement iterateNext()
 - Fixed isoTimestamp to handle timestamps with time zone correctly
-- Added new MochiKit.DOM createDOMFunc aliases: SELECT, OPTION, OPTGROUP, 
+- Added new MochiKit.DOM createDOMFunc aliases: SELECT, OPTION, OPTGROUP,
   LEGEND, FIELDSET
 - New MochiKit.DOM formContents and enhancement to queryString to support it
 - Updated view_source example to use dp.SyntaxHighlighter 1.3.0

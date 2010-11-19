@@ -111,6 +111,37 @@ Note that this affects Date object serialization is some browsers.</li>
 <li>Added state() method for MochiKit.Async.Deferred. Also clarified docs on
 available properties.</li>
 <li>Added MochiKit.DOM.IFRAME, LINK and SCRIPT functions.</li>
+<li><em>https://github.com/blq/mochikit fork changes start here</em></li>
+<li>Made all module have Google Closure module dependency specifications</li>
+<li>Added Base-ext module</li>
+<li>Added &quot;bind 2.0&quot;. Support for placeholder arguments and nesting</li>
+<li>Added bind2, partial2, method2, bindLate2,</li>
+<li>Added protect, apply</li>
+<li>Added isBoundFunction</li>
+<li>Added shuffleArray</li>
+<li>Added partition</li>
+<li>Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat</li>
+<li>Added Iter-ext module</li>
+<li>Added Iter.treePreOrder, treeLevelOrder, treePostOrder</li>
+<li>Added Iter.pairIter</li>
+<li>Added Iter.windowView</li>
+<li>Added Iter.uniqueView</li>
+<li>Added Iter.izipLongest</li>
+<li>Added Iter.iproduct</li>
+<li>Added Iter.enumerate</li>
+<li>Added Iter.chainFromIter</li>
+<li>Added Iter.iflattenArray</li>
+<li>Added Iter.filterMap</li>
+<li>Added alias to Iter.any=some, all=every, starmap=applymap</li>
+<li>Added Text-ext module</li>
+<li>Added humanStringCompare</li>
+<li>Added levenshteinDistance</li>
+<li>Added HeapQ module</li>
+<li>Added heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort</li>
+<li>Added imergeSorted</li>
+<li>Added DOM.TEXT alias function</li>
+<li>Made DOM.removeElement silently handle null, as well as already removed elements</li>
+<li>Changed Async.addCallback/addErrback to interpret no return value as piping, i.e pass on the last value.</li>
 </ul>
 <p>2009-XX-YY      v1.4.3 (bug fix release)</p>
 <ul class="simple">
@@ -491,7 +522,7 @@ though.</li>
 </div>
 <div class="section" id="copyright">
 <h1>Copyright</h1>
-<p>Copyright 2005-2008 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
+<p>Copyright 2005-2010 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
 dual-licensed free software; you can redistribute it and/or modify it
 under the terms of the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a> or the <a class="reference external" href="http://www.opensource.org/licenses/afl-2.1.php">Academic Free License
 v2.1</a>.</p>
