@@ -276,10 +276,12 @@ MochiKit.Base.update(MochiKit.Base, {
         sub: function (a, b) { return a - b; },
         /** @id MochiKit.Base.div */
         div: function (a, b) { return a / b; },
+		floordiv: function(a, b) { return Math.floor(a / b); },
         /** @id MochiKit.Base.mod */
         mod: function (a, b) { return a % b; },
         /** @id MochiKit.Base.mul */
         mul: function (a, b) { return a * b; },
+		pow: function (a, b) { return Math.pow(a, b); },
 
         // bitwise binary operators
         /** @id MochiKit.Base.and */
@@ -294,6 +296,7 @@ MochiKit.Base.update(MochiKit.Base, {
         rshift: function (a, b) { return a >> b; },
         /** @id MochiKit.Base.zrshift */
         zrshift: function (a, b) { return a >>> b; },
+		getitem: function (a, b) { return a[b]; },
 
         // near-worthless built-in comparators
         /** @id MochiKit.Base.eq */
@@ -335,12 +338,13 @@ MochiKit.Base.update(MochiKit.Base, {
         /** @id MochiKit.Base.contains */
         contains: function (a, b) { return b in a; },
 
-		floordiv: function(a, b) { return Math.floor(a / b); },
-
 		// a + b for sequences
 		concat: function(a, b) { return MochiKit.Base.concat(a, b); }, // hmm, confusing for strings? (expands them..)
 		// in-place concatenation for sequences (in practice only for string and Array)
-		iconcat: function(a, b) { return a.concat(b); }
+		iconcat: function(a, b) { return a.concat(b); },
+
+		setitem: function(a, b, c) { return a[b] = c; },
+		delitem: function(a, b) { delete a[b]; }
     },
 
     /** @id MochiKit.Base.forwardCall */

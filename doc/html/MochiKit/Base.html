@@ -1103,7 +1103,7 @@ except it uses the arguments instead of a given <tt class="docutils literal">Arr
 <a class="mochidef reference external" href="#fn-operator">operator</a>:</p>
 <blockquote>
 <p>A table of JavaScript's operators for usage with <a class="mochiref reference external" href="#fn-map">map</a>,
-<a class="mochiref reference external" href="#fn-filter">filter</a>, etc.</p>
+<a class="mochiref reference external" href="#fn-filter">filter</a>, etc. Similar to the Python <a class="reference external" href="http://docs.python.org/library/operator.html">http://docs.python.org/library/operator.html</a> module.</p>
 <p>Unary Logic Operators:</p>
 <blockquote>
 <table border="1" class="docutils">
@@ -1187,6 +1187,10 @@ except it uses the arguments instead of a given <tt class="docutils literal">Arr
 <td><tt class="docutils literal">a / b</tt></td>
 <td>Division</td>
 </tr>
+<tr><td><tt class="docutils literal">floordiv(a, b)</tt></td>
+<td><tt class="docutils literal">floor(a / b)</tt></td>
+<td>Integer division</td>
+</tr>
 <tr><td><tt class="docutils literal">mod(a, b)</tt></td>
 <td><tt class="docutils literal">a % b</tt></td>
 <td>Modulus</td>
@@ -1194,6 +1198,10 @@ except it uses the arguments instead of a given <tt class="docutils literal">Arr
 <tr><td><tt class="docutils literal">mul(a, b)</tt></td>
 <td><tt class="docutils literal">a * b</tt></td>
 <td>Multiplication</td>
+</tr>
+<tr><td><tt class="docutils literal">pow(a, b)</tt></td>
+<td><tt class="docutils literal">pow(a, b)</tt></td>
+<td>Exponentiation</td>
 </tr>
 <tr><td><tt class="docutils literal">and(a, b)</tt></td>
 <td><tt class="docutils literal">a &amp; b</tt></td>
@@ -1218,6 +1226,18 @@ except it uses the arguments instead of a given <tt class="docutils literal">Arr
 <tr><td><tt class="docutils literal">zrshift(a, b)</tt></td>
 <td><tt class="docutils literal">a &gt;&gt;&gt; b</tt></td>
 <td>Bitwise unsigned right shift</td>
+</tr>
+<tr><td><tt class="docutils literal">getitem(a, b)</tt></td>
+<td><tt class="docutils literal">a[b]</tt></td>
+<td>Value of a at index b</td>
+</tr>
+<tr><td><tt class="docutils literal">delitem(a, b)</tt></td>
+<td><tt class="docutils literal">delete a[b]</tt></td>
+<td>Remove value of a at index b</td>
+</tr>
+<tr><td><tt class="docutils literal">setitem(a,b,c)</tt></td>
+<td><tt class="docutils literal">a[b] = c</tt></td>
+<td>Set value of a at index b to c</td>
 </tr>
 </tbody>
 </table>
