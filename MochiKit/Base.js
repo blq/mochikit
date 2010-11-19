@@ -333,7 +333,14 @@ MochiKit.Base.update(MochiKit.Base, {
         /** @id MochiKit.Base.logor */
         logor: function (a, b) { return a || b; },
         /** @id MochiKit.Base.contains */
-        contains: function (a, b) { return b in a; }
+        contains: function (a, b) { return b in a; },
+
+		floordiv: function(a, b) { return Math.floor(a / b); },
+
+		// a + b for sequences
+		concat: function(a, b) { return MochiKit.Base.concat(a, b); }, // hmm, confusing for strings? (expands them..)
+		// in-place concatenation for sequences (in practice only for string and Array)
+		iconcat: function(a, b) { return a.concat(b); }
     },
 
     /** @id MochiKit.Base.forwardCall */
