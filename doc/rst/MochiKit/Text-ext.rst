@@ -3,6 +3,8 @@
 Name
 ====
 
+*THIS IS NOT YET AN OFFICIAL MOCHIKIT COMPONENT*
+
 MochiKit.Text-ext - various text processing algorithms
 
 *Availability*:
