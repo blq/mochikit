@@ -3,6 +3,8 @@
 Name
 ====
 
+*THIS IS NOT YET AN OFFICIAL MOCHIKIT COMPONENT*
+
 MochiKit.Base-ext - even more functional programming
 
 *Availability*:
@@ -13,28 +15,23 @@ Synopsis
 
 ::
 
-    function f(x)
-    {
+    function f(x) {
         return "f(" + x + ")";
     }
 
-    function g(x)
-    {
+    function g(x) {
         return "g(" + x + ")";
     }
 
-    function h(x, y)
-    {
+    function h(x, y) {
         return "h(" + x + ", " + y + ")";
     }
 
-    function k()
-    {
+    function k() {
         return "k()";
     }
 
-    function test(f)
-    {
+    function test(f) {
         return f("x", "y");
     }
 
@@ -104,7 +101,7 @@ Functions
 
     ::
 
-        bind(f, _2, bind(g, _1))(x, y);               // f(y, g(x))
+        bind(f, _2, bind(g, _1))(x, y);         // f(y, g(x))
 
 
 
@@ -125,15 +122,21 @@ Functions
 
 :mochidef:`protect(boundFn)`:
 
-    simple wrapper to mask the fact that a fn is bound.
-    to be used in cases where you don't want to evaluate a nested bind
+    Simple wrapper to mask the fact that ``boundFn`` is bound.
+
+    Typically to be used in cases where you don't want a nested bind to be evaluated.
 
 
 :mochidef:`apply(fn, a, b, ...)`:
 
-    assumes first arg is a function,
-    calls it with the rest of the arguments applied.
+    assumes first arg is a function, calls it with the rest of the arguments applied.
 
+    note: might change name of this fn..
+
+    ::
+
+        var lst = [ function(a) { return a + '0'; }, function(a) { return a + '1'; } ];
+    	MochiKit.Base.map(bind2(apply, null, _1, 'X'), m); -> [ 'X0', 'X1' ]
 
 
 :mochidef:`shuffleArray(values)`:
@@ -170,7 +173,7 @@ Authors
 Copyright
 =========
 
-Copyright 2005 Bob Ippolito <bob@redivi.com>. This program is
+Copyright 2005-2010 Bob Ippolito <bob@redivi.com>. This program is
 dual-licensed free software; you can redistribute it and/or modify it
 under the terms of the `MIT License`_ or the `Academic Free License
 v2.1`_.

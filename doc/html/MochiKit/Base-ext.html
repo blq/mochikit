@@ -17,6 +17,7 @@
 <div class="document">
 <div class="section" id="name">
 <h1>Name</h1>
+<p><em>THIS IS NOT YET AN OFFICIAL MOCHIKIT COMPONENT</em></p>
 <p>MochiKit.Base-ext - even more functional programming</p>
 <dl class="docutils">
 <dt><em>Availability</em>:</dt>
@@ -26,28 +27,23 @@
 <div class="section" id="synopsis">
 <h1>Synopsis</h1>
 <pre class="literal-block">
-function f(x)
-{
+function f(x) {
     return &quot;f(&quot; + x + &quot;)&quot;;
 }
 
-function g(x)
-{
+function g(x) {
     return &quot;g(&quot; + x + &quot;)&quot;;
 }
 
-function h(x, y)
-{
+function h(x, y) {
     return &quot;h(&quot; + x + &quot;, &quot; + y + &quot;)&quot;;
 }
 
-function k()
-{
+function k() {
     return &quot;k()&quot;;
 }
 
-function test(f)
-{
+function test(f) {
     return f(&quot;x&quot;, &quot;y&quot;);
 }
 
@@ -105,7 +101,7 @@ bind(g, _1, _1, _1)(x, y, z);          // g(x, x, x)
 <p>Furthermore it allows nested binds <a class="footnote-reference" href="#id6" id="id2">[2]</a>
 This enables in-order function composition, as opposed to the RTL order of <a class="mochiref reference external" href="#fn-compose">compose</a></p>
 <pre class="literal-block">
-bind(f, _2, bind(g, _1))(x, y);               // f(y, g(x))
+bind(f, _2, bind(g, _1))(x, y);         // f(y, g(x))
 </pre>
 </blockquote>
 <p>
@@ -127,14 +123,19 @@ a version of <a class="mochiref reference external" href="#fn-partial">partial</
 <a name="fn-protect"></a>
 <a class="mochidef reference external" href="#fn-protect">protect(boundFn)</a>:</p>
 <blockquote>
-simple wrapper to mask the fact that a fn is bound.
-to be used in cases where you don't want to evaluate a nested bind</blockquote>
+<p>Simple wrapper to mask the fact that <tt class="docutils literal">boundFn</tt> is bound.</p>
+<p>Typically to be used in cases where you don't want a nested bind to be evaluated.</p>
+</blockquote>
 <p>
 <a name="fn-apply"></a>
 <a class="mochidef reference external" href="#fn-apply">apply(fn, a, b, ...)</a>:</p>
 <blockquote>
-assumes first arg is a function,
-calls it with the rest of the arguments applied.</blockquote>
+<p>assumes first arg is a function, calls it with the rest of the arguments applied.</p>
+<pre class="literal-block">
+var lst = [ function(a) { return a + '0'; }, function(a) { return a + '1'; } ];
+MochiKit.Base.map(bind2(apply, null, _1, 'X'), m); -&gt; [ 'X0', 'X1' ]
+</pre>
+</blockquote>
 <p>
 <a name="fn-shufflearray"></a>
 <a class="mochidef reference external" href="#fn-shufflearray">shuffleArray(values)</a>:</p>
