@@ -41,6 +41,7 @@ MochiKit.Base.update(MochiKit.Iter, {
             return iterable;
         } else if (typeof(iterable.iter) == 'function') {
             return iterable.iter();
+		// todo: ? is this _still_ applicable? Google Closure lib does this for example
         /*
         }  else if (typeof(iterable.__iterator__) == 'function') {
             //
@@ -77,7 +78,7 @@ MochiKit.Base.update(MochiKit.Iter, {
 
     /**
      * @id MochiKit.Iter.cycle
-     * todo: add a fast path for Array?
+     * todo: add a fast (no mem) path for Array?
      * todo: should indicate the additional memory in the docs
      */
     cycle: function (p) {
