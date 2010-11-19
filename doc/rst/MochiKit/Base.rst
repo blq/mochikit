@@ -478,7 +478,7 @@ Functions
 
     1. A boolean ``value`` is returned as-is.
     2. A string ``value`` is considered false if and only if it equals ``""``,
-       ``"false"``, ``"null"``, ``"undefined"`` or ``"0"``. 
+       ``"false"``, ``"null"``, ``"undefined"`` or ``"0"``.
     3. A number ``value`` is considered false if and only if ``isNaN(value)``
        or ``value == 0``.
     4. A array-like ``value`` is considered false if and only if
@@ -673,7 +673,7 @@ Functions
 :mochidef:`flattenArray(lst)`:
 
     Return a new ``Array`` consisting of every item in lst with ``Array``
-    items expanded in-place recursively. This differs from 
+    items expanded in-place recursively. This differs from
     :mochiref:`flattenArguments` in that it only takes one argument and
     it only flattens items that are ``instanceof Array``.
 
@@ -864,14 +864,14 @@ Functions
 
         :mochiref:`map(fn, p, q, ...)`
             ->  ``[fn(p[0], q[0], ..), fn(p[1], q[1], ...), ...]``
-    
+
     If ``fn`` is ``null``, and more than one sequence is given as
     arguments, then the ``Array`` function is used.
 
         :mochiref:`map(null, p, q, ...)`
             -> :mochiref:`MochiKit.Iter.zip(p, q, ...)`
             -> ``[[p0, q0, ...], [p1, q1, ...], ...];``
-   
+
     Since this is a common idiom, :mochiref:`zip(p, q, ...)`
     is actually a shortcut for this.
 
@@ -928,6 +928,15 @@ Functions
 
         lst = map(methodcaller("toLowerCase"), ["THIS", "is", "LoWeRCaSe"]);
         assert( lst.join(" ") == "this is lowercase" );
+
+    also accepts a function as input, typically a prototype.function. i.e the above
+    could also be acchieved by::
+
+        methodcaller(String.prototype.toLowerCase)
+
+    This might be preferrable in case the code is to be agressively compressed to avoid getting
+    a function rename mismatch (wont happen in the ``String`` case though. Note that this also sacrifies interface based, "duck type", coding)
+
 
     *Availability*:
         Available in MochiKit 1.4+
@@ -1220,7 +1229,7 @@ Functions
     defined HTML elements. For example::
 
         assert( queryString({a: [1,2]}) === "a=1&a=2" );
-    
+
     Alternate form 2 (MochiKit 1.4+):
         :mochiref:`queryString([names, values])`
 
