@@ -17,6 +17,7 @@
 <div class="document">
 <div class="section" id="name">
 <h1>Name</h1>
+<p><em>THIS IS NOT YET AN OFFICIAL MOCHIKIT COMPONENT</em></p>
 <p>MochiKit.HeapQ - Heap queue algorithm</p>
 <dl class="docutils">
 <dt><em>Availability</em>:</dt>
@@ -94,6 +95,13 @@ combination returns the smaller of the two values, leaving the larger value on t
 Returns an iterator over the sorted values.</p>
 <p>Similar to <tt class="docutils literal">sorted(chain(iterables))</tt> but returns an iterable, does not pull the data into memory all at once, and
 assumes that each of the input streams is already sorted (smallest to largest).</p>
+</blockquote>
+<p>
+<a name="fn-isheap"></a>
+<a class="mochidef reference external" href="#fn-isheap">isHeap(lst[, cmp])</a>:</p>
+<blockquote>
+<p>Test if the <tt class="docutils literal">lst</tt> Array fulfills the heap invariant.</p>
+<p>note: Observe that, in contrast to the default cmp in base heap functions, the compare fn must return true for equal elements also.</p>
 </blockquote>
 </div>
 </div>

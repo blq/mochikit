@@ -3,6 +3,8 @@
 Name
 ====
 
+*THIS IS NOT YET AN OFFICIAL MOCHIKIT COMPONENT*
+
 MochiKit.HeapQ - Heap queue algorithm
 
 *Availability*:
@@ -88,6 +90,13 @@ Functions
 
     Similar to ``sorted(chain(iterables))`` but returns an iterable, does not pull the data into memory all at once, and
     assumes that each of the input streams is already sorted (smallest to largest).
+
+
+:mochidef:`isHeap(lst[, cmp])`:
+
+    Test if the ``lst`` Array fulfills the heap invariant.
+
+    note: Observe that, in contrast to the default cmp in base heap functions, the compare fn must return true for equal elements also.
 
 
 
