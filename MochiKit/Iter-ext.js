@@ -471,6 +471,12 @@ MochiKit.Iter.any = MochiKit.Iter.some;
  */
 MochiKit.Iter.all = MochiKit.Iter.every;
 
+/**
+ * alias for MochiKit.Iter.applymap (to match Python)
+ * @see http://docs.python.org/library/itertools.html#itertools.starmap
+ */
+MochiKit.Iter.starmap = MochiKit.Iter.applyMap;
+
 
 // todo: combinations, permutations, compress(?), sorted?
 
