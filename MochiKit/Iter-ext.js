@@ -104,11 +104,11 @@ MochiKit.Iter.treePostOrder = function(rootNode, getChildNodes)
 				if (stack.length == 0)
 					throw MochiKit.Iter.StopIteration;
 
-				var n = stack.pop(); // shift would work also
+				var n = stack.pop(); // shift (queue) would work also
 				if (n[1]) // visited?
 					return n[0];
 				// else
-				n[1] = true;
+				n[1] = true; // mark as visited
 				stack.push(n);
 
 				MochiKit.Iter.iextend(stack, MochiKit.Iter.imap(
@@ -127,9 +127,10 @@ MochiKit.Iter.treePostOrder = function(rootNode, getChildNodes)
  * Pairwise view of an iterable (overlapping)
  * <tt>[a, b, c, d, ..] -> [[a,b],[b,c],[c,d], ..]</tt>
  *
- * todo: generalize to full n-tuples (fifo queue) and configurable start and end logic (offset, clamp, wraparound etc) (windowIter?)
  * todo: is logic for single elem ok? 1 elem iter: no wrap -> no result, wrap=true -> one [elem, elem] pair. should wrap case also return nothing?
- * note that this function _might have_ sideeffects, since it immediately extracts first element (could change implementation to do this on first .next call I guess?)
+ * note that this function might have sideeffects, since it immediately extracts first element (could change implementation to do this on first .next call I guess?)
+ *
+ * todo: currently only reason to keep this instead of forwarding to windowView is the 'wrapLast' option.
  *
  * @param {!Iterable} iterable
  * @param {boolean=} [wrapLast=false] optional, default false. if true, last pair will be: [last, first] elems
@@ -175,7 +176,8 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
 
 /**
  * sliding-window iterator, generalized pairView
- * tood: decide on howto handle ending, need logic caese to handle clamping, wraparound etc (see pairView and wrapLast for example)
+ * todo: decide on howto handle ending, need logic caese to handle clamping, wraparound etc (see pairView and wrapLast for example)
+ * todo: more configurable start and end logic (offset, clamp, wraparound etc)
  * @param {!Iterable} iterable
  * @param {integer=} [windowSize=2] defaults to pair-size
  * @param {integer=} [stepSize=1]
@@ -217,29 +219,26 @@ MochiKit.Iter.windowView = function(iterable, windowSize, stepSize)
  * convenience in the common(?) case where you need to do a mapping
  * but also discard certain elements (when mapFn returns null/undefined)
  * todo: perhaps support an optional param that specifies which value should be considered "false"? (to allow -1 etc for example)
+ * todo: ok name? (ifilterMap?) ! not to confuse with a filter operation on a map(dictionary) object..
  *
  * @method filterMap
  * @param {!function(*): *} mapFn
  * @param {!Iterable} iterable
+ * @param {Function=} [isTrue=undefined|null]
  * @return {!Iterable}
  */
-MochiKit.Iter.filterMap = function(mapFn, iterable) // ok name? (not to confuse with a filter operation on a map(dictionary) object..)
+MochiKit.Iter.filterMap = function(mapFn, iterable, isTrue)
 {
-	return MochiKit.Iter.ifilter(
-		function(item) {
-			return typeof item !== 'undefined' && item !== null;
-		},
-		MochiKit.Iter.imap(
-			mapFn,
-			iterable
-		)
-	);
+	isTrue = isTrue || function(item) { return typeof item !== 'undefined' && item !== null; };
+	return MochiKit.Iter.ifilter(isTrue, MochiKit.Iter.imap(mapFn, iterable));
 };
 
 
 /**
  * extract only the leaves
  * iterator vesion of MochiKit.Base.flattenArray
+ * @param {!ArrayLike} root
+ * @return {!Itrable}
  */
 MochiKit.Iter.iflattenArray = function(root)
 {
@@ -258,8 +257,7 @@ MochiKit.Iter.iflattenArray = function(root)
 
 				if (node instanceof Array) {
 					Array.prototype.splice.apply(queue, [0, 0].concat(node)); // insert elements at front of queue, in-place.
-				}
-				else {
+				} else {
 					return node;
 				}
 			}
@@ -291,7 +289,7 @@ MochiKit.Iter.chainFromIter = function(seq, getIter)
 
 		next: function() {
 			if (jt == null)
-				jt = MochiKit.Iter.iter(getIter(it.next())); // wrap once more in iter since getIter might return an Array for example
+				jt = MochiKit.Iter.iter(getIter(it.next())); // wrap once more in iter since getIter might return an Array for example (ok? or demand iter?)
 
 			while (true) {
 				try {
@@ -318,7 +316,7 @@ MochiKit.Iter.chainFromIter = function(seq, getIter)
  */
 MochiKit.Iter.uniqueView = function(iterable, pred)
 {
-	pred = pred || MochiKit.Base.operator.eq;
+	pred = pred || MochiKit.Base.operator.eq; // or 'ceq'?
 
 	var it = MochiKit.Iter.iter(iterable);
 	var first = true;
@@ -438,7 +436,7 @@ MochiKit.Iter.izipLongest = function(iterables, fillValue)
 		toString: MochiKit.Base.forwardCall("repr"),
 
 		next: function() {
-			var result = new Array(iterables.length);
+			var result = new Array(iterables.length); // could push also but I pretend this is more efficient here(?)
 			for (var i = 0; i < iterables.length; ++i) {
 				try {
 					result[i] = iterables[i].next();
@@ -475,7 +473,7 @@ MochiKit.Iter.all = MochiKit.Iter.every;
  * alias for MochiKit.Iter.applymap (to match Python)
  * @see http://docs.python.org/library/itertools.html#itertools.starmap
  */
-MochiKit.Iter.starmap = MochiKit.Iter.applyMap;
+MochiKit.Iter.starmap = MochiKit.Iter.applymap;
 
 
 // todo: combinations, permutations, compress(?), sorted?
