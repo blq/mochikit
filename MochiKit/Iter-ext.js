@@ -326,6 +326,7 @@ MochiKit.Iter.uniqueView = function(iterable, pred)
 		repr: function() { return "uniqueView(...)"; },
 		toString: MochiKit.Base.forwardCall("repr"),
 
+		// fold-iteration
 		next: function() {
 			if (first) {
 				first = false;
@@ -477,6 +478,18 @@ MochiKit.Iter.starmap = MochiKit.Iter.applymap;
 
 
 // todo: combinations, permutations, compress(?), sorted?
+
+
+/**
+ * ok place..?
+ * @param {!Iterable} iterable
+ * @param {Function=} [cmp=cle]
+ * @return {boolean}
+ */
+MochiKit.Iter.isSorted = function(iterable, cmp)
+{
+	return MochiKit.Iter.every(MochiKit.Iter.windowView(iterable), cmp || MochiKit.Base.operator.cle);
+};
 
 
 //--------------------------------
