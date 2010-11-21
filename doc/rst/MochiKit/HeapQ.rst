@@ -99,6 +99,16 @@ Functions
     note: Observe that, in contrast to the default cmp in base heap functions, the compare fn must return true for equal elements also.
 
 
+:mochidef:`nLargest(n, iterable[, cmp])`:
+
+    Return a list with the ``n`` largest elements from the dataset defined by ``iterable``.
+
+
+:mochidef:`nSmallest(n, iterable[, cmp])`:
+
+    Return a list with the ``n`` smallest elements from the dataset defined by ``iterable``.
+
+
 
 See Also
 ========

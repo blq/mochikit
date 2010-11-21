@@ -74,6 +74,7 @@
 
 - Added HeapQ module
 - Added heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort
+- Added example priority queue class based on the heap functions
 - Added imergeSorted
 - Added nSmallest and nLargest (partial sorting)
 - Added heapIter
