@@ -46,7 +46,7 @@ tests.test_HeapQ = function(t)
 
     function test_nsmallest()
 	{
-		var data = map(random, repeat(2000, 1000));
+		var data = map(randRange, repeat(2000, 1000));
 
         forEach([0, 1, 2, 10, 100, 400, 999, 1000, 1100], function(n) {
             t.eq(nSmallest(n, data), sorted(data).slice(0, n), 'nsmallest ' + n + ' ok');
@@ -55,16 +55,21 @@ tests.test_HeapQ = function(t)
 	test_nsmallest();
 
 
-	// !?? fails
-	var m = [2, 8, 3, 0, 5, 6, 4, 1, 9, 7];
-	var n = nLargest(5, m);
-	t.eq(n, [9, 8, 7, 6, 5], 'simple nlargest ok');
+	function test_nlargest_simple()
+	{
+		// smallest case distilled before finding the actual islice bug..
+		var m = [0, 1, 2];
+		var n = nLargest(2, m);
+		t.eq(n, [2, 1], 'nlargest micro test ok');
+	}
+	test_nlargest_simple();
+
 
     function test_nlargest()
 	{
-		var data = map(random, repeat(2000, 1000));
+		var data = map(randRange, repeat(2000, 1000));
 
-        forEach([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 66, 99, 100, 400, 999, 1000, 1100], function(n) {
+        forEach([0, 1, 2, 10, 100, 400, 999, 1000, 1100], function(n) {
             t.eq(nLargest(n, data), reversed(sorted(data)).slice(0, n), 'nlargest ' + n + ' ok');
 		});
 	}
@@ -73,7 +78,7 @@ tests.test_HeapQ = function(t)
 
     function test_naive_nbest()
 	{
-		var data = map(random, repeat(2000, 1000));
+		var data = map(randRange, repeat(2000, 1000));
 
         var heap = []
         forEach(data, function(item) {
@@ -95,7 +100,7 @@ tests.test_HeapQ = function(t)
         // heap instead of a min heap, it could go faster still via
         // heapify'ing all of data (linear time), then doing 10 heappops
         // (10 log-time steps).
-        var data = map(random,  repeat(200, 1000));
+        var data = map(randRange,  repeat(200, 1000));
 
         var heap = data.slice(0, 10);
         heapify(heap);
@@ -114,8 +119,8 @@ tests.test_HeapQ = function(t)
 	{
         // Exercise everything with repeated heapsort checks
         forEach(range(100), function(trial) {
-            var size = random(50);
-			var data = map(random, repeat(25, size));
+            var size = randRange(50);
+			var data = map(randRange, repeat(25, size));
 
             if (trial & 1) {     // Half of the time, use heapify
                 var heap = list(data);

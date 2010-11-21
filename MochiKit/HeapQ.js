@@ -32,6 +32,7 @@ MochiKit.Base._module('HeapQ', '1.5', ['Base', 'Iter']);
  * @see http://docs.python.org/library/heapq.html#heapq.heapify
  * @param {!Array} x
  * @param {Function=} [cmp]
+ * @return {!Array} chained, modified input array (note that Python heapify doesn't do this..)
  */
 MochiKit.HeapQ.heapify = function(x, cmp)
 {
@@ -43,8 +44,9 @@ MochiKit.HeapQ.heapify = function(x, cmp)
     // or i < (n-1)/2.  If n is even = 2*j, this is (2*j-1)/2 = j-1/2 so
     // j-1 is the largest, which is n//2 - 1.  If n is odd = 2*j+1, this is
     // (2*j+1-1)/2 = j so j-1 is the largest, and that's again n//2-1.
-    for (var i = Math.floor(n / 2); i >= 0; --i)
+    for (var i = Math.floor(n / 2) - 1; i >= 0; --i)
 		MochiKit.HeapQ._siftup(x, i, cmp);
+	return x; // enable functional chaining (Python doesn't do this..)
 };
 
 
@@ -180,7 +182,7 @@ MochiKit.HeapQ.heapReplace = function(heap, item, cmp)
 
 
 /**
- * Fast version of a heappush followed by a heappop.
+ * Fast version of a heapPush followed by a heapPop.
  * @see http://docs.python.org/library/heapq.html#heapq.heappushpop
  * @param {!Array} heap
  * @param {*} item
@@ -214,16 +216,16 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 {
 	// todo: ! need to wrap the comparator.. cmp shouldn't need to handle arrays, only the actual value type!
 	cmp = cmp || MochiKit.Base.operator.clt; // ! need to use clt since we compare array (tuples)
-	var m = MochiKit;
+	var m = MochiKit, mi = m.Iter;
 
-    var h = [];
-    m.Iter.forEach(m.Iter.izip(m.Iter.count(), m.Iter.imap(m.Iter.iter, iterables)), function(pair) {
+	var h = [];
+	mi.forEach(mi.izip(mi.count(), mi.imap(mi.iter, iterables)), function(pair) {
 		var itnum = pair[0], it = pair[1];
         try {
             var next = it.next;
             h.push([next(), itnum, next]);
 		} catch (e) {
-			if (e != m.Iter.StopIteration)
+			if (e != mi.StopIteration)
 				throw e;
 		}
 	});
@@ -236,7 +238,7 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 		next: function() {
 			while (true) {
 				if (h.length == 0)
-					throw m.Iter.StopIteration;
+					throw mi.StopIteration;
 
 				var s = h[0];
 				var v = s[0]; var next = s[2];
@@ -245,7 +247,7 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 					s[0] = next(); // raises StopIteration when exhausted
 					m.HeapQ.heapReplace(h, s, cmp); // restore heap condition
 				} catch (e) {
-					if (e != m.Iter.StopIteration)
+					if (e != mi.StopIteration)
 						throw e;
 					m.HeapQ.heapPop(h, cmp);   // remove empty iterator
 				}
@@ -253,6 +255,91 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 			}
 		}
 	};
+};
+
+
+/**
+ * note: ! this is a destructive iterator!
+ * @param {!Array} heap ! will be emptied during the iteration
+ * @param {Function=} [cmp=clt]
+ * @return {!Iterable}
+ */
+MochiKit.HeapQ.heapIter = function(heap, cmp)
+{
+	cmp = cmp || MochiKit.Base.operator.clt;
+
+	return {
+		next: function() {
+			if (heap.length == 0)
+				throw MochiKit.Iter.StopIteration;
+			return MochiKit.HeapQ.heapPop(heap, cmp);
+		}
+	};
+};
+
+
+/**
+ * Find the n largest elements in a dataset.
+ * Equivalent to: sorted(iterable, reverse=True)[:n]
+ * @see http://docs.python.org/library/heapq.html#heapq.nlargest
+ * @param {integer} n
+ * @param {!Iterable} iterable
+ * @param {Function=} [cmp=cle]
+ * @return {!Array} array of (at most) n elements from iterable in sorted order
+ */
+MochiKit.HeapQ.nLargest = function(n, iterable, cmp)
+{
+	var m = MochiKit, mi = m.Iter;
+	cmp = cmp || m.Base.operator.clt; // cle? ok?
+    var it = mi.iter(iterable);
+
+	// todo: several fast-paths possible. n >= len(iterable) -> rev.sort etc
+/*
+	// PyPy variant
+	var result = mi.list(mi.islice(it, n));
+    if (result.length == 0)
+        return result;
+    m.HeapQ.heapify(result, cmp);
+    var sol = result[0];         // sol --> smallest of the nlargest
+    mi.forEach(it, function(elem) {
+       if (elem > sol) {
+			m.HeapQ.heapReplace(result, elem, cmp);
+			sol = result[0];
+	   }
+	});
+    result.sort(function(a, b) { return -1*m.Base.compare(a, b); }); // todo: extract a negateComparator
+    return result;
+*/
+
+    var result = mi.list(mi.islice(it, n));
+	if (result.length == 0)
+		return result;
+    m.HeapQ.heapify(result, cmp);
+	mi.forEach(it, function(elem) {
+		m.HeapQ.heapPushPop(result, elem, cmp);
+	});
+    result.sort(function(a, b) { return -1*m.Base.compare(a, b); });
+    return result;
+};
+
+
+/**
+ * @see http://docs.python.org/library/heapq.html#heapq.nsmallest
+ * O(N + n log N), N = len(iterable)
+ * @param {integer} n
+ * @param {!Iterable} iterable
+ * @param {Function=} [cmp=lte]
+ * @return {!Array}
+ */
+MochiKit.HeapQ.nSmallest = function(n, iterable, cmp)
+{
+	// (Python code also has a fast-path for n*10 < len(iterable) using bisection)
+	var m = MochiKit, mi = m.Iter;
+	cmp = cmp || m.Base.operator.clt; // ok?
+
+	var h = mi.list(iterable);
+	m.HeapQ.heapify(h, cmp);
+	return m.Base.map(m.Base.partial(m.HeapQ.heapPop, h, cmp), mi.range(Math.min(n, h.length)));
 };
 
 
@@ -265,13 +352,21 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 MochiKit.HeapQ.isHeap = function(lst, cmp)
 {
 	cmp = cmp || MochiKit.Base.operator.cle;
-
+/*
 	var n = Math.floor(lst.length / 2);
 	if (n == 0)
 		return true;
 
 	for (var i = 0; i < n - 1; ++i) {
 		if (!(cmp(lst[i], lst[2*i+1]) && cmp(lst[i], lst[2*i+2])))
+			return false;
+	}
+	return true;
+*/
+	// bottom up variant
+	for (var pos = 1; pos < lst.length; ++pos) { // pos 0 has no parent
+		var parentpos = (pos - 1) >> 1; // == Math.floor((pos - 1) / 2)
+		if (!cmp(lst[parentpos], lst[pos]))
 			return false;
 	}
 	return true;
@@ -283,7 +378,7 @@ MochiKit.HeapQ.isHeap = function(lst, cmp)
 
 /**
  * example code for heap sort.
- * Does Not run in-place. (hmm, perhaps call it heapSorteD?) (in-place version possible, but more code)
+ * Does Not run in-place. (hmm, perhaps call it heapSorteD?) (todo: in-place version possible, but more code)
  * Equivalent to sorted(iterable)
  * @param {!Iterable} iterable
  * @param {BinaryComparator=} [cmp]
@@ -295,7 +390,7 @@ MochiKit.HeapQ.heapSort = function(iterable, cmp)
 
 	var h = m.Iter.list(iterable);
 	m.HeapQ.heapify(h, cmp);
-	return m.Base.map(m.Base.partial(m.HeapQ.heapPop, h, cmp), m.Iter.range(h.length));
+	return m.Base.map(m.Base.partial(m.HeapQ.heapPop, h, cmp), m.Iter.range(h.length)); // could use repeat(h, h.length) also (see nSmallest)
 };
 
 
