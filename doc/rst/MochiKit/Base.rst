@@ -564,7 +564,7 @@ Functions
         Available in MochiKit 1.3.1+
 
 
-:mochidef:`counter(n=1)`:
+:mochidef:`counter(n=1, step=1)`:
 
     Returns a function that will return a number one greater than
     the previous returned value, starting at ``n``. For example::

@@ -84,12 +84,18 @@ MochiKit.Base.update(MochiKit.Base, {
     },
 
     /** @id MochiKit.Base.counter */
-    counter: function (n/* = 1 */) {
+    counter: function (n/* = 1 */, step/* = 1 */) {
         if (arguments.length === 0) {
             n = 1;
         }
+		if (arguments.length < 2) {
+			step = 1;
+		}
+
         return function () {
-            return n++;
+			var c = n;
+			n += step;
+            return c;
         };
     },
 
