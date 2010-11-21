@@ -64,15 +64,17 @@ MochiKit.Base.update(MochiKit.Iter, {
     },
 
     /** @id MochiKit.Iter.count */
-    count: function (n) {
+    count: function (n, step/* = 1 */) {
         if (!n) {
             n = 0;
         }
+		if (arguments.length < 2)
+			step = 1;
         var m = MochiKit.Base;
         return {
             repr: function () { return "count(" + n + ")"; },
             toString: m.forwardCall("repr"),
-            next: m.counter(n)
+            next: m.counter(n, step)
         };
     },
 

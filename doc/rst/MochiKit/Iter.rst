@@ -94,7 +94,7 @@ Functions
         Available in MochiKit 1.3.1+
 
 
-:mochidef:`count(n=0)`:
+:mochidef:`count(n=0, step=1)`:
 
     ``count(n=0)`` --> n, n + 1, n + 2, ...
 
