@@ -49,6 +49,8 @@
 - Added shuffleArray
 - Added partition
 - Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat
+- Added an optional 'step' parameter to Base.counter()
+- Added randRange
 
 - Added Iter-ext module
 - Added Iter.treePreOrder, treeLevelOrder, treePostOrder
@@ -62,6 +64,9 @@
 - Added Iter.iflattenArray
 - Added Iter.filterMap
 - Added alias to Iter.any=some, all=every, starmap=applymap
+- Added isSorted
+- Added an optional 'step' parameter to Iter.count() (symmetry with Base.counter() change)
+- Fixed islice bug. consuming one item too much. Added unit tests to verify.
 
 - Added Text-ext module
 - Added humanStringCompare
@@ -70,6 +75,8 @@
 - Added HeapQ module
 - Added heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort
 - Added imergeSorted
+- Added nSmallest and nLargest (partial sorting)
+- Added heapIter
 
 - Added DOM.TEXT alias function
 - Made DOM.removeElement silently handle null, as well as already removed elements
