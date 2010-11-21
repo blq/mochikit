@@ -254,12 +254,33 @@ MochiKit.Base.apply = function(fn, var_args) // todo: name.. dangerous.
 	// or return a wrapper fn..?
 
 	var args = MochiKit.Base.extend([], arguments, 1);
-	return arguments[0].apply(this, args);
+	return fn.apply(this, args);
 };
 
 
 
 //-----------
+
+/**
+ * similar to Python's randrange (but without the 'step' param)
+ * todo: put in some other module?
+ * todo/note: currently needs at least 1 param. perhaps fallback to standard Math.random, i.e [0, 1) if zero args?
+ * uses half-open range. i.e random(0, 10) => values within [0..9] ([0,10) in range-notation)
+ * @param {integer=} [rangeStart=0]
+ * @param {integer=} [rangeEnd=rangeStart] if not set method returns [0..rangeStart-1]
+ * @return {integer} number in range [rangeStart..rangeEnd-1]
+ */
+MochiKit.Base.randRange = function(rangeStart, rangeEnd)
+{
+	// single param overload
+	if (arguments.length == 1) {
+		rangeEnd = rangeStart;
+		rangeStart = 0;
+	}
+
+	var range = rangeEnd - rangeStart;
+	return Math.floor(Math.random() * range) + rangeStart;
+};
 
 
 /**
@@ -278,7 +299,7 @@ MochiKit.Base.apply = function(fn, var_args) // todo: name.. dangerous.
  * @param {!Array} values
  * @return {!Array} chained, values array shuffled
  */
-MochiKit.Base.shuffleArray = function(values)
+MochiKit.Base.shuffleArray = function(values) // or just shuffle?
 {
 	// Durstenfeld's algorithm
 	for (var i = values.length - 1; i > 0; --i) {
@@ -307,6 +328,8 @@ MochiKit.Base.deal = function(numItems, func)
 {
 	func = func || MochiKit.Base.operator.identity; // default pass-through, function(i) { return i; }
 
+	// == shuffle(map(func, range(numItems)));
+
 	var deck = new Array(numItems);
 	for (var i = 0; i < numItems; ++i) {
 		var j = Math.floor(Math.random() * (i + 1));
@@ -319,12 +342,13 @@ MochiKit.Base.deal = function(numItems, func)
 
 /**
  * in-place partitioning (not stable). O(N)
+ * @see http://en.wikipedia.org/wiki/Quicksort
  * @param {!Array} array
  * @param {?(function(*, *): boolean)=} [cmp=<] ordering, default <  (or allow acomplete comparator with -1, 0, +1 return?)
  * @param {integer=} [left=0]
  * @param {integer=} [right=array.length-1]
- * @param {integer=} [pivotIndex=middle] // or move this to an optional pickPivot(array, left, right) function?
- * @return {integer} location of the pivot element. todo: hmm, or return a tuple with the array + index? (would allow functional use also)
+ * @param {(integer|Function)=} [pivotIndex=middle] // or move this to an optional pickPivot(array, left, right) function?
+ * @return {integer} location of the pivot element
  */
 MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 {
@@ -355,7 +379,7 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 };
 
 
-// todo: stablePartition, binarySearch, isSorted, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
+// todo: stablePartition, binarySearch, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
 
 //------------------
 
