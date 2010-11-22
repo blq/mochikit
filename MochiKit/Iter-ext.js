@@ -267,7 +267,7 @@ MochiKit.Iter.iflattenArray = function(root)
 
 
 /**
- * resembles Python's chain.from_iter
+ * resembles Python's chain.from_iterable
  * one level flattening of a sequence of iterables
  * generalized chain (intended for larger volumes, think nodes->values of a tree-structure).
  * Can be used to traverse grouby sequences: indirectChain(groupby([1,1,1,2,2,3,3]), function(v) { return v[1]; }) -> [1,1,1,2,2,3,3] i.e an inverse of the groupby)
