@@ -51,7 +51,8 @@ MochiKit.MochiKit.SUBMODULES = [
 	"Base-ext",
 	"Iter-ext",
 	"Text-ext",
-	"HeapQ"
+	"HeapQ",
+	"Random"
 ];
 
 (function () {

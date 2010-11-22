@@ -139,29 +139,12 @@ Functions
     	MochiKit.Base.map(bind2(apply, null, _1, 'X'), m); -> [ 'X0', 'X1' ]
 
 
-:mochidef:`shuffleArray(values)`:
-
-    Shuffles an array using the Fisher-Yates algorithm [3]_ (Knuth). O(N)
-    (in-place algorithm)
-
-    Returns the shuffled input array to enable chaining.
-
-    (..shuffling an array by sorting using a random comparator is a Bad idea [4]_)
-
-
-:mochidef:`deal(numItems, opt_func)`:
-
-    Generates a unique random range of numbers from 0..N-1 (or rather f(0)..f(N-1) ) (no number occurs twice) (think dealing a deck of cards)
-
-
 
 See Also
 ========
 
 .. [1] C++ Boost bind: http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html
 .. [2] Nested bind: http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds
-.. [3] Fisher-Yates shuffle: http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-.. [4] Microsoft: http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
 
 
 Authors

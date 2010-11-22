@@ -46,11 +46,9 @@
 - Added bind2, partial2, method2, bindLate2,
 - Added protect, apply
 - Added isBoundFunction
-- Added shuffleArray
 - Added partition
 - Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat
 - Added an optional 'step' parameter to Base.counter()
-- Added randRange
 
 - Added Iter-ext module
 - Added Iter.treePreOrder, treeLevelOrder, treePostOrder
@@ -79,10 +77,16 @@
 - Added nSmallest and nLargest (partial sorting)
 - Added heapIter
 
-- Added DOM.TEXT alias function
 - Made DOM.removeElement silently handle null, as well as already removed elements
 
 - Changed Async.addCallback/addErrback to interpret no return value as piping, i.e pass on the last value.
+
+- Added Random module
+- Added randRange
+- Added shuffle
+- Added sample
+- Added choice
+- Added uniform
 
 
 2009-XX-YY      v1.4.3 (bug fix release)

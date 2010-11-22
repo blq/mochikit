@@ -91,14 +91,14 @@ t.is(test( partial2(f, partial2(k)) ), 'f(k())');
 <blockquote>
 <p>&quot;Bind 2.0&quot;.</p>
 <p>Apart from the functionality offered by <a class="mochiref reference external" href="#fn-bind">bind</a>, <a class="mochiref reference external" href="#fn-bind2">bind2</a> also supports
-binding with placeholder arguments, inspired by the C++ Boost bind <a class="footnote-reference" href="#id5" id="id1">[1]</a>.</p>
+binding with placeholder arguments, inspired by the C++ Boost bind <a class="footnote-reference" href="#id3" id="id1">[1]</a>.</p>
 <pre class="literal-block">
 bind(f, _2, _1)(x, y);                 // f(y, x)
 bind(g, _1, 9, _1)(x);                 // g(x, 9, x)
 bind(g, _3, _3, _3)(x, y, z);          // g(z, z, z)
 bind(g, _1, _1, _1)(x, y, z);          // g(x, x, x)
 </pre>
-<p>Furthermore it allows nested binds <a class="footnote-reference" href="#id6" id="id2">[2]</a>
+<p>Furthermore it allows nested binds <a class="footnote-reference" href="#id4" id="id2">[2]</a>
 This enables in-order function composition, as opposed to the RTL order of <a class="mochiref reference external" href="#fn-compose">compose</a></p>
 <pre class="literal-block">
 bind(f, _2, bind(g, _1))(x, y);         // f(y, g(x))
@@ -137,46 +137,20 @@ var lst = [ function(a) { return a + '0'; }, function(a) { return a + '1'; } ];
 MochiKit.Base.map(bind2(apply, null, _1, 'X'), m); -&gt; [ 'X0', 'X1' ]
 </pre>
 </blockquote>
-<p>
-<a name="fn-shufflearray"></a>
-<a class="mochidef reference external" href="#fn-shufflearray">shuffleArray(values)</a>:</p>
-<blockquote>
-<p>Shuffles an array using the Fisher-Yates algorithm <a class="footnote-reference" href="#id7" id="id3">[3]</a> (Knuth). O(N)
-(in-place algorithm)</p>
-<p>Returns the shuffled input array to enable chaining.</p>
-<p>(..shuffling an array by sorting using a random comparator is a Bad idea <a class="footnote-reference" href="#id8" id="id4">[4]</a>)</p>
-</blockquote>
-<p>
-<a name="fn-deal"></a>
-<a class="mochidef reference external" href="#fn-deal">deal(numItems, opt_func)</a>:</p>
-<blockquote>
-Generates a unique random range of numbers from 0..N-1 (or rather f(0)..f(N-1) ) (no number occurs twice) (think dealing a deck of cards)</blockquote>
 </div>
 </div>
 <div class="section" id="see-also">
 <h1>See Also</h1>
-<table class="docutils footnote" frame="void" id="id5" rules="none">
+<table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>C++ Boost bind: <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html</a></td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id6" rules="none">
+<table class="docutils footnote" frame="void" id="id4" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Nested bind: <a class="reference external" href="http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds">http://www.boost.org/doc/libs/1_44_0/libs/bind/bind.html#nested_binds</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id7" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Fisher-Yates shuffle: <a class="reference external" href="http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle">http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id8" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Microsoft: <a class="reference external" href="http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html">http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html</a></td></tr>
 </tbody>
 </table>
 </div>

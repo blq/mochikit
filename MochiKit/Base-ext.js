@@ -261,84 +261,6 @@ MochiKit.Base.apply = function(fn, var_args) // todo: name.. dangerous.
 
 //-----------
 
-/**
- * similar to Python's randrange (but without the 'step' param)
- * todo: put in some other module?
- * todo/note: currently needs at least 1 param. perhaps fallback to standard Math.random, i.e [0, 1) if zero args?
- * uses half-open range. i.e random(0, 10) => values within [0..9] ([0,10) in range-notation)
- * @param {integer=} [rangeStart=0]
- * @param {integer=} [rangeEnd=rangeStart] if not set method returns [0..rangeStart-1]
- * @return {integer} number in range [rangeStart..rangeEnd-1]
- */
-MochiKit.Base.randRange = function(rangeStart, rangeEnd)
-{
-	// single param overload
-	if (arguments.length == 1) {
-		rangeEnd = rangeStart;
-		rangeStart = 0;
-	}
-
-	var range = rangeEnd - rangeStart;
-	return Math.floor(Math.random() * range) + rangeStart;
-};
-
-
-/**
- * Shuffles an array using the Fisher-Yates algorithm (Knuth). O(N)
- * in-place algorithm. (todo: a functional version?)
- *
- * @see http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
- * - Thou shalt not shuffle by sorting using a random comparator!
- * .. you don't want to make same mistake M$ did ;) http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
- *
- * todo: take optional range, start & end, indices?
- * todo: take a custom getter and setter funcs instead of just whole elem swaps? (though this yearns for a custom iterator concept..)
- * todo: support a generator? custom rand fn?
- *
- * @id MochiKit.Base.shuffle
- * @param {!Array} values
- * @return {!Array} chained, values array shuffled
- */
-MochiKit.Base.shuffleArray = function(values) // or just shuffle?
-{
-	// Durstenfeld's algorithm
-	for (var i = values.length - 1; i > 0; --i) {
-		var j = Math.floor(Math.random() * (i + 1));
-		// swap elems at i and j
-		var tmp = values[i];
-		values[i] = values[j];
-		values[j] = tmp;
-	}
-	return values; // ok? enable chaining
-};
-
-
-/**
- * todo: drop? no significant advantage of this compared to (mapping) a shuffle..
- * Generates a unique random range of numbers from 0..N-1 (or rather f(0)..f(N-1) ) (no number occurs twice) (think dealing a deck of cards)
- * O(N)
- * todo: create an iterator based impl? (needs a quite different algo though, using a specific rand method)
- *
- * @id MochiKit.Base.deal
- * @param {integer} numItems
- * @param {Function=} [func] Optional. function receiving the index.nr and producing a result. default identity.
- * @return {!Array}
- */
-MochiKit.Base.deal = function(numItems, func)
-{
-	func = func || MochiKit.Base.operator.identity; // default pass-through, function(i) { return i; }
-
-	// == shuffle(map(func, range(numItems)));
-
-	var deck = new Array(numItems);
-	for (var i = 0; i < numItems; ++i) {
-		var j = Math.floor(Math.random() * (i + 1));
-		deck[i] = deck[j];
-		deck[j] = func(i);
-	}
-	return deck;
-};
-
 
 /**
  * in-place partitioning (not stable). O(N)
@@ -380,6 +302,18 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 
 
 // todo: stablePartition, binarySearch, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
+
+/**
+ * @param {!Function} cmp
+ * @return {!Function}
+ */
+MochiKit.Base.negateComparator = function(cmp)
+{
+	return function() {
+		return -1 * cmp.apply(this, arguments);
+	};
+};
+
 
 //------------------
 
