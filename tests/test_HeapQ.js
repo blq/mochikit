@@ -1,5 +1,8 @@
 // Unittests for heapq.
-// converted from PyPy's unit-tests, http://codespeak.net/svn/pypy/trunk/lib-python/2.5.2/test/test_heapq.py
+//
+// converted from Python and PyPy's unit-tests
+// http://codespeak.net/svn/pypy/trunk/lib-python/2.5.2/test/test_heapq.py
+// and http://svn.python.org/view/python/trunk/Lib/test/test_heapq.py
 
 if (typeof(tests) == 'undefined') { tests = {}; }
 
@@ -39,7 +42,7 @@ tests.test_HeapQ = function(t)
         var data_sorted = sorted(data);
         t.eq(data_sorted, results);
         // 2) Check that the invariant holds for a sorted array
-        t.ok(isHeap(results), 'pushpop ok');
+        t.ok(isHeap(results), 'push pop ok');
 	}
 	test_push_pop();
 
@@ -115,6 +118,29 @@ tests.test_HeapQ = function(t)
 	test_nbest();
 
 
+    function test_heappushpop()
+	{
+        var h = [];
+        var x = heapPushPop(h, 10);
+        t.eq([h, x], [[], 10], 'pushpop begin');
+
+        h = [10];
+        x = heapPushPop(h, 10.0);
+        t.eq([h, x], [[10], 10.0]);
+        t.eq(typeof h[0], 'number');
+        t.eq(typeof x, 'number');
+
+        h = [10];
+        x = heapPushPop(h, 9);
+        t.eq([h, x], [[10], 9]);
+
+        h = [10];
+        x = heapPushPop(h, 11);
+        t.eq([h, x], [[11], 10], 'pushpop end');
+	}
+	test_heappushpop();
+
+
     function test_heapsort()
 	{
         // Exercise everything with repeated heapsort checks
@@ -137,5 +163,35 @@ tests.test_HeapQ = function(t)
 	}
 	test_heapsort();
 
-};
 
+	function test_merge()
+	{
+        var inputs = [];
+        forEach(range(randRange(5)), function(i) {
+			var row = sorted( map(randRange, repeat(1000, randRange(10))) );
+            inputs.push(row);
+		});
+        t.eq(sorted(chainFromIter(inputs)), list(imergeSorted(inputs)), 'merge ok');
+        t.eq(list(imergeSorted([])), [], 'merge empty ok');
+	}
+	test_merge();
+
+
+    function test_merge_stability()
+	{
+        var inputs = [[], [], [], []];
+        forEach(range(2000), function(i) {
+            var stream = randRange(4);
+            var x = randRange(500);
+            inputs[stream].push([x, stream]);
+		});
+        forEach(inputs, function(stream) {
+            stream.sort(compare);
+        });
+        var result = list(imergeSorted(inputs));
+        t.eq(result, sorted(result));
+	}
+	test_merge_stability();
+
+
+};
