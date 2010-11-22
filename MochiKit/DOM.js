@@ -1139,8 +1139,6 @@ MochiKit.Base.update(MochiKit.DOM, {
         this.$ = this.getElement;
         /** @id MochiKit.DOM.NBSP */
         this.NBSP = "\u00a0";
-		/** @id MochiKit.DOM.TEXT */
-        this.TEXT = createDOMFunc("text"); // actually useful in cases when you want to add additional properties to the text elem
 
         m.nameFunctions(this);
     }
