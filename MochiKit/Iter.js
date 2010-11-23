@@ -41,15 +41,8 @@ MochiKit.Base.update(MochiKit.Iter, {
             return iterable;
         } else if (typeof(iterable.iter) == 'function') {
             return iterable.iter();
-		// todo: ? is this _still_ applicable? Google Closure lib does this for example
-        /*
-        }  else if (typeof(iterable.__iterator__) == 'function') {
-            //
-            // XXX: We can't support JavaScript 1.7 __iterator__ directly
-            //      because of Object.prototype.__iterator__
-            //
-            return iterable.__iterator__();
-        */
+        }  else if (typeof(iterable.__iterator__) == 'function') { // todo: could argue this should be either first or last test.. (?)
+            return iterable.__iterator__(false); // false should be the default (values)
         }
 
         try {
