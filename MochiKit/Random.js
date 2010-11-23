@@ -4,6 +4,8 @@
  *
  * @author Fredrik Blomqvist
  *
+ * todo: support native custom generators. having a seed to be able to get repeatedly same rands is useful
+ *
  */
 
 if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
@@ -16,8 +18,7 @@ MochiKit.Base._module('Random', '1.5', ['Base']);
 
 
 /**
- * initially just for "symmetry"
- * todo: support native custom generators. having a seed to be able to get repeatedly same rands is useful
+ * initially just for "symmetry" but should support custom generators
  * @see http://docs.python.org/library/random.html#random.random
  *
  * @return {number} [0.0..1.0)

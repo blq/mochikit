@@ -47,14 +47,14 @@ Functions
 
 :mochidef:`random()`:
 
-    Return the next random floating point number in the range [0.0, 1.0).
+    Return the next random floating point number in the range ``[0.0, 1.0)``.
 
 :mochidef:`randRange([start=0], stop[, step=1])`:
 
     Choose a random item from ``range(start, stop[, step])``
     Half-open range, i.e does Not include ``stop``
 
-    todo: ``step`` is not supported yet
+    todo: ``step`` is not yet supported
 
 
 :mochidef:`choice(seq)`:
@@ -81,6 +81,8 @@ Functions
     in selection order so that all sub-slices will also be valid random
     samples.  This allows raffle winners (the sample) to be partitioned
     into grand prize and second place winners (the subslices).
+
+    Note: does not support iterator as input, use list(iterable).
 
 
 :mochidef:`deal(numItems, opt_func)`:
