@@ -27,10 +27,8 @@ MochiKit.Random.random = Math.random;
 
 
 /**
- * similar to Python's randrange (todo: but without the 'step' param)
+ * similar to Python's randrange
  * @see http://docs.python.org/library/random.html#random.randrange
- * todo: put in some other module? (should move 'randRange', 'shuffle' and 'random' to Random module?)
- * todo/note: currently needs at least 1 param. perhaps fallback to standard Math.random, i.e [0, 1) if zero args?
  * uses half-open range. i.e random(0, 10) => values within [0..9] ([0,10) in range-notation)
  * @param {integer=} [rangeStart=0]
  * @param {integer=} [rangeEnd=rangeStart] if not set method returns [0..rangeStart-1]
@@ -44,10 +42,18 @@ MochiKit.Random.randRange = function(rangeStart, rangeEnd, step)
 		rangeEnd = rangeStart;
 		rangeStart = 0;
 	}
-	// todo: step
+	step = step || 1;
 
-	var range = rangeEnd - rangeStart;
-	return Math.floor(MochiKit.Random.random() * range) + rangeStart;
+	var width = rangeEnd - rangeStart;
+	if (step == 1 && width > 0) {
+		return Math.floor(rangeStart + Math.floor(MochiKit.Random.random()*width));
+	}
+	if (step > 0) {
+        var n = Math.floor((width + step - 1) / step);
+	} else if (step < 0) {
+		var n = Math.floor((width + step + 1) / step);
+	}
+	return rangeStart + step*Math.floor(MochiKit.Random.random() * n);
 };
 
 

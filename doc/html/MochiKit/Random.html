@@ -55,15 +55,13 @@ The API is largely a subset of the Python random <a class="footnote-reference" h
 <a name="fn-random"></a>
 <a class="mochidef reference external" href="#fn-random">random()</a>:</p>
 <blockquote>
-Return the next random floating point number in the range [0.0, 1.0).</blockquote>
+Return the next random floating point number in the range <tt class="docutils literal">[0.0, 1.0)</tt>.</blockquote>
 <p>
 <a name="fn-randrange"></a>
 <a class="mochidef reference external" href="#fn-randrange">randRange([start=0], stop[, step=1])</a>:</p>
 <blockquote>
-<p>Choose a random item from <tt class="docutils literal">range(start, stop[, step])</tt>
-Half-open range, i.e does Not include <tt class="docutils literal">stop</tt></p>
-<p>todo: <tt class="docutils literal">step</tt> is not supported yet</p>
-</blockquote>
+Choose a random item from <tt class="docutils literal">range(start, stop[, step])</tt>
+Half-open range, i.e does Not include <tt class="docutils literal">stop</tt></blockquote>
 <p>
 <a name="fn-choice"></a>
 <a class="mochidef reference external" href="#fn-choice">choice(seq)</a>:</p>
@@ -88,6 +86,7 @@ leaving the original population unchanged.  The resulting list is
 in selection order so that all sub-slices will also be valid random
 samples.  This allows raffle winners (the sample) to be partitioned
 into grand prize and second place winners (the subslices).</p>
+<p>Note: does not support iterator as input, use list(iterable).</p>
 </blockquote>
 <p>
 <a name="fn-deal"></a>

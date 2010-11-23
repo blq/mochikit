@@ -54,8 +54,6 @@ Functions
     Choose a random item from ``range(start, stop[, step])``
     Half-open range, i.e does Not include ``stop``
 
-    todo: ``step`` is not yet supported
-
 
 :mochidef:`choice(seq)`:
 
