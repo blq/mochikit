@@ -16,7 +16,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Style');
 }
 
-MochiKit.Base._module('Position', '1.5', ['Base', 'DOM', 'Style']);
+MochiKit.Base.module(MochiKit, 'Position', '1.5', ['Base', 'DOM', 'Style']);
 
 MochiKit.Base.update(MochiKit.Position, {
     // Don't export from this module

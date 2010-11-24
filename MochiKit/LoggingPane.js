@@ -15,7 +15,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Logging');
 }
 
-MochiKit.Base._module('LoggingPane', '1.5', ['Base', 'Logging']);
+MochiKit.Base.module(MochiKit, 'LoggingPane', '1.5', ['Base', 'Logging']);
 
 /** @id MochiKit.LoggingPane.createLoggingPane */
 MochiKit.LoggingPane.createLoggingPane = function (inline/* = false */) {

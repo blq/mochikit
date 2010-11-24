@@ -12,7 +12,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Base');
 }
 
-MochiKit.Base._module('Base_ext', '1.5', ['Base']);
+MochiKit.Base.module(MochiKit, 'Base_ext', '1.5', ['Base']);
 
 /**
  * @private
@@ -288,6 +288,7 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 	var pivotValue = array[pivotIndex];
 	swap(pivotIndex, right); // move pivot to end
 
+	// todo: change to bidirectional version
 	var storeIndex = left;
 	for (var i = left; i <= right; ++i) {
 		if (cmp(array[i], pivotValue)) {

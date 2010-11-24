@@ -23,7 +23,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Iter');
 }
 
-MochiKit.Base._module('HeapQ', '1.5', ['Base', 'Iter']);
+MochiKit.Base.module(MochiKit, 'HeapQ', '1.5', ['Base', 'Iter']);
 
 
 
@@ -220,7 +220,7 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 	// wrap user supplied cmp so it only needs to compare the value-part
 	var _cmp = function(a, b) {
 		var c = cmp(a[0], b[0]);
-		// todo: hmm ? shouldn't we chain a compare with the index if equal..? 
+		// todo: hmm ? shouldn't we chain a compare with the index if equal..?
 		return c;
 	};
 

@@ -14,7 +14,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Base');
 }
 
-MochiKit.Base._module('Async', '1.5', ['Base']);
+MochiKit.Base.module(MochiKit, 'Async', '1.5', ['Base']);
 
 /**
  * @id MochiKit.Async.Deferred
@@ -455,7 +455,6 @@ MochiKit.Base.update(MochiKit.Async, {
     /** @id MochiKit.Async.loadScript */
     loadScript: function (url) {
         var d = new MochiKit.Async.Deferred();
-        var head = document.getElementsByTagName("head")[0];
         var script = document.createElement("script");
         script.type = "text/javascript";
         script.src = url;
@@ -463,12 +462,14 @@ MochiKit.Base.update(MochiKit.Async, {
             script.onload = null;
             script.onerror = null;
             script.onreadystatechange = null;
+            script = null;
             d.callback();
         };
         script.onerror = function (msg) {
             script.onload = null;
             script.onerror = null;
             script.onreadystatechange = null;
+            script = null;
             msg = "Failed to load script at " + url + ": " + msg;
             d.errback(new URIError(msg, url));
         }
@@ -480,8 +481,7 @@ MochiKit.Base.update(MochiKit.Async, {
                 MochiKit.Async.callLater(10, script.onerror, "Script loading timed out")
             }
         };
-        head.appendChild(script);
-		head = null;
+        document.getElementsByTagName("head")[0].appendChild(script);
         return d;
     },
 
@@ -591,6 +591,7 @@ MochiKit.Async.DeferredList = function (list, /* optional */fireOnOneCallback, f
 };
 
 MochiKit.Async.DeferredList.prototype = new MochiKit.Async.Deferred();
+MochiKit.Async.DeferredList.prototype.constructor = MochiKit.Async.DeferredList;
 
 MochiKit.Async.DeferredList.prototype._cbDeferred = function (index, succeeded, result) {
     this.resultList[index] = [succeeded, result];

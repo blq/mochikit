@@ -14,7 +14,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Base');
 }
 
-MochiKit.Base._module('Logging', '1.5', ['Base']);
+MochiKit.Base.module(MochiKit, 'Logging', '1.5', ['Base']);
 
 /**
  * @id MochiKit.Logging.LogMessage

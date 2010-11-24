@@ -14,7 +14,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Base');
 }
 
-MochiKit.Base._module('Iter', '1.5', ['Base']);
+MochiKit.Base.module(MochiKit, 'Iter', '1.5', ['Base']);
 
 MochiKit.Base.update(MochiKit.Iter, {
     /** @id MochiKit.Iter.registerIteratorFactory */
@@ -792,7 +792,7 @@ MochiKit.Iter.__new__();
 // XXX: Internet Explorer blows
 //
 if (MochiKit.__export__) {
-    window.reduce = MochiKit.Iter.reduce;
+    reduce = MochiKit.Iter.reduce;
 }
 
 MochiKit.Base._exportSymbols(this, MochiKit.Iter);

@@ -16,7 +16,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Iter');
 }
 
-MochiKit.Base._module('Selector', '1.5', ['Base', 'DOM', 'Iter']);
+MochiKit.Base.module(MochiKit, 'Selector', '1.5', ['Base', 'DOM', 'Iter']);
 
 /**
  * @constructor

@@ -15,7 +15,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.DOM');
 }
 
-MochiKit.Base._module('Style', '1.5', ['Base', 'DOM']);
+MochiKit.Base.module(MochiKit, 'Style', '1.5', ['Base', 'DOM']);
 
 
 /**

@@ -19,7 +19,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Position');
 }
 
-MochiKit.Base._module('DragAndDrop', '1.5', ['Base', 'Iter', 'DOM', 'Signal', 'Visual', 'Position']);
+MochiKit.Base.module(MochiKit, 'DragAndDrop', '1.5', ['Base', 'Iter', 'DOM', 'Signal', 'Visual', 'Position']);
 
 MochiKit.DragAndDrop.Droppables = {
     /***
@@ -453,8 +453,8 @@ MochiKit.DragAndDrop.Draggable.prototype = {
     currentDelta: function () {
         var s = MochiKit.Style.getStyle;
         return [
-          parseInt(s(this.element, 'left') || '0'),
-          parseInt(s(this.element, 'top') || '0')];
+          parseInt(s(this.element, 'left') || '0', 10),
+          parseInt(s(this.element, 'top') || '0', 10)];
     },
 
     /** @id MochiKit.DragAndDrop.initDrag */

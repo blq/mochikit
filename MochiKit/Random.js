@@ -14,7 +14,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Base');
 }
 
-MochiKit.Base._module('Random', '1.5', ['Base']);
+MochiKit.Base.module(MochiKit, 'Random', '1.5', ['Base']);
 
 
 /**
@@ -84,7 +84,7 @@ MochiKit.Random.uniform = function(a, b)
 
 /**
  * Shuffles an array using the Fisher-Yates algorithm (Knuth). O(N)
- * in-place algorithm. (todo: a functional version?)
+ * in-place algorithm.
  *
  * @see http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
  * @see http://docs.python.org/library/random.html#random.shuffle

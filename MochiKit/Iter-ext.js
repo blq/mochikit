@@ -13,7 +13,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Iter');
 }
 
-MochiKit.Base._module('Iter_ext', '1.5', ['Base', 'Iter']);
+MochiKit.Base.module(MochiKit, 'Iter_ext', '1.5', ['Base', 'Iter']);
 
 
 /**

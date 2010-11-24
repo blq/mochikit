@@ -15,7 +15,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.DOM');
 }
 
-MochiKit.Base._module('Signal', '1.5', ['Base', 'DOM'/*, 'Style'*/]);
+MochiKit.Base.module(MochiKit, 'Signal', '1.5', ['Base', 'DOM']);
 
 MochiKit.Signal._observers = [];
 
@@ -278,14 +278,12 @@ MochiKit.Signal.Event.prototype.mouse = function () {
 		this.type().indexOf('click') != -1 ||
 		this.type() == 'contextmenu')) {
 
-		//m.client = new MochiKit.Style.Coordinates(0, 0);
 		m.client = { x: 0, y: 0 };
 		if (e.clientX || e.clientY) {
 			m.client.x = (!e.clientX || e.clientX < 0) ? 0 : e.clientX;
 			m.client.y = (!e.clientY || e.clientY < 0) ? 0 : e.clientY;
 		}
 
-		//m.page = new MochiKit.Style.Coordinates(0, 0);
 		m.page = { x: 0, y: 0 };
 		if (e.pageX || e.pageY) {
 			m.page.x = (!e.pageX || e.pageX < 0) ? 0 : e.pageX;
@@ -348,7 +346,6 @@ MochiKit.Signal.Event.prototype.mouse = function () {
 			}
 		}
 		if (this.type() == 'mousewheel') {
-		//  m.wheel = new MochiKit.Style.Coordinates(0, 0);
 			m.wheel = { x: 0, y: 0 };
 			if (e.wheelDeltaX || e.wheelDeltaY) {
 				m.wheel.x = e.wheelDeltaX / -40 || 0;
@@ -907,10 +904,10 @@ MochiKit.Signal.__new__(this);
 // XXX: Internet Explorer blows
 //
 if (MochiKit.__export__) {
-    window.connect = MochiKit.Signal.connect;
-    window.disconnect = MochiKit.Signal.disconnect;
-    window.disconnectAll = MochiKit.Signal.disconnectAll;
-    window.signal = MochiKit.Signal.signal;
+    connect = MochiKit.Signal.connect;
+    disconnect = MochiKit.Signal.disconnect;
+    disconnectAll = MochiKit.Signal.disconnectAll;
+    signal = MochiKit.Signal.signal;
 }
 
 MochiKit.Base._exportSymbols(this, MochiKit.Signal);

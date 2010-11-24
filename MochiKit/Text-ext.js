@@ -12,7 +12,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Text');
 }
 
-MochiKit.Base._module('Text_ext', '1.5', ['Text']);
+MochiKit.Base.module(MochiKit, 'Text_ext', '1.5', ['Text']);
 
 
 /**

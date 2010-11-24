@@ -14,7 +14,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Base');
 }
 
-MochiKit.Base._module('DOM', '1.5', ['Base']);
+MochiKit.Base.module(MochiKit, 'DOM', '1.5', ['Base']);
 
 MochiKit.Base.update(MochiKit.DOM, {
 
@@ -1151,8 +1151,8 @@ MochiKit.DOM.__new__(((typeof(window) == "undefined") ? this : window));
 // XXX: Internet Explorer blows
 //
 if (MochiKit.__export__) {
-    window.withWindow = MochiKit.DOM.withWindow;
-    window.withDocument = MochiKit.DOM.withDocument;
+    withWindow = MochiKit.DOM.withWindow;
+    withDocument = MochiKit.DOM.withDocument;
 }
 
 MochiKit.Base._exportSymbols(this, MochiKit.DOM);

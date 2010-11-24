@@ -12,13 +12,12 @@ if (typeof(MochiKit) == 'undefined') {
     MochiKit = {};
 }
 
-if (typeof(MochiKit.MochiKit) == 'undefined') {
-    /** @id MochiKit.MochiKit */
-    MochiKit.MochiKit = {};
-}
+/** @id MochiKit.MochiKit */
+MochiKit.MochiKit = MochiKit.MochiKit || {};
 
 MochiKit.MochiKit.NAME = "MochiKit.MochiKit";
 MochiKit.MochiKit.VERSION = "1.5";
+MochiKit.MochiKit.__export__ = false;
 MochiKit.MochiKit.__repr__ = function () {
     return "[" + this.NAME + " " + this.VERSION + "]";
 };

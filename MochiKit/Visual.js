@@ -18,7 +18,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.require('MochiKit.Position');
 }
 
-MochiKit.Base._module('Visual', '1.5', ['Base', 'DOM', 'Style', 'Color', 'Position']);
+MochiKit.Base.module(MochiKit, 'Visual', '1.5', ['Base', 'DOM', 'Style', 'Color', 'Position']);
 
 MochiKit.Visual._RoundCorners = function (e, options) {
     e = MochiKit.DOM.getElement(e);

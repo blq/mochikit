@@ -16,7 +16,7 @@ if (typeof goog != 'undefined' && typeof goog.provide  == 'function') {
 	goog.require('MochiKit.Style');
 }
 
-MochiKit.Base._module('Color', '1.5', ['Base', 'DOM', 'Style']);
+MochiKit.Base.module(MochiKit, 'Color', '1.5', ['Base', 'DOM', 'Style']);
 
 /**
  * @id MochiKit.Color.Color
