@@ -37,8 +37,12 @@ MochiKit.Random.random = Math.random;
  */
 MochiKit.Random.randRange = function(rangeStart, rangeEnd, step)
 {
-	// single param overload
+	// todo: verify it there's some subtle floor vs int-cast/trunc case left.. floor isn't same as trunc...
+	var self = MochiKit.Random;
 	if (arguments.length == 1) {
+		// todo: verify this.
+	//	// rangeStart > 0 in this case
+	//	return Math.floor(self.random() * rangeStart);
 		rangeEnd = rangeStart;
 		rangeStart = 0;
 	}
@@ -46,14 +50,20 @@ MochiKit.Random.randRange = function(rangeStart, rangeEnd, step)
 
 	var width = rangeEnd - rangeStart;
 	if (step == 1 && width > 0) {
-		return Math.floor(rangeStart + Math.floor(MochiKit.Random.random()*width));
+		// Note that floor(start + random()*width)
+		// instead would be incorrect.  For example, consider istart
+		// = -2 and istop = 0.  Then the guts would be in
+		// -2.0 to 0.0 exclusive on both ends (ignoring that random()
+		// might return 0.0), and because floor() truncates toward 0, the
+		// final result would be -1 or 0 (instead of -2 or -1).
+		return Math.floor(rangeStart + Math.floor(self.random()*width));
 	}
 	if (step > 0) {
-        var n = Math.floor((width + step - 1) / step);
+		var n = Math.floor((width + step - 1) / step);
 	} else if (step < 0) {
 		var n = Math.floor((width + step + 1) / step);
 	}
-	return rangeStart + step*Math.floor(MochiKit.Random.random() * n);
+	return rangeStart + step*Math.floor(self.random() * n);
 };
 
 
@@ -173,12 +183,14 @@ MochiKit.Random.shuffled = function(source)
  *
  * @see http://docs.python.org/library/random.html#random.sample
  *
- * @param {!Array} population
+ * @param {!ArrayLike} population  (note: only supports Array-like input, not objs/dicts or iterables)
  * @param {integer} k  0 <= k <= len(population)
  * @return {!Array}
  */
 MochiKit.Random.sample = function(population, k)
 {
+	// todo: couple of fast-path optimization depending on size
+	// of population versus k can be made. See Python lib.
 	var n = population.length;
 	var result = new Array(k);
 	var selected = {};
@@ -198,7 +210,7 @@ MochiKit.Random.sample = function(population, k)
 
 /** @this MochiKit.Random */
 MochiKit.Random.__new__ = function() {
-	// ...
+	// todo: setup generators etc here
 };
 
 MochiKit.Random.__new__();
