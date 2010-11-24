@@ -49,7 +49,9 @@ SimpleTest._scopeFilter = { 'window': true,
                             'clientInformation': true,
                             'sessionStorage': true,
                             'localStorage': true,
-                            'media': true };
+                            'media': true,
+							'getInterface': true // nsIInterfaceRequestor.getInterface, shows up randomly..
+						};
 
 /**
  * Initializes the testing engine for the specified global scope. This will
