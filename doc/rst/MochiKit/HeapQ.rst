@@ -70,6 +70,7 @@ Functions
 :mochidef:`heapify(x[, cmp])`:
 
     Transform array ``x`` into a heap, in-place, in linear time.
+    Returns the heap to enable chaining.
 
 
 :mochidef:`heapReplace(heap, item[, cmp])`:
