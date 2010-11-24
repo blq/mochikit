@@ -140,7 +140,7 @@ MochiKit.HeapQ.heapPop = function(heap, cmp)
 {
 	cmp = cmp || MochiKit.Base.operator.clt;
 
-    var lastelt = heap.pop(); // raises appropriate IndexError if heap is empty
+    var lastelt = heap.pop(); // todo: throw if empty?
 	var returnitem;
     if (heap.length > 0) {
         returnitem = heap[0];
@@ -174,7 +174,7 @@ MochiKit.HeapQ.heapReplace = function(heap, item, cmp)
 {
 	cmp = cmp || MochiKit.Base.operator.clt;
 
-    var returnitem = heap[0]; // raises appropriate IndexError if heap is empty
+    var returnitem = heap[0]; // todo: throw if empty?
     heap[0] = item;
     MochiKit.HeapQ._siftup(heap, 0, cmp);
     return returnitem;
@@ -214,22 +214,28 @@ MochiKit.HeapQ.heapPushPop = function(heap, item, cmp)
  */
 MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 {
-	// todo: ! need to wrap the comparator.. cmp shouldn't need to handle arrays, only the actual value type!
-	cmp = cmp || MochiKit.Base.operator.clt; // ! need to use clt since we compare array (tuples)
 	var m = MochiKit, mi = m.Iter;
+	cmp = cmp || m.Base.operator.clt;;
+
+	// wrap user supplied cmp so it only needs to compare the value-part
+	var _cmp = function(a, b) {
+		var c = cmp(a[0], b[0]);
+		// todo: hmm ? shouldn't we chain a compare with the index if equal..? 
+		return c;
+	};
 
 	var h = [];
 	mi.forEach(mi.izip(mi.count(), mi.imap(mi.iter, iterables)), function(pair) {
 		var itnum = pair[0], it = pair[1];
         try {
             var next = it.next;
-            h.push([next(), itnum, next]);
+            h.push([next(), itnum, next]); // tuple of [value, index, iterator]
 		} catch (e) {
 			if (e != mi.StopIteration)
 				throw e;
 		}
 	});
-    m.HeapQ.heapify(h, cmp);
+    m.HeapQ.heapify(h, _cmp);
 
 	return {
 		repr: function() { return "imergeSorted(...)"; },
@@ -244,12 +250,12 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 				var v = s[0]; var next = s[2];
 
 				try {
-					s[0] = next(); // raises StopIteration when exhausted
-					m.HeapQ.heapReplace(h, s, cmp); // restore heap condition
+					s[0] = next();
+					m.HeapQ.heapReplace(h, s, _cmp); // restore heap condition
 				} catch (e) {
 					if (e != mi.StopIteration)
 						throw e;
-					m.HeapQ.heapPop(h, cmp);   // remove empty iterator
+					m.HeapQ.heapPop(h, _cmp);   // remove empty iterator
 				}
 				return v;
 			}
