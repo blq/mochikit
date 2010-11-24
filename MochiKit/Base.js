@@ -1398,7 +1398,7 @@ MochiKit.Base.__new__ = function () {
     var m = this;
 
     /** @id MochiKit.Base.noop */
-    m.noop = m.operator.identity;
+    m.noop = function() {};
 
     // Backwards compat
     m._deprecated(m, 'forward', 'MochiKit.Base.forwardCall', '1.3');
