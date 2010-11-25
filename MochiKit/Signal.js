@@ -862,14 +862,7 @@ MochiKit.Base.update(MochiKit.Signal, {
             }
         }
         self._lock--;
-        if (self._lock === 0 && self._dirty) {
-            self._dirty = false;
-            for (var i = observers.length - 1; i >= 0; i--) {
-                if (!observers[i].connected) {
-                    observers.splice(i, 1);
-                }
-            }
-        }
+		self._gc();
         if (errors.length == 1) {
             throw errors[0];
         } else if (errors.length > 1) {
@@ -877,7 +870,22 @@ MochiKit.Base.update(MochiKit.Signal, {
             e.errors = errors;
             throw e;
         }
-    }
+    },
+
+	_gc: function()	{
+		var self = MochiKit.Signal;
+		var observers = self._observers;
+        if (self._lock === 0 && self._dirty) {
+            for (var i = observers.length - 1; i >= 0; i--) {
+                if (!observers[i].connected) {
+                    observers.splice(i, 1);
+                }
+            }
+			self._dirty = false;
+			return true;
+        }
+		return false;
+	}
 
 });
 
