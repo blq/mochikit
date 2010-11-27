@@ -88,6 +88,8 @@ MochiKit.Random.uniform = function(a, b)
  *
  * @see http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
  * @see http://docs.python.org/library/random.html#random.shuffle
+ * @see http://www.sgi.com/tech/stl/random_shuffle.html
+ *
  * - Thou shalt not shuffle by sorting using a random comparator!
  * .. you don't want to make same mistake M$ did ;) http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
  *
@@ -182,6 +184,7 @@ MochiKit.Random.shuffled = function(source)
  * into grand prize and second place winners (the subslices).
  *
  * @see http://docs.python.org/library/random.html#random.sample
+ * @see http://www.sgi.com/tech/stl/random_sample.html
  *
  * @param {!ArrayLike} population  (note: only supports Array-like input, not objs/dicts or iterables)
  * @param {integer} k  0 <= k <= len(population)

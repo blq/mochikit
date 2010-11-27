@@ -5,12 +5,16 @@
  * Heap methods
  * see http://en.wikipedia.org/wiki/Heap_(data_structure)
  * more specifically this resembles a min-heap.
- * supports custom comparator.
  *
  * the impl. is almost a line-by-line(!) port of http://docs.python.org/library/heapq.html
  *
+ * note: supports custom comparator.
+ * note: hopefully self evident, but, when using custom comparators, you must use same comparator in all calls.
+ * see also: https://github.com/blq/mochikit/blob/master/examples/PriorityQueue.js
+ *
  * todo: separate imergeSorted? could drop dep on Iter
  * todo: explicit prio queue class (see /examples/PrioQueue.js)
+ *
  *
  * @author Fredrik Blomqvist
  *
@@ -29,7 +33,10 @@ MochiKit.Base.module(MochiKit, 'HeapQ', '1.5', ['Base', 'Iter']);
 
 /**
  * Transform list x into a heap, in-place, in linear time.
+ *
  * @see http://docs.python.org/library/heapq.html#heapq.heapify
+ * @see http://www.sgi.com/tech/stl/make_heap.html
+ *
  * @param {!Array} x
  * @param {Function=} [cmp]
  * @return {!Array} chained, modified input array (note that Python heapify doesn't do this..)
@@ -69,7 +76,7 @@ MochiKit.HeapQ._siftdown = function(heap, startpos, pos, cmp)
     // Follow the path to the root, moving parents down until finding a place
     // newitem fits.
     while (pos > startpos) {
-        var parentpos = (pos - 1) >> 1;
+        var parentpos = (pos - 1) >> 1; // or use floor() ?
         var parent = heap[parentpos];
         if (cmp(newitem, parent)) {
             heap[pos] = parent;
@@ -79,6 +86,7 @@ MochiKit.HeapQ._siftdown = function(heap, startpos, pos, cmp)
         break;
 	}
     heap[pos] = newitem;
+	// return heap?
 };
 
 /**
@@ -111,12 +119,16 @@ MochiKit.HeapQ._siftup = function(heap, pos, cmp)
     // to its final resting place (by sifting its parents down).
     heap[pos] = newitem;
     MochiKit.HeapQ._siftdown(heap, startpos, pos, cmp);
+	// return heap?
 };
 
 
 /**
  * Push the value item onto the heap, maintaining the heap invariant.
+ *
  * @see http://docs.python.org/library/heapq.html#heapq.heappush
+ * @see http://www.sgi.com/tech/stl/push_heap.html
+ *
  * @param {!Array} heap
  * @param {*} item
  * @param {Function=} cmp
@@ -131,7 +143,10 @@ MochiKit.HeapQ.heapPush = function(heap, item, cmp)
 
 /**
  * Pop the smallest item off the heap, maintaining the heap invariant.
+ *
  * @see http://docs.python.org/library/heapq.html#heapq.heappop
+ * @see http://www.sgi.com/tech/stl/pop_heap.html
+ *
  * @param {!Array} heap
  * @param {Function=} cmp
  * @return {*}
@@ -351,6 +366,9 @@ MochiKit.HeapQ.nSmallest = function(n, iterable, cmp)
 
 /**
  * Test if Array lst fulfills the heap invariant
+ *
+ * @see http://www.sgi.com/tech/stl/is_heap.html
+ *
  * @param {!Array} lst
  * @param {BinaryComparator=} [cmp] observe that this, in contrast to the default cmp in heap creation functions, must return true for equal elements also
  * @return {boolean}
@@ -386,6 +404,9 @@ MochiKit.HeapQ.isHeap = function(lst, cmp)
  * example code for heap sort.
  * Does Not run in-place. (hmm, perhaps call it heapSorteD?) (todo: in-place version possible, but more code)
  * Equivalent to sorted(iterable)
+ *
+ * @see http://www.sgi.com/tech/stl/sort_heap.html
+ *
  * @param {!Iterable} iterable
  * @param {BinaryComparator=} [cmp]
  * @return {!Array}
