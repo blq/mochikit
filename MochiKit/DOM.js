@@ -558,6 +558,88 @@ MochiKit.Base.update(MochiKit.DOM, {
         }
     },
 
+	/**
+	 * Sniffs for the best impl on current platform (IE _really_ needs this on larger DOMs).
+	 * todo: should merge this "deeper" with the existing getElementsByTagAndClassName function (now only in the simplest tagName=* case)
+	 *
+	 * Based on code by Robert Nyman, http://www.robertnyman.com, Code/licensing: http://code.google.com/p/getelementsbyclassname/
+	 * see also http://robertnyman.com/2008/05/27/the-ultimate-getelementsbyclassname-anno-2008/
+	 *
+	 * @param {string} className(s) separate classes by space to lookup multiple (any order, AND combination)
+	 * @param {(!Element|string)=} [elm=document] starting root node
+	 * @return {!Array.<!Element>} (Not a nodelist) empty list if no elems found
+	 */
+	getElementsByClassName: function(className, /*optional*/parent) {
+		var self = MochiKit.DOM;
+		if (self._document.getElementsByClassName) {
+			// native implementation (todo: is this case worth checking? http://robertnyman.com/2008/05/27/the-ultimate-getelementsbyclassname-anno-2008/#comment-600797)
+			self.getElementsByClassName = function(className, elm) {
+				elm = elm || self._document;
+				elm = self.getElement(elm);
+
+				var elements = elm.getElementsByClassName(className);
+				return MochiKit.Base.extend([], elements); // transform nodelist to real array
+			};
+		} else if (self._document.evaluate) {
+			// XPath impl
+			self.getElementsByClassName = function(className, elm) {
+				elm = elm || self._document;
+				elm = self.getElement(elm);
+
+				var classes = className.split(" ");
+				var classesToCheck = "";
+				for (var k = 0, kl = classes.length; k < kl; ++k) {
+					classesToCheck += "[contains(concat(' ', @class, ' '), ' " + classes[k] + " ')]";
+				}
+
+				var tag = '*'; // todo: remove tag search from expression altogether?
+				var elements = [];
+				try {
+					var xhtmlNamespace = "http://www.w3.org/1999/xhtml";
+					var namespaceResolver = (self._document.documentElement.namespaceURI === xhtmlNamespace) ? xhtmlNamespace : null; // could move this to precalc stage?
+					elements = self._document.evaluate(".//" + tag + classesToCheck, elm, namespaceResolver, 0, null);
+				} catch (e) {
+					elements = self._document.evaluate(".//" + tag + classesToCheck, elm, null, 0, null);
+				}
+
+				// todo: drop thsi Iter dep.
+				return MochiKit.Iter.list(elements); // transform to real array (iterates using iterateNext)
+			};
+		} else {
+			// fallback to getElementsByTagName and filtering
+			self.getElementsByClassName = function(className, elm) {
+				elm = elm || self._document;
+				elm = self.getElement(elm);
+
+				var classes = className.split(" ");
+				var classesToCheck = [];
+				for (var k = 0, kl = classes.length; k < kl; ++k) {
+					classesToCheck.push(new RegExp("(^|\\s)" + classes[k] + "(\\s|$)"));
+				}
+
+				var elements = elm.all ? elm.all : elm.getElementsByTagName('*');
+
+				var returnElements = [];
+				for (var l = 0, ll = elements.length; l < ll; ++l) {
+					var current = elements[l];
+
+					var match = false;
+					for (var m = 0, ml = classesToCheck.length; m < ml; ++m) {
+						match = classesToCheck[m].test(current.className);
+						if (!match)
+							break;
+					}
+					if (match) {
+						returnElements.push(current);
+					}
+				}
+				return returnElements;
+			};
+		}
+
+		return self.getElementsByClassName(className, parent);
+	},
+
     /** @id MochiKit.DOM.getElementsByTagAndClassName */
     getElementsByTagAndClassName: function (tagName, className,
             /* optional */parent) {
@@ -572,6 +654,11 @@ MochiKit.Base.update(MochiKit.DOM, {
         if (parent == null) {
             return [];
         }
+		if (tagName == '*') {
+			// simple fast-path. todo: should integrate deeper
+			return self.getElementsByClassName(className, parent);
+		}
+
         var children = (parent.getElementsByTagName(tagName)
             || self._document.all);
         if (typeof(className) == 'undefined' || className === null) {
@@ -880,7 +967,10 @@ MochiKit.Base.update(MochiKit.DOM, {
         }
     },
 
-    /** @id MochiKit.DOM.getFirstElementByTagAndClassName */
+    /**
+     * @id MochiKit.DOM.getFirstElementByTagAndClassName
+     * todo: insert the byClassName optimization
+     */
     getFirstElementByTagAndClassName: function (tagName, className,
             /* optional */parent) {
         var self = MochiKit.DOM;
