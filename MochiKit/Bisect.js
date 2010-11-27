@@ -74,19 +74,8 @@ MochiKit.Bisect.bisectRight = function(a, x, lo, hi)
  */
 MochiKit.Bisect.insortRight = function(a, x, lo, hi)
 {
-	lo = lo || 0;
-//	if (lo < 0)
-//    throw new Error('lo must be non-negative');
-	hi = hi || a.length;
-
-    while (lo < hi) {
-        var mid = Math.floor((lo + hi) / 2);
-        if (MochiKit.Base.compare(x, a[mid]) < 0)
-			hi = mid;
-        else
-			lo = mid + 1;
-	}
-    a.splice(lo, 0, x);
+	lo = MochiKit.Bisect.bisectRight(a, x, lo, hi);
+	a.splice(lo, 0, x);
 	return a;
 };
 
@@ -144,18 +133,7 @@ MochiKit.Bisect.bisectLeft = function(a, x, lo, hi)
  */
 MochiKit.Bisect.insortLeft = function(a, x, lo, hi)
 {
-	lo = lo || 0;
-//	if (lo < 0)
-//		throw new Error('lo must be non-negative');
-	hi = hi || a.length;
-
-    while (lo < hi) {
-        var mid = Math.floor((lo + hi) / 2);
-        if (MochiKit.Base.compare(a[mid], x) < 0)
-			lo = mid + 1;
-        else
-			hi = mid;
-	}
+	lo = MochiKit.Bisect.bisectLeft(a, x, lo, hi);
     a.splice(lo, 0, x);
 	return a;
 };
