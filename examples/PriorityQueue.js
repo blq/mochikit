@@ -2,17 +2,21 @@
  * example priority-queue class with interface from http://hepunx.rl.ac.uk/BFROOT/dist/packages/boost/V01-27-00-04/libs/pri_queue/p_queue.html
  * (apart from value return in pop)
  * Shows how to create a wrapper around the heap functions.
+ *
  * todo: parametrice on heap algorithm (now uses HeapQ)
  * todo: elevate this to an official component?
+ * todo: should rather store a pair: [elem, insert_count] to act as a tie-breaker for equal elems (to avoid starvation)
  *
  * @author Fredrik Blomqvist
  *
  */
 
+// require: Base, Iter, HeapQ
+
 
 /**
- * @param {?Iterable} iterable
- * @param {Function=} [cmp]
+ * @param {?Iterable=} [iterable=empty]
+ * @param {Function=} [cmp=clt]
  * @constructor
  */
 function PriorityQueue(iterable, cmp)
