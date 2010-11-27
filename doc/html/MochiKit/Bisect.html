@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.8: http://docutils.sourceforge.net/" />
+<title>MochiKit.Bisect - Array bisection algorithm</title>
+
+<link rel="stylesheet" href="../../../include/css/documentation.css" type="text/css" />
+<script type="text/javascript" src="../../../MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="../../js/toc.js"></script>
+</head>
+<body>
+<a href="http://mochikit.com"><img id="mainlink" src="../../../include/img/g_logo_doc.gif" alt="MochiKit" /></a>
+<a class='indexlink' href='index.html'>Back to docs index</a>
+<div class="document">
+<div class="section" id="name">
+<h1>Name</h1>
+<p><em>THIS IS NOT YET AN OFFICIAL MOCHIKIT COMPONENT</em></p>
+<p>MochiKit.Bisect - Array bisection algorithm</p>
+<dl class="docutils">
+<dt><em>Availability</em>:</dt>
+<dd>Available in MochiKit 1.5+</dd>
+</dl>
+</div>
+<div class="section" id="synopsis">
+<h1>Synopsis</h1>
+<pre class="literal-block">
+todo: ..
+</pre>
+</div>
+<div class="section" id="description">
+<h1>Description</h1>
+<p>This module provides support for maintaining a list in sorted order without having to sort the
+list after each insertion. For long lists of items with expensive comparison operations, this can
+be an improvement over the more common approach. The module is called bisect because it uses
+a basic bisection algorithm <a class="footnote-reference" href="#id3" id="id1">[1]</a> to do its work. The source code may be most useful as a working example
+of the algorithm (the boundary conditions are already right!).</p>
+<p>Currently this is basically a clone/port of the Python bisect <a class="footnote-reference" href="#id5" id="id2">[3]</a> module, <a class="reference external" href="http://docs.python.org/library/bisect.html">http://docs.python.org/library/bisect.html</a></p>
+</div>
+<div class="section" id="dependencies">
+<h1>Dependencies</h1>
+<ul class="simple">
+<li><a class="mochiref reference external" href="Base.html">MochiKit.Base</a></li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h1>Overview</h1>
+<p>ASDF ASDF</p>
+</div>
+<div class="section" id="api-reference">
+<h1>API Reference</h1>
+<div class="section" id="functions">
+<h2>Functions</h2>
+<p>
+<a name="fn-bisectleft"></a>
+<a class="mochidef reference external" href="#fn-bisectleft">bisectLeft(a, x[, lo=0, hi=a.length])</a>:</p>
+<blockquote>
+<p>Locate the insertion point for <tt class="docutils literal">x</tt> in <tt class="docutils literal">a</tt> to maintain sorted order. The parameters <tt class="docutils literal">lo</tt> and <tt class="docutils literal">hi</tt> may
+be used to specify a subset of the list which should be considered; by default the entire
+list is used. If <tt class="docutils literal">x</tt> is already present in <tt class="docutils literal">a</tt>, the insertion point will be before (to the left of)
+any existing entries. The return value is suitable for use as the first parameter to <tt class="docutils literal">list.splice()</tt>
+assuming that <tt class="docutils literal">a</tt> is already sorted.</p>
+<p>The returned insertion point <tt class="docutils literal">i</tt> partitions the array <tt class="docutils literal">a</tt> into two halves so that <tt class="docutils literal">all(val &lt; x for val in a[lo:i])</tt>
+for the left side and <tt class="docutils literal">all(val &gt;= x for val in a[i:hi])</tt> for the right side.</p>
+</blockquote>
+<p>
+<a name="fn-insortleft"></a>
+<a class="mochidef reference external" href="#fn-insortleft">insortLeft(a, x[, lo=0, hi=a.length])</a>:</p>
+<blockquote>
+Insert <tt class="docutils literal">x</tt> in <tt class="docutils literal">a</tt> in sorted order. This is equivalent to <tt class="docutils literal">a.splice(bisectLeft(a, x, lo, hi), 0, x)</tt>
+assuming that <tt class="docutils literal">a</tt> is already sorted. Keep in mind that the <tt class="docutils literal">O(log n)</tt> search is dominated by the slow <tt class="docutils literal">O(n)</tt> insertion step.</blockquote>
+<p>
+<a name="fn-bisectright"></a>
+<a class="mochidef reference external" href="#fn-bisectright">bisectRight(a, x[, lo=0, hi=a.length])</a>:</p>
+<blockquote>
+<p>Similar to <a class="mochiref reference external" href="#fn-bisectleft">bisectLeft()</a>, but returns an insertion point which comes after (to the right of) any existing entries of <tt class="docutils literal">x</tt> in <tt class="docutils literal">a</tt>.</p>
+<p>The returned insertion point <tt class="docutils literal">i</tt> partitions the array <tt class="docutils literal">a</tt> into two halves so that <tt class="docutils literal">all(val &lt;= x for val in a[lo:i])</tt>
+for the left side and <tt class="docutils literal">all(val &gt; x for val in a[i:hi])</tt> for the right side.</p>
+</blockquote>
+<p>
+<a name="fn-insortright"></a>
+<a class="mochidef reference external" href="#fn-insortright">insortRight(a, x[, lo=0, hi=a.length])</a>:</p>
+<blockquote>
+Similar to <a class="mochiref reference external" href="#fn-insortleft">insortLeft()</a>, but inserting <tt class="docutils literal">x</tt> in <tt class="docutils literal">a</tt> after any existing entries of <tt class="docutils literal">x</tt>.</blockquote>
+</div>
+</div>
+<div class="section" id="see-also">
+<h1>See Also</h1>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Bisection method: <a class="reference external" href="http://en.wikipedia.org/wiki/Bisection_method">http://en.wikipedia.org/wiki/Bisection_method</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td>Binary search: <a class="reference external" href="http://en.wikipedia.org/wiki/Binary_search">http://en.wikipedia.org/wiki/Binary_search</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[3]</a></td><td>Python bisect module: <a class="reference external" href="http://docs.python.org/library/bisect.html">http://docs.python.org/library/bisect.html</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="authors">
+<h1>Authors</h1>
+<ul class="simple">
+<li>Fredrik Blomqvist &lt;fblomqvist at gmail.com&gt;</li>
+</ul>
+</div>
+<div class="section" id="copyright">
+<h1>Copyright</h1>
+<p>Copyright 2005-2010 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
+dual-licensed free software; you can redistribute it and/or modify it
+under the terms of the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a> or the <a class="reference external" href="http://www.opensource.org/licenses/afl-2.1.php">Academic Free License
+v2.1</a>.</p>
+</div>
+</div>
+
+</body>
+</html>

@@ -28,6 +28,7 @@ MochiKit - makes JavaScript suck a bit less
 - :mochiref:`MochiKit.Text-ext` - more text/string algorithms
 - :mochiref:`MochiKit.HeapQ` - Heap queue algorithm
 - :mochiref:`MochiKit.Random` - Random numbers and algorithms
+- :mochiref:`MochiKit.Bisect` - Array bisection algorithm
 
 
 Notes

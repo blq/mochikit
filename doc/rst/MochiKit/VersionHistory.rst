@@ -91,6 +91,8 @@
 - Added choice
 - Added uniform
 
+- Added Bisect module
+
 
 2009-XX-YY      v1.4.3 (bug fix release)
 
