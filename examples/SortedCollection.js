@@ -72,6 +72,8 @@ from bisect import bisect_left, bisect_right
     '''
 */
 
+// require: Base, Iter, Base_ext, Bisect
+
 /**
  * @param {Iterable=} [iterable]
  * @param {Function=} [key]
