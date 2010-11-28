@@ -142,5 +142,17 @@ tests.test_Bisect = function (t) {
 	test_optionalSlicing();
 
 
+	function grade(score, breakpoints, grades) {
+		breakpoints = breakpoints || [60, 70, 80, 90];
+		grades = grades || 'FDCBA';
+
+		var i = bisect(breakpoints, score);
+		return grades[i];
+	}
+
+	t.eq(map(grade, [33, 99, 77, 70, 89, 90, 100]), ['F', 'A', 'C', 'C', 'B', 'A', 'A'], 'grading ok');
+
+
+
 
 };
