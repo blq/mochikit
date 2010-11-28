@@ -305,6 +305,24 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 // todo: stablePartition, binarySearch, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
 
 /**
+ * Counts number of occurences of elem in iterable
+ * similar to findValue but can take an iterable
+ * @param {!Iterable} iterable
+ * @param {*} elem
+ * @param {Function=} [cmp=ceq]
+ * todo: ? or take optional indices as findValue? (and in that case assume iterable is ArrayLike)
+ * @return {integer}
+ */
+MochiKit.Base.countValue = function(iterable, elem, cmp)
+{
+	cmp = cmp || MochiKit.Base.operator.ceq;
+	var n = 0;
+	MochiKit.Iter.forEach(iterable, function(e) { if (cmp(e, item)) ++n; });
+	return n;
+};
+
+
+/**
  * @param {!Function} cmp
  * @return {!Function}
  */
