@@ -414,6 +414,16 @@ MochiKit.Iter.breakIt = function()
 	throw MochiKit.Iter.StopIteration;
 };
 
+/**
+ * @param {!Function} genFn
+ * @param {integer} n
+ * @return {!Iterable} genFn applied n times
+ */
+MochiKit.Iter.generateN = function(genFn, n)
+{
+	return MochiKit.Iter.imap(function() { return genFn(); }, MochiKit.Iter.repeat('dummy', n)); // we wrap genFn to make sure the arity of the call isn't disturbed by imap+dummy
+};
+
 
 /**
  * @see http://docs.python.org/library/itertools.html#itertools.izip_longest
