@@ -53,6 +53,7 @@
 - Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat
 - Added an optional 'step' parameter to Base.counter()
 - Made all base operators have .NAME
+- Added countValue
 
 - Added Iter-ext module
 - Added Iter.treePreOrder, treeLevelOrder, treePostOrder
@@ -71,6 +72,7 @@
 - Fixed islice bug. consuming one item too much. Added unit tests to verify.
 - Added Iter.advance
 - Made Iter.iextend take an optional 'skip' param similar to Base.extend()
+- Added generateN
 
 - Added Text-ext module
 - Added humanStringCompare

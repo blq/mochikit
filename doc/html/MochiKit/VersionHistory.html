@@ -66,6 +66,8 @@ changes the mouse event coordinate values, but should be compatible.</li>
 <li>Added partition</li>
 <li>Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat</li>
 <li>Added an optional 'step' parameter to Base.counter()</li>
+<li>Made all base operators have .NAME</li>
+<li>Added countValue</li>
 <li>Added Iter-ext module</li>
 <li>Added Iter.treePreOrder, treeLevelOrder, treePostOrder</li>
 <li>Added Iter.pairIter</li>
@@ -81,6 +83,9 @@ changes the mouse event coordinate values, but should be compatible.</li>
 <li>Added isSorted</li>
 <li>Added an optional 'step' parameter to Iter.count() (symmetry with Base.counter() change)</li>
 <li>Fixed islice bug. consuming one item too much. Added unit tests to verify.</li>
+<li>Added Iter.advance</li>
+<li>Made Iter.iextend take an optional 'skip' param similar to Base.extend()</li>
+<li>Added generateN</li>
 <li>Added Text-ext module</li>
 <li>Added humanStringCompare</li>
 <li>Added levenshteinDistance</li>
@@ -98,7 +103,10 @@ changes the mouse event coordinate values, but should be compatible.</li>
 <li>Added sample</li>
 <li>Added choice</li>
 <li>Added uniform</li>
-<li>Added Bisect module</li>
+<li>Added Bisect module.</li>
+<li>Added bisectLeft, bisectRight, insortLeft, insortRight</li>
+<li>Added a SortedCollection example class based on the Bisect module</li>
+<li>Added a Set example class based on the Bisect module</li>
 </ul>
 <p>2009-XX-YY      v1.4.3 (bug fix release)</p>
 <ul class="simple">
