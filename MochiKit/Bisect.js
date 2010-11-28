@@ -139,6 +139,18 @@ MochiKit.Bisect.insortLeft = function(a, x, lo, hi)
 };
 
 
+/**
+ * alias for bisectRight
+ */
+MochiKit.Bisect.bisect = MochiKit.Bisect.bisectRight;
+
+/**
+ * alias for insortRight
+ */
+MochiKit.Bisect.insort = MochiKit.Bisect.insortRight;
+
+
+
 //------------------
 
 

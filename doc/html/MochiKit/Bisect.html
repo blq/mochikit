@@ -27,7 +27,57 @@
 <div class="section" id="synopsis">
 <h1>Synopsis</h1>
 <pre class="literal-block">
-todo: ..
+// Locate the leftmost value exactly equal to x
+function index(a, x) {
+    var i = bisectLeft(a, x);
+    if (i != a.length &amp;&amp; a[i] == x)
+        return i;
+    return NotFound;
+}
+
+// Find rightmost value less than x
+function find_lt(a, x) {
+    var i = bisectLeft(a, x);
+    if (i != 0)
+        return a[i-1];
+    return NotFound;
+}
+
+// Find rightmost value less than or equal to x
+function find_le(a, x) {
+    var i = bisectRight(a, x);
+    if (i != 0)
+        return a[i-1];
+    return NotFound;
+}
+
+// Find leftmost value greater than x
+function find_gt(a, x) {
+    var i = bisectRight(a, x);
+    if (i != a.length)
+        return a[i];
+    return NotFound;
+}
+
+// Find leftmost item greater than or equal to x
+function find_ge(a, x) {
+    var i = bisectLeft(a, x);
+    if (i != a.length)
+        return a[i];
+    return NotFound;
+}
+</pre>
+<pre class="literal-block">
+function grade(score, breakpoints, grades) {
+    breakpoints = breakpoints || [60, 70, 80, 90];
+    grades = grades || 'FDCBA';
+
+    var i = bisect(breakpoints, score);
+    return grades[i];
+}
+
+&gt;&gt; map(grade, [33, 99, 77, 70, 89, 90, 100]);
+    --&gt; ['F', 'A', 'C', 'C', 'B', 'A', 'A']
 </pre>
 </div>
 <div class="section" id="description">
@@ -78,12 +128,15 @@ assuming that <tt class="docutils literal">a</tt> is already sorted. Keep in min
 <p>Similar to <a class="mochiref reference external" href="#fn-bisectleft">bisectLeft()</a>, but returns an insertion point which comes after (to the right of) any existing entries of <tt class="docutils literal">x</tt> in <tt class="docutils literal">a</tt>.</p>
 <p>The returned insertion point <tt class="docutils literal">i</tt> partitions the array <tt class="docutils literal">a</tt> into two halves so that <tt class="docutils literal">all(val &lt;= x for val in a[lo:i])</tt>
 for the left side and <tt class="docutils literal">all(val &gt; x for val in a[i:hi])</tt> for the right side.</p>
+<p>Also available via the <tt class="docutils literal">bisect</tt> alias.</p>
 </blockquote>
 <p>
 <a name="fn-insortright"></a>
 <a class="mochidef reference external" href="#fn-insortright">insortRight(a, x[, lo=0, hi=a.length])</a>:</p>
 <blockquote>
-Similar to <a class="mochiref reference external" href="#fn-insortleft">insortLeft()</a>, but inserting <tt class="docutils literal">x</tt> in <tt class="docutils literal">a</tt> after any existing entries of <tt class="docutils literal">x</tt>.</blockquote>
+<p>Similar to <a class="mochiref reference external" href="#fn-insortleft">insortLeft()</a>, but inserting <tt class="docutils literal">x</tt> in <tt class="docutils literal">a</tt> after any existing entries of <tt class="docutils literal">x</tt>.</p>
+<p>Also available via the <tt class="docutils literal">insort</tt> alias.</p>
+</blockquote>
 </div>
 </div>
 <div class="section" id="see-also">

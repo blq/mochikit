@@ -15,8 +15,58 @@ Synopsis
 
 ::
 
-    todo: ..
+    // Locate the leftmost value exactly equal to x
+    function index(a, x) {
+        var i = bisectLeft(a, x);
+        if (i != a.length && a[i] == x)
+            return i;
+        return NotFound;
+    }
 
+    // Find rightmost value less than x
+    function find_lt(a, x) {
+        var i = bisectLeft(a, x);
+        if (i != 0)
+            return a[i-1];
+        return NotFound;
+    }
+
+    // Find rightmost value less than or equal to x
+    function find_le(a, x) {
+        var i = bisectRight(a, x);
+        if (i != 0)
+            return a[i-1];
+        return NotFound;
+    }
+
+    // Find leftmost value greater than x
+    function find_gt(a, x) {
+        var i = bisectRight(a, x);
+        if (i != a.length)
+            return a[i];
+        return NotFound;
+    }
+
+    // Find leftmost item greater than or equal to x
+    function find_ge(a, x) {
+        var i = bisectLeft(a, x);
+        if (i != a.length)
+            return a[i];
+        return NotFound;
+    }
+
+::
+
+    function grade(score, breakpoints, grades) {
+        breakpoints = breakpoints || [60, 70, 80, 90];
+        grades = grades || 'FDCBA';
+
+        var i = bisect(breakpoints, score);
+        return grades[i];
+    }
+
+    >> map(grade, [33, 99, 77, 70, 89, 90, 100]);
+        --> ['F', 'A', 'C', 'C', 'B', 'A', 'A']
 
 
 Description
@@ -74,9 +124,14 @@ Functions
     The returned insertion point ``i`` partitions the array ``a`` into two halves so that ``all(val <= x for val in a[lo:i])``
     for the left side and ``all(val > x for val in a[i:hi])`` for the right side.
 
+    Also available via the ``bisect`` alias.
+
+
 :mochidef:`insortRight(a, x[, lo=0, hi=a.length])`:
 
     Similar to :mochiref:`insortLeft()`, but inserting ``x`` in ``a`` after any existing entries of ``x``.
+
+    Also available via the ``insort`` alias.
 
 
 See Also
