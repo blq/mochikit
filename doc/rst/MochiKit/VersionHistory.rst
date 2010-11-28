@@ -52,6 +52,7 @@
 - Added partition
 - Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat
 - Added an optional 'step' parameter to Base.counter()
+- Made all base operators have .NAME
 
 - Added Iter-ext module
 - Added Iter.treePreOrder, treeLevelOrder, treePostOrder
@@ -68,6 +69,8 @@
 - Added isSorted
 - Added an optional 'step' parameter to Iter.count() (symmetry with Base.counter() change)
 - Fixed islice bug. consuming one item too much. Added unit tests to verify.
+- Added Iter.advance
+- Made Iter.iextend take an optional 'skip' param similar to Base.extend()
 
 - Added Text-ext module
 - Added humanStringCompare
@@ -91,7 +94,10 @@
 - Added choice
 - Added uniform
 
-- Added Bisect module
+- Added Bisect module.
+- Added bisectLeft, bisectRight, insortLeft, insortRight
+- Added a SortedCollection example class based on the Bisect module
+- Added a Set example class based on the Bisect module
 
 
 2009-XX-YY      v1.4.3 (bug fix release)
