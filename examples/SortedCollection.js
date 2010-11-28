@@ -144,6 +144,13 @@ SortedCollection.prototype.__iterator__ = function() {
 };
 
 /**
+ * @return {string}
+ */
+SortedCollection.prototype.__repr__ = function() {
+	return 'SortedCollection(' +  repr(this._items) + ', key=' + repr(this._key) + ')';
+};
+
+/**
  * @param {*} item
  * @return {boolean}
  */
