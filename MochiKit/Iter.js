@@ -608,17 +608,21 @@ MochiKit.Base.update(MochiKit.Iter, {
     },
 
     /** @id MochiKit.Iter.iextend */
-    iextend: function (lst, iterable) {
+    iextend: function (lst, iterable, /* optional */skip) { // todo: add support for a start pos? similar to Base.extend, resulting in a kindof islice/iextend combo.
+		skip = skip || 0;
         var m = MochiKit.Base;
         var self = MochiKit.Iter;
         if (m.isArrayLike(iterable) && !self.isIterable(iterable)) {
             // fast-path for array-like
-            for (var i = 0; i < iterable.length; i++) {
+            for (var i = skip; i < iterable.length; i++) {
                 lst.push(iterable[i]);
             }
         } else {
             iterable = self.iter(iterable);
             try {
+				while (skip-- > 0) { // == Iter_ext.advance()
+					iterable.next();
+				}
                 while (true) {
                     lst.push(iterable.next());
                 }
