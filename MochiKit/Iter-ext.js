@@ -489,6 +489,21 @@ MochiKit.Iter.all = MochiKit.Iter.every;
 MochiKit.Iter.starmap = MochiKit.Iter.applymap;
 
 
+/**
+ * @see http://www.sgi.com/tech/stl/advance.html
+ * (Python example in itertools calls this "consume")
+ *
+ * @param {!{ next: !Function }} iter iterator, Not iterable
+ * @param {integer} n  >= 0
+ * @return {!{ next: !Function }} iter advanced n steps
+ */
+MochiKit.Iter.advance = function(iter, n)
+{
+	while (n-- > 0)
+		iter.next();
+	return iter;
+};
+
 // todo: combinations, permutations, compress(?), sorted?
 
 
