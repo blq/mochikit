@@ -99,7 +99,7 @@ tests.test_Bisect = function (t) {
     function test_random(n) {
 		n = n || 25;
         forEach(range(n), function(i) {
-			var data = map(partial(randRange, 0, n, 2), repeat('dummy', i));
+			var data = map(partial(randRange, 0, n, 2), range(i));
             data.sort(compare);
             var elem = randRange(-1, n+1);
             var ip = bisectLeft(data, elem);

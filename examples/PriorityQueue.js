@@ -30,7 +30,7 @@ function PriorityQueue(iterable, cmp)
 /**
  * @return {integer}
  */
-PriorityQueue.prototype.size = function()
+PriorityQueue.prototype.size = function() // or length() ?
 {
 	return this._heap.length;
 };
@@ -83,5 +83,4 @@ PriorityQueue.prototype.__iterator__ = function()
 // necessary to support current MK impl.
 PriorityQueue.prototype.iter = PriorityQueue.prototype.__iterator__;
 
-
-// .. + sorted?
+// todo: .. clear(), sorted()?

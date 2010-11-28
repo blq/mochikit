@@ -1,7 +1,9 @@
-// Unittests for Random module
+// Unit tests for the Random module
 //
 // converted from Python and PyPy's unit-tests
 // http://svn.python.org/view/python/branches/release27-maint/Lib/test/test_random.py?view=markup
+//
+// todo: this generates some odd false negatives when run from the main index.html test form?!
 
 
 if (typeof(tests) == 'undefined') { tests = {}; }
@@ -9,6 +11,7 @@ if (typeof(tests) == 'undefined') { tests = {}; }
 
 tests.test_Random = function(t)
 {
+
 
 	function test_sample()
 	{

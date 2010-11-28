@@ -415,13 +415,15 @@ MochiKit.Iter.breakIt = function()
 };
 
 /**
+ * @see http://www.sgi.com/tech/stl/generate_n.html
+ *
  * @param {!Function} genFn
  * @param {integer} n
  * @return {!Iterable} genFn applied n times
  */
 MochiKit.Iter.generateN = function(genFn, n)
 {
-	return MochiKit.Iter.imap(function() { return genFn(); }, MochiKit.Iter.repeat('dummy', n)); // we wrap genFn to make sure the arity of the call isn't disturbed by imap+dummy
+	return MochiKit.Iter.imap(function() { return genFn(); }, MochiKit.Iter.range(n)); // we wrap genFn to make sure the arity of the call isn't disturbed by imap+range
 };
 
 
