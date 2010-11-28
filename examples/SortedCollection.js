@@ -83,9 +83,10 @@ function SortedCollection(iterable, key)
 };
 
 /**
- * @param {Iterable=} [iterable]
- * @param {Function=} [key]
- * todo: support custom comparator
+ * @param {Iterable=} [iterable=empty]
+ * @param {Function=} [key=identity]
+ * todo: support custom comparator?
+ * @private
  */
 SortedCollection.prototype._init = function(iterable, key) {
 	iterable = iterable || [];
@@ -124,7 +125,7 @@ SortedCollection.prototype.clear = function() {
 /**
  * @return {integer}
  */
-SortedCollection.prototype.length = function() {
+SortedCollection.prototype.length = function() { // or size()?
 	return this._items.length;
 };
 
