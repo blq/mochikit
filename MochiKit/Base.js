@@ -233,7 +233,7 @@ MochiKit.Base.update(MochiKit.Base, {
     /** @id MochiKit.Base.keys */
     keys: function (obj) {
         var rval = [];
-        for (var prop in obj) {
+        for (var prop in obj) { // todo: use o.hasOwnProperty instead/also?
             rval.push(prop);
         }
         return rval;
@@ -242,8 +242,8 @@ MochiKit.Base.update(MochiKit.Base, {
     /** @id MochiKit.Base.values */
     values: function (obj) {
         var rval = [];
-        for (var prop in obj) {
-            rval.push(obj[prop]);
+        for (var prop in obj) { // todo: use o.hasOwnProperty instead/also?
+            rval.push(obj[prop]); // doesn't this need a try-catch?
         }
         return rval;
     },
@@ -251,7 +251,7 @@ MochiKit.Base.update(MochiKit.Base, {
      /** @id MochiKit.Base.items */
     items: function (obj) {
         var rval = [];
-        for (var prop in obj) {
+        for (var prop in obj) { // todo: use o.hasOwnProperty instead/also?
             var v;
             try {
                 v = obj[prop];
@@ -273,6 +273,7 @@ MochiKit.Base.update(MochiKit.Base, {
 
     /** @id MochiKit.Base.operator */
     operator: {
+		NAME: 'operator', // ok?
         // unary logic operators
         /** @id MochiKit.Base.truth */
         truth: function (a) { return !!a; },
@@ -384,7 +385,7 @@ MochiKit.Base.update(MochiKit.Base, {
         if (typeof(value) === "boolean" || value instanceof Boolean) {
             return value.valueOf();
         } else if (typeof(value) === "string" || value instanceof String) {
-            return value.length > 0 && value != "false" && value != "null" &&
+            return value.length > 0 && value != "false" && value != "null" && // todo: allow "False", "FALSE"?
                    value != "undefined" && value != "0";
         } else if (typeof(value) === "number" || value instanceof Number) {
             return !isNaN(value) && value != 0;
@@ -1228,7 +1229,7 @@ MochiKit.Base.update(MochiKit.Base, {
             var o = names;
             names = [];
             values = [];
-            for (var k in o) {
+            for (var k in o) { // todo: use o.hasOwnProperty instead?
                 var v = o[k];
                 if (typeof(v) == "function") {
                     continue;
@@ -1515,7 +1516,7 @@ MochiKit.Base.__new__ = function () {
     m.jsonRegistry = new m.AdapterRegistry();
 
     m.nameFunctions(this);
-
+	m.nameFunctions(this.operator); 
 };
 
 MochiKit.Base.__new__();
