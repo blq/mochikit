@@ -45,13 +45,13 @@ MochiKit.HeapQ.heapify = function(x, cmp)
 {
 	cmp = cmp || MochiKit.Base.operator.clt;
 
-    var n = x.length;
-    // Transform bottom-up.  The largest index there's any point to looking at
-    // is the largest with a child index in-range, so must have 2*i + 1 < n,
-    // or i < (n-1)/2.  If n is even = 2*j, this is (2*j-1)/2 = j-1/2 so
-    // j-1 is the largest, which is n//2 - 1.  If n is odd = 2*j+1, this is
-    // (2*j+1-1)/2 = j so j-1 is the largest, and that's again n//2-1.
-    for (var i = Math.floor(n / 2) - 1; i >= 0; --i)
+	var n = x.length;
+	// Transform bottom-up.  The largest index there's any point to looking at
+	// is the largest with a child index in-range, so must have 2*i + 1 < n,
+	// or i < (n-1)/2.  If n is even = 2*j, this is (2*j-1)/2 = j-1/2 so
+	// j-1 is the largest, which is n//2 - 1.  If n is odd = 2*j+1, this is
+	// (2*j+1-1)/2 = j so j-1 is the largest, and that's again n//2-1.
+	for (var i = Math.floor(n / 2) - 1; i >= 0; --i)
 		MochiKit.HeapQ._siftup(x, i, cmp);
 	return x; // enable functional chaining (Python doesn't do this..)
 };
@@ -72,20 +72,20 @@ MochiKit.HeapQ._siftdown = function(heap, startpos, pos, cmp)
 {
 	cmp = cmp || MochiKit.Base.operator.clt;
 
-    var newitem = heap[pos];
-    // Follow the path to the root, moving parents down until finding a place
-    // newitem fits.
-    while (pos > startpos) {
-        var parentpos = (pos - 1) >> 1; // or use floor() ?
-        var parent = heap[parentpos];
-        if (cmp(newitem, parent)) {
-            heap[pos] = parent;
-            pos = parentpos;
-            continue;
+	var newitem = heap[pos];
+	// Follow the path to the root, moving parents down until finding a place
+	// newitem fits.
+	while (pos > startpos) {
+		var parentpos = (pos - 1) >> 1; // or use floor() ?
+		var parent = heap[parentpos];
+		if (cmp(newitem, parent)) {
+			heap[pos] = parent;
+			pos = parentpos;
+			continue;
 		}
-        break;
+		break;
 	}
-    heap[pos] = newitem;
+	heap[pos] = newitem;
 	// return heap?
 };
 
@@ -100,25 +100,25 @@ MochiKit.HeapQ._siftup = function(heap, pos, cmp)
 {
 	cmp = cmp || MochiKit.Base.operator.clt;
 
-    var endpos = heap.length;
-    var startpos = pos;
-    var newitem = heap[pos];
-    // Bubble up the smaller child until hitting a leaf.
-    var childpos = 2*pos + 1; // leftmost child position
-    while (childpos < endpos) {
-        // Set childpos to index of smaller child.
-        var rightpos = childpos + 1;
-        if (rightpos < endpos && !(cmp(heap[childpos], heap[rightpos])))
-            childpos = rightpos;
-        // Move the smaller child up.
-        heap[pos] = heap[childpos];
-        pos = childpos;
-        childpos = 2*pos + 1;
+	var endpos = heap.length;
+	var startpos = pos;
+	var newitem = heap[pos];
+	// Bubble up the smaller child until hitting a leaf.
+	var childpos = 2*pos + 1; // leftmost child position
+	while (childpos < endpos) {
+		// Set childpos to index of smaller child.
+		var rightpos = childpos + 1;
+		if (rightpos < endpos && !(cmp(heap[childpos], heap[rightpos])))
+			childpos = rightpos;
+		// Move the smaller child up.
+		heap[pos] = heap[childpos];
+		pos = childpos;
+		childpos = 2*pos + 1;
 	}
-    // The leaf at pos is empty now.  Put newitem there, and bubble it up
-    // to its final resting place (by sifting its parents down).
-    heap[pos] = newitem;
-    MochiKit.HeapQ._siftdown(heap, startpos, pos, cmp);
+	// The leaf at pos is empty now.  Put newitem there, and bubble it up
+	// to its final resting place (by sifting its parents down).
+	heap[pos] = newitem;
+	MochiKit.HeapQ._siftdown(heap, startpos, pos, cmp);
 	// return heap?
 };
 
@@ -155,16 +155,16 @@ MochiKit.HeapQ.heapPop = function(heap, cmp)
 {
 	cmp = cmp || MochiKit.Base.operator.clt;
 
-    var lastelt = heap.pop(); // todo: throw if empty?
+	var lastelt = heap.pop(); // todo: throw if empty?
 	var returnitem;
-    if (heap.length > 0) {
-        returnitem = heap[0];
-        heap[0] = lastelt;
-        MochiKit.HeapQ._siftup(heap, 0, cmp);
+	if (heap.length > 0) {
+		returnitem = heap[0];
+		heap[0] = lastelt;
+		MochiKit.HeapQ._siftup(heap, 0, cmp);
 	} else {
-        returnitem = lastelt;
+		returnitem = lastelt;
 	}
-    return returnitem;
+	return returnitem;
 };
 
 
@@ -189,10 +189,10 @@ MochiKit.HeapQ.heapReplace = function(heap, item, cmp)
 {
 	cmp = cmp || MochiKit.Base.operator.clt;
 
-    var returnitem = heap[0]; // todo: throw if empty?
-    heap[0] = item;
-    MochiKit.HeapQ._siftup(heap, 0, cmp);
-    return returnitem;
+	var returnitem = heap[0]; // todo: throw if empty?
+	heap[0] = item;
+	MochiKit.HeapQ._siftup(heap, 0, cmp);
+	return returnitem;
 };
 
 
@@ -208,13 +208,13 @@ MochiKit.HeapQ.heapPushPop = function(heap, item, cmp)
 {
 	cmp = cmp || MochiKit.Base.operator.clt;
 
-    if (heap.length > 0 && cmp(heap[0], item)) {
+	if (heap.length > 0 && cmp(heap[0], item)) {
 		var tmp = heap[0];
 		heap[0] = item;
 		item = tmp;
-        MochiKit.HeapQ._siftup(heap, 0, cmp);
+		MochiKit.HeapQ._siftup(heap, 0, cmp);
 	}
-    return item;
+	return item;
 };
 
 
@@ -242,15 +242,15 @@ MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 	var h = [];
 	mi.forEach(mi.izip(mi.count(), mi.imap(mi.iter, iterables)), function(pair) {
 		var itnum = pair[0], it = pair[1];
-        try {
-            var next = it.next;
-            h.push([next(), itnum, next]); // tuple of [value, index, iterator]
+		try {
+			var next = it.next;
+			h.push([next(), itnum, next]); // tuple of [value, index, iterator]
 		} catch (e) {
 			if (e != mi.StopIteration)
 				throw e;
 		}
 	});
-    m.HeapQ.heapify(h, _cmp);
+	m.HeapQ.heapify(h, _cmp);
 
 	return {
 		repr: function() { return "imergeSorted(...)"; },
@@ -312,35 +312,35 @@ MochiKit.HeapQ.nLargest = function(n, iterable, cmp)
 {
 	var m = MochiKit, mi = m.Iter;
 	cmp = cmp || m.Base.operator.clt; // cle? ok?
-    var it = mi.iter(iterable);
+	var it = mi.iter(iterable);
 
 	// todo: several fast-paths possible. n >= len(iterable) -> rev.sort etc
 /*
 	// PyPy variant
 	var result = mi.list(mi.islice(it, n));
-    if (result.length == 0)
-        return result;
-    m.HeapQ.heapify(result, cmp);
-    var sol = result[0];         // sol --> smallest of the nlargest
-    mi.forEach(it, function(elem) {
-       if (elem > sol) {
+	if (result.length == 0)
+		return result;
+	m.HeapQ.heapify(result, cmp);
+	var sol = result[0];         // sol --> smallest of the nlargest
+	mi.forEach(it, function(elem) {
+	   if (elem > sol) {
 			m.HeapQ.heapReplace(result, elem, cmp);
 			sol = result[0];
 	   }
 	});
-    result.sort(function(a, b) { return -1*m.Base.compare(a, b); }); // todo: extract a negateComparator
-    return result;
+	result.sort(function(a, b) { return -1*m.Base.compare(a, b); }); // todo: extract a negateComparator
+	return result;
 */
 
-    var result = mi.list(mi.islice(it, n));
+	var result = mi.list(mi.islice(it, n));
 	if (result.length == 0)
 		return result;
-    m.HeapQ.heapify(result, cmp);
+	m.HeapQ.heapify(result, cmp);
 	mi.forEach(it, function(elem) {
 		m.HeapQ.heapPushPop(result, elem, cmp);
 	});
-    result.sort(function(a, b) { return -1*m.Base.compare(a, b); });
-    return result;
+	result.sort(function(a, b) { return -1*m.Base.compare(a, b); });
+	return result;
 };
 
 
