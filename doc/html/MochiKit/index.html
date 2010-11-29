@@ -117,17 +117,17 @@ available properties.</li>
 changes the mouse event coordinate values, but should be compatible.</li>
 <li>Added new MochiKit.Base.module() and moduleExport() functions.</li>
 <li><em>https://github.com/blq/mochikit fork changes start here</em></li>
-<li>Made all module have Google Closure module dependency specifications</li>
+<li>Made all modules have Google Closure module dependency specifications</li>
 <li>Added Base-ext module</li>
-<li>Added &quot;bind 2.0&quot;. Support for placeholder arguments and nesting</li>
-<li>Added bind2, partial2, method2, bindLate2,</li>
-<li>Added protect, apply</li>
-<li>Added isBoundFunction</li>
-<li>Added partition</li>
+<li>Added &quot;bind 2.0&quot;. Support for placeholder arguments and nesting. Similar to the C++ Boost bind lib.</li>
+<li>Added Base.bind2, partial2, method2, bindLate2,</li>
+<li>Added Base.protect, apply</li>
+<li>Added Base.isBoundFunction</li>
+<li>Added Base.partition</li>
 <li>Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat</li>
 <li>Added an optional 'step' parameter to Base.counter()</li>
-<li>Made all base operators have .NAME</li>
-<li>Added countValue</li>
+<li>Made all base Base.operators named (have .NAME property)</li>
+<li>Added Base.countValue</li>
 <li>Added Iter-ext module</li>
 <li>Added Iter.treePreOrder, treeLevelOrder, treePostOrder</li>
 <li>Added Iter.pairIter</li>
@@ -140,31 +140,30 @@ changes the mouse event coordinate values, but should be compatible.</li>
 <li>Added Iter.iflattenArray</li>
 <li>Added Iter.filterMap</li>
 <li>Added alias to Iter.any=some, all=every, starmap=applymap</li>
-<li>Added isSorted</li>
+<li>Added Iter.isSorted</li>
 <li>Added an optional 'step' parameter to Iter.count() (symmetry with Base.counter() change)</li>
-<li>Fixed islice bug. consuming one item too much. Added unit tests to verify.</li>
+<li>Fixed Iter.islice bug. consuming one item too much. Added unit tests to verify.</li>
 <li>Added Iter.advance</li>
 <li>Made Iter.iextend take an optional 'skip' param similar to Base.extend()</li>
-<li>Added generateN</li>
+<li>Added Iter.generateN</li>
 <li>Added Text-ext module</li>
-<li>Added humanStringCompare</li>
-<li>Added levenshteinDistance</li>
-<li>Added HeapQ module</li>
-<li>Added heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort</li>
+<li>Added Text.humanStringCompare</li>
+<li>Added Text.levenshteinDistance</li>
+<li>Added HeapQ module based on the Python.heapq module API.</li>
+<li>Added HeapQ.heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort</li>
 <li>Added example priority queue class based on the heap functions</li>
-<li>Added imergeSorted</li>
-<li>Added nSmallest and nLargest (partial sorting)</li>
-<li>Added heapIter</li>
+<li>Added HeapQ.imergeSorted</li>
+<li>Added HeapQ.nSmallest and nLargest (partial sorting)</li>
+<li>Added HeapQ.heapIter</li>
 <li>Made DOM.removeElement silently handle null, as well as already removed elements</li>
-<li>Changed Async.addCallback/addErrback to interpret no return value as piping, i.e pass on the last value.</li>
-<li>Added Random module</li>
-<li>Added randRange</li>
-<li>Added shuffle</li>
-<li>Added sample</li>
-<li>Added choice</li>
-<li>Added uniform</li>
-<li>Added Bisect module.</li>
-<li>Added bisectLeft, bisectRight, insortLeft, insortRight</li>
+<li>Added DOM.getElementsByClassName that uses browser-optimized paths</li>
+<li>Made the simplest tagName=* case in DOM.getElementsByTagAndClassName use the optimization</li>
+<li>Changed Async.addCallback/addErrback to interpret no return value as piping, i.e pass on the last non-void value.</li>
+<li>Added Random module.</li>
+<li>Added Random.randRange</li>
+<li>Added Random.shuffle, sample, choice, uniform</li>
+<li>Added Bisect module based on the Python.bisect module API.</li>
+<li>Added Bisect.bisectLeft, bisectRight, insortLeft, insortRight</li>
 <li>Added a SortedCollection example class based on the Bisect module</li>
 <li>Added a Set example class based on the Bisect module</li>
 </ul>

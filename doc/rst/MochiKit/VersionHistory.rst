@@ -42,18 +42,18 @@
 
 - *https://github.com/blq/mochikit fork changes start here*
 
-- Made all module have Google Closure module dependency specifications
+- Made all modules have Google Closure module dependency specifications
 
 - Added Base-ext module
-- Added "bind 2.0". Support for placeholder arguments and nesting
-- Added bind2, partial2, method2, bindLate2,
-- Added protect, apply
-- Added isBoundFunction
-- Added partition
+- Added "bind 2.0". Support for placeholder arguments and nesting. Similar to the C++ Boost bind lib.
+- Added Base.bind2, partial2, method2, bindLate2,
+- Added Base.protect, apply
+- Added Base.isBoundFunction
+- Added Base.partition
 - Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat
 - Added an optional 'step' parameter to Base.counter()
-- Made all base operators have .NAME
-- Added countValue
+- Made all base Base.operators named (have .NAME property)
+- Added Base.countValue
 
 - Added Iter-ext module
 - Added Iter.treePreOrder, treeLevelOrder, treePostOrder
@@ -67,37 +67,36 @@
 - Added Iter.iflattenArray
 - Added Iter.filterMap
 - Added alias to Iter.any=some, all=every, starmap=applymap
-- Added isSorted
+- Added Iter.isSorted
 - Added an optional 'step' parameter to Iter.count() (symmetry with Base.counter() change)
-- Fixed islice bug. consuming one item too much. Added unit tests to verify.
+- Fixed Iter.islice bug. consuming one item too much. Added unit tests to verify.
 - Added Iter.advance
 - Made Iter.iextend take an optional 'skip' param similar to Base.extend()
-- Added generateN
+- Added Iter.generateN
 
 - Added Text-ext module
-- Added humanStringCompare
-- Added levenshteinDistance
+- Added Text.humanStringCompare
+- Added Text.levenshteinDistance
 
-- Added HeapQ module
-- Added heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort
+- Added HeapQ module based on the Python.heapq module API.
+- Added HeapQ.heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort
 - Added example priority queue class based on the heap functions
-- Added imergeSorted
-- Added nSmallest and nLargest (partial sorting)
-- Added heapIter
+- Added HeapQ.imergeSorted
+- Added HeapQ.nSmallest and nLargest (partial sorting)
+- Added HeapQ.heapIter
 
 - Made DOM.removeElement silently handle null, as well as already removed elements
+- Added DOM.getElementsByClassName that uses browser-optimized paths
+- Made the simplest tagName=* case in DOM.getElementsByTagAndClassName use the optimization
 
-- Changed Async.addCallback/addErrback to interpret no return value as piping, i.e pass on the last value.
+- Changed Async.addCallback/addErrback to interpret no return value as piping, i.e pass on the last non-void value.
 
-- Added Random module
-- Added randRange
-- Added shuffle
-- Added sample
-- Added choice
-- Added uniform
+- Added Random module.
+- Added Random.randRange
+- Added Random.shuffle, sample, choice, uniform
 
-- Added Bisect module.
-- Added bisectLeft, bisectRight, insortLeft, insortRight
+- Added Bisect module based on the Python.bisect module API.
+- Added Bisect.bisectLeft, bisectRight, insortLeft, insortRight
 - Added a SortedCollection example class based on the Bisect module
 - Added a Set example class based on the Bisect module
 
