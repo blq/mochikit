@@ -872,6 +872,11 @@ MochiKit.Base.update(MochiKit.Signal, {
         }
     },
 
+	/**
+	 * frees any pending disconnects (if lock allows)
+	 * @return {boolean} false if locked and no gc could be performed
+	 * @private
+	 */
 	_gc: function()	{
 		var self = MochiKit.Signal;
 		var observers = self._observers;
