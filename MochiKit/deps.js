@@ -1,0 +1,26 @@
+// MochiKit dependencies.
+goog.addDependency('Async.js', ['MochiKit.Async'], ['MochiKit.Base']);
+goog.addDependency('Base-ext.js', ['MochiKit.Base_ext'], ['MochiKit.Base']);
+goog.addDependency('Base.js', ['MochiKit.Base'], []);
+goog.addDependency('Bisect.js', ['MochiKit.Bisect'], ['MochiKit.Base']);
+goog.addDependency('Color.js', ['MochiKit.Color'], ['MochiKit.DOM', 'MochiKit.Style', 'MochiKit.Base']);
+goog.addDependency('DateTime-ext.js', ['MochiKit.DateTime_ext'], ['MochiKit.DateTime', 'MochiKit.Iter', 'MochiKit.Base']);
+goog.addDependency('DateTime.js', ['MochiKit.DateTime'], ['MochiKit.Base']);
+goog.addDependency('DOM.js', ['MochiKit.DOM'], ['MochiKit.Base']);
+goog.addDependency('DragAndDrop.js', ['MochiKit.DragAndDrop'], ['MochiKit.Signal', 'MochiKit.Base', 'MochiKit.Visual', 'MochiKit.Iter', 'MochiKit.Position', 'MochiKit.DOM']);
+goog.addDependency('Format.js', ['MochiKit.Format'], ['MochiKit.Base']);
+goog.addDependency('HeapQ.js', ['MochiKit.HeapQ'], ['MochiKit.Iter', 'MochiKit.Base']);
+goog.addDependency('Iter-ext.js', ['MochiKit.Iter_ext'], ['MochiKit.Iter', 'MochiKit.Base']);
+goog.addDependency('Iter.js', ['MochiKit.Iter'], ['MochiKit.Base']);
+goog.addDependency('Logging.js', ['MochiKit.Logging'], ['MochiKit.Base']);
+goog.addDependency('LoggingPane.js', ['MochiKit.LoggingPane'], ['MochiKit.Base', 'MochiKit.Logging']);
+goog.addDependency('Position.js', ['MochiKit.Position'], ['MochiKit.DOM', 'MochiKit.Style', 'MochiKit.Base']);
+goog.addDependency('Random.js', ['MochiKit.Random'], ['MochiKit.Base']);
+goog.addDependency('Selector.js', ['MochiKit.Selector'], ['MochiKit.Iter', 'MochiKit.DOM', 'MochiKit.Base']);
+goog.addDependency('Signal.js', ['MochiKit.Signal'], ['MochiKit.DOM', 'MochiKit.Base']);
+goog.addDependency('Sortable.js', ['MochiKit.Sortable'], ['MochiKit.Position', 'MochiKit.Iter', 'MochiKit.DOM', 'MochiKit.DragAndDrop', 'MochiKit.Base']);
+goog.addDependency('Style.js', ['MochiKit.Style'], ['MochiKit.DOM', 'MochiKit.Base']);
+goog.addDependency('Test.js', ['MochiKit.Test'], ['MochiKit.Base']);
+goog.addDependency('Text-ext.js', ['MochiKit.Text_ext'], ['MochiKit.Text']);
+goog.addDependency('Text.js', ['MochiKit.Text'], ['MochiKit.Format', 'MochiKit.Base']);
+goog.addDependency('Visual.js', ['MochiKit.Visual'], ['MochiKit.Position', 'MochiKit.DOM', 'MochiKit.Style', 'MochiKit.Base', 'MochiKit.Color']);

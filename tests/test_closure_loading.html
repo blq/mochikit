@@ -1,0 +1,33 @@
+<html>
+<head>
+	<script type="text/javascript">
+		// instruct Closure to not try to load its native dependencies
+		var CLOSURE_NO_DEPS = true;
+		// point to MochiKit root
+		var CLOSURE_BASE_PATH = '../MochiKit/';
+	</script>
+	<script type="text/javascript" src="../MochiKit/Closure/base.js"></script>
+    <script type="text/javascript" src="../MochiKit/deps.js"></script>
+	<!-- todo: show how compiled branch loading looks -->
+</head>
+
+<body>
+
+<script type="text/javascript">
+	// example of requiring couple of MochiKit modules
+	// note how we don't need to specify 'Base' and how 'DOM' is also loaded automatically
+	goog.require('MochiKit.Iter');
+	goog.require('MochiKit.Signal');
+</script>
+<!-- ! this separation of script blocks is necessary -->
+<script type="text/javascript">
+	// start your app here! - observe: this must be in a separate <script> block from the .require's
+	if (typeof goog == 'undefined' || typeof MochiKit == 'undefined') {
+		alert('Failed to load MochiKit using Closure :(');
+	} else {
+		alert('MochiKit + Closure = true!');
+	}
+</script>
+
+</body>
+</html>
