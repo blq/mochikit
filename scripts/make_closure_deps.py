@@ -18,7 +18,7 @@ import subprocess
 def main():
 
   p = subprocess.Popen(['python', 'Closure/bin/build/depswriter.py',
-    '--output_file', '../MochiKit/deps.js',
+    '--output_file', '../MochiKit/Closure/deps.js',
     '--root', '../MochiKit', #use --root_with_prefix if more "advanced" paths needed
     '--append_version', '1.5' # not strictly necessary. todo: parse version from main script
   ])
