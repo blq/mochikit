@@ -4,7 +4,6 @@ goog.addDependency('Base-ext.js', ['MochiKit.Base_ext'], ['MochiKit.Base']);
 goog.addDependency('Base.js', ['MochiKit.Base'], []);
 goog.addDependency('Bisect.js', ['MochiKit.Bisect'], ['MochiKit.Base']);
 goog.addDependency('Color.js', ['MochiKit.Color'], ['MochiKit.DOM', 'MochiKit.Style', 'MochiKit.Base']);
-goog.addDependency('DateTime-ext.js', ['MochiKit.DateTime_ext'], ['MochiKit.DateTime', 'MochiKit.Iter', 'MochiKit.Base']);
 goog.addDependency('DateTime.js', ['MochiKit.DateTime'], ['MochiKit.Base']);
 goog.addDependency('DOM.js', ['MochiKit.DOM'], ['MochiKit.Base']);
 goog.addDependency('DragAndDrop.js', ['MochiKit.DragAndDrop'], ['MochiKit.Signal', 'MochiKit.Base', 'MochiKit.Visual', 'MochiKit.Iter', 'MochiKit.Position', 'MochiKit.DOM']);
