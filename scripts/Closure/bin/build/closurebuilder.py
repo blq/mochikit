@@ -1,16 +1,28 @@
 #!/usr/bin/env python
 #
-# Copyright 2009 Google Inc. All Rights Reserved.
-
+# Copyright 2009 The Closure Library Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS-IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 """Utility for Closure Library dependency calculation.
 
-Closure Builder scans source files to build dependency info.  From the
+ClosureBuilder scans source files to build dependency info.  From the
 dependencies, the script can produce a deps.js file, a manifest in dependency
 order, a concatenated script, or compiled output from the Closure Compiler.
 
-Paths to files can be expressed as arguments (intended for use with xargs).
-As a convenience, --root can be used to specify all JS files below a directory.
+Paths to files can be expressed as individual arguments to the tool (intended
+for use with find and xargs).  As a convenience, --root can be used to specify
+all JS files below a directory.
 
 usage: %prog [options] [file1.js file2.js ...]
 """
@@ -28,8 +40,6 @@ import depstree
 import jscompiler
 import source
 import treescan
-
-#import orderedset
 
 
 def _GetOptionsParser():
@@ -53,7 +63,9 @@ def _GetOptionsParser():
                     help='One or more namespaces to calculate dependencies '
                     'for.  These namespaces will be combined with those given '
                     'with the -i flag to form the set of namespaces to find '
-                    'dependencies for.')
+                    'dependencies for.  A Closure namespace is a '
+                    'dot-delimited path expression declared with a call to '
+                    'goog.provide() (e.g. "goog.array" or "foo.bar").')
   parser.add_option('--root',
                     dest='roots',
                     action='append',
@@ -69,7 +81,7 @@ def _GetOptionsParser():
                     help='The type of output to generate from this script. '
                     'Options are "list" for a list of filenames, "script" '
                     'for a single script containing the contents of all the '
-                    'file, or "compiled" to produce compiled output with '
+                    'files, or "compiled" to produce compiled output with '
                     'the Closure Compiler.  Default is "list".')
   parser.add_option('-c',
                     '--compiler_jar',
@@ -79,7 +91,8 @@ def _GetOptionsParser():
   parser.add_option('-f',
                     '--compiler_flags',
                     dest='compiler_flags',
-                    action='store',
+                    default=[],
+                    action='append',
                     help='Additional flags to pass to the Closure compiler.')
   parser.add_option('--output_file',
                     dest='output_file',
