@@ -7,16 +7,17 @@
 #
 #
 
+import os
+import shutil
 import subprocess
 
 import make_closure_deps
 #import Closure.bin.build.modulebuilder # our own tool
 
-
 if __name__ == '__main__':
 
   # list modules (not file names!) you want to build here
-  # todo: should rather parse the MochiKit.js file (as pack.py does) but this way we be more illustrative
+  # todo: should rather parse the MochiKit.js file (as pack.py does) but this way we can be more illustrative
 
   mochikit_core_modules = [
     'MochiKit.' + mod
@@ -43,6 +44,7 @@ if __name__ == '__main__':
 
   modules = [
     ('MochiKit', mochikit_core_modules),
+    # example. separate modules in several packages
     ('MochiKit_blq_fork_extensions', [ 'MochiKit.Base_ext', 'MochiKit.Bisect', 'MochiKit.HeapQ', 'MochiKit.Iter_ext', 'MochiKit.Random' ])
   ]
 
@@ -50,6 +52,7 @@ if __name__ == '__main__':
   for mod in modules:
     mod_args.extend([ '--module', mod[0] + ':' + ','.join(mod[1]) ])
 
+  # example cmd line (todo: extract params as configs)
   args = [
     '--compiler_jar', 'Closure/compiler.jar',
     '--output_mode', 'compiled',
@@ -79,9 +82,13 @@ if __name__ == '__main__':
       --externs closure_externs/json.js'
   ]
 
-  # example cmd line (todo: extract params as configs)
   # our own tool, similar to Google's closurebuilder.py but let's you work with *module(s)*, not files.
-  p = subprocess.Popen(['python', 'Closure/bin/build/modulebuilder.py'] + args)
+  subprocess.check_call(['python', 'Closure/bin/build/modulebuilder.py'] + args) # throws if build fails
+
+  # move output to packed folder
+  shutil.move('goog.js', '../packed/MochiKit/Closure/base.js') # assumes 'keep_base_separate' param was used above
+  for mod in modules:
+    shutil.move(mod[0] + '.js', '../packed/MochiKit/Closure')
 
   # generate dependency file
   make_closure_deps.main()
