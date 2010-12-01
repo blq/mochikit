@@ -1,5 +1,6 @@
 <html>
 <head>
+	<!-- uncompressed mode -->
 	<script type="text/javascript">
 		// instruct Closure to not try to load its native dependencies
 		var CLOSURE_NO_DEPS = true;
@@ -8,7 +9,17 @@
 	</script>
 	<script type="text/javascript" src="../MochiKit/Closure/base.js"></script>
     <script type="text/javascript" src="../MochiKit/Closure/deps.js"></script>
-	<!-- todo: show how compiled branch loading looks -->
+	<!-- /uncompressed mode -->
+
+
+	<!-- compressed mode -->
+	<!-- (note base.js can be baked into the packed module also) -->
+<!--
+	<script type="text/javascript" src="../packed/MochiKit/Closure/base.js"></script>
+    <script type="text/javascript" src="../packed/MochiKit/Closure/MochiKit.js"></script>
+-->
+	<!-- /compressed mode -->
+
 </head>
 
 <body>
@@ -18,6 +29,7 @@
 	// note how we don't need to specify 'Base' and how 'DOM' is also loaded automatically
 	goog.require('MochiKit.Iter');
 	goog.require('MochiKit.Signal');
+	goog.require('MochiKit.Logging');
 </script>
 <!-- ! this separation of script blocks is necessary -->
 <script type="text/javascript">
