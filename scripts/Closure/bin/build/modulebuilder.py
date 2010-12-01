@@ -77,11 +77,12 @@ def _GetOptionsParser():
                     default=False,
                     help=('display a list of the unused files in the root(s) after compilation')
                     )
+  # todo: perhaps support a generic --keep_file_separate flag?
   parser.add_option('--keep_base_separate',
                     dest='keep_base_separate',
                     action='store',
                     default=True,
-                    help=('keep the goog base.js as a separate module. i.e don''t bake into other module (NOT compatible with the "keep_dep_tags" flag)')
+                    help=('keep the goog base.js as a separate module. i.e don''t bake into other module (NOT compatible with the "keep_dep_tags" flag)') #? incorrect docs? we are currently using these two flags combined..
                     )
   return parser
 
@@ -177,7 +178,7 @@ def _generateModules(sources, modules, keepBaseSeparate=True):
 
 
 # string for closure compiler
-# todo: not quite sure this works now..
+# todo: not quite sure this works now.. (todo: this case? http://groups.google.com/group/closure-library-discuss/browse_thread/thread/bbcc4d9cea16b4b3/34e8b4a75733a2b7 and http://code.google.com/p/closure-library/issues/detail?id=164 )
 # todo: support the new "keep_base_separate" flag also
 def _generateCommandLine(modules, modulesOnly=False, lineBreaks=True, keepDeps=True):
   global moduleProvides
