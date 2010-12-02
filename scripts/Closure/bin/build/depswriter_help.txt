@@ -1,4 +1,4 @@
-usage: Generates out a Closure deps.js file given a list of JavaScript sources.
+Usage: Generates out a Closure deps.js file given a list of JavaScript sources.
 
 Paths can be specified as arguments or (more commonly) specifying trees
 with the flags (call with --help for descriptions).
@@ -6,7 +6,7 @@ with the flags (call with --help for descriptions).
 Usage: depswriter.py [path/to/js1.js [path/to/js2.js] ...]
 
 
-options:
+Options:
   -h, --help            show this help message and exit
   --output_file=OUTPUT_FILE
                         If specified, write output to this path instead of
@@ -25,3 +25,6 @@ options:
                         file in the generated deps file (if either contains a
                         space, surround with whitespace). This flag may be
                         specifified multiple times.
+  --append_version=APPEND_VERSION
+                        If specified, append version as "?v=version" to each
+                        url.
