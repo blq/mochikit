@@ -83,7 +83,7 @@ def main():
   ]
 
   modules = [
-    ('MochiKit', mochikit_core_modules),
+    ('MochiKit_Core', mochikit_core_modules),
     # example. separate modules in several packages
     ('MochiKit_blq_fork_extensions', [ 'MochiKit.Base_ext', 'MochiKit.Bisect', 'MochiKit.HeapQ', 'MochiKit.Iter_ext', 'MochiKit.Random' ])
   ]
@@ -91,9 +91,16 @@ def main():
   build_modules(modules)
 
   # move output to packed folder
-  shutil.move('goog.js', 'packed/MochiKit/Closure/base.js') # assumes 'keep_base_separate' param was used above
   for mod in modules:
     shutil.move(mod[0] + '.js', 'packed/MochiKit/Closure')
+
+  # also build a complete pack (for comparison with "old" pack.py)
+  build_modules([
+    ('MochiKit', modules[0][1] + modules[1][1])
+  ])
+  shutil.move('MochiKit.js', 'packed/MochiKit/Closure')
+
+  shutil.move('goog.js', 'packed/MochiKit/Closure/base.js') # assumes 'keep_base_separate' param was used above
 
   # generate dependency file
   make_closure_deps.main()
