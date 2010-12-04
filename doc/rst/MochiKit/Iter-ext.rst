@@ -148,7 +148,8 @@ Functions
 
 :mochidef:`filterMap(mapFn, iterable)`:
 
-    convenience in the common(?) case where you need to do a mapping but also discard certain elements (when mapFn returns null/undefined)
+    convenience in the common(?) case where you need to do a mapping but also discard
+    certain elements (when mapFn returns null/undefined)
     i.e if mapFn null/undefined is treated as false
 
 
@@ -206,10 +207,52 @@ Functions
 
 :mochidef:`izipLongest(iterables, fillValue=null)`:
 
-    Similar to :mochiref:`MochiKit.Iter.izip` but continues until the longest iterator is exhausted, filling missing values with ``fillValue``, default ``null``
+    Similar to :mochiref:`MochiKit.Iter.izip` but continues until the longest iterator is
+    exhausted, filling missing values with ``fillValue``, default ``null``
 
 
+:mochidef:`combinations(iterables, r)`:
 
+    Return ``r`` length subsequences of elements from the input iterable.
+
+    Combinations are emitted in lexicographic sort order. So, if the input iterable is sorted, the
+    combination tuples will be produced in sorted order.
+
+    Elements are treated as unique based on their position, not on their value.
+    So if the input elements are unique, there will be no repeat values in each combination.
+
+    ::
+
+        combinations('ABCD'.split(), 2) --> AB AC AD BC BD CD
+        combinations(range(4), 3) --> 012 013 023 123
+
+
+:mochidef:`compressIter(data, selectors)`:
+
+    Make an iterator that filters elements from ``data`` returning only those that have a
+    corresponding element in ``selectors`` that evaluates to ``True``. Stops when either the ``data``
+    or ``selectors`` iterables has been exhausted.
+
+    ::
+
+        compress('ABCDEF'.split(), [1,0,1,0,1,1]) --> A C E F
+
+
+:mochidef:`interleave(iterable[, ...]))`:
+
+    ::
+
+        interleave([a, b, c], [1, 2, 3], [x, y, z]) --> [a, 1, z, b, 2, y, c, 3, z]
+
+
+:mochidef:`advance(iter, n)`:
+
+    Advances iterator ``iter`` ``n`` steps.
+
+
+:mochidef:`generateN(genFn, n)`:
+
+    Returns iterable equivalent of applying ``genFn()`` ``n`` times.
 
 
 See Also
