@@ -41,6 +41,8 @@ tests.test_Examples = function (t) {
 		t.ok(sd.index('xyzpdq') == -1);
 		sd.remove('jumped');
 		t.eq(list(sd), ['Brown', 'Fox', 'jUmPeD', 'quick', 'QuIcK', 'The']);
+
+		t.ok(sd.count('quick') == 1);
 	}
 	test_SortedCollection();
 

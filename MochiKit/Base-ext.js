@@ -317,7 +317,7 @@ MochiKit.Base.countValue = function(iterable, elem, cmp)
 {
 	cmp = cmp || MochiKit.Base.operator.ceq;
 	var n = 0;
-	MochiKit.Iter.forEach(iterable, function(e) { if (cmp(e, item)) ++n; });
+	MochiKit.Iter.forEach(iterable, function(e) { if (cmp(e, elem)) ++n; });
 	return n;
 };
 
