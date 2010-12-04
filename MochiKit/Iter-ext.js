@@ -539,6 +539,19 @@ MochiKit.Iter.interleave = function(iterable, var_args)
 };
 
 
+/**
+ * re-maps lst based on indices in index. kind of permutation.
+ * @see http://www.boost.org/doc/libs/1_45_0/libs/iterator/doc/permutation_iterator.html
+ * @see http://www.boost.org/doc/libs/1_45_0/libs/iterator/doc/indirect_iterator.html
+ *
+ * @param {!Iterable} index todo: allow fns here? (mapping->index)
+ * @param {!ArrayLike} lst
+ * @return {!Iterable} [lst[i0], lst[i1], ...lst[iN]]
+ */
+MochiKit.Iter.remapView = function(index, lst)
+{
+	return MochiKit.Iter.imap(MochiKit.Base.partial(MochiKit.Base.operator.getitem, lst), index);
+};
 //--------------------------------
 
 
