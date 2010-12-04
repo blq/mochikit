@@ -552,6 +552,31 @@ MochiKit.Iter.remapView = function(index, lst)
 {
 	return MochiKit.Iter.imap(MochiKit.Base.partial(MochiKit.Base.operator.getitem, lst), index);
 };
+
+
+/**
+ * compress('ABCDEF'.split(), [1,0,1,0,1,1]) --> A C E F
+ * @see http://docs.python.org/library/itertools.html#itertools.compress
+ *
+ * @param {!Iterable} data
+ * @param {!Iterable} selectors
+ * @return {!Iterable}
+ */
+MochiKit.Iter.compressIter = function(data, selectors)
+{
+	return MochiKit.Iter.imap(
+		function(d_s) {
+			return d_s[0];
+		},
+		MochiKit.Iter.ifilter(
+			function(d_s) {
+				return d_s[1] ? true : false;
+			},
+			MochiKit.Iter.izip(data, selectors)
+		)
+	);
+};
+
 //--------------------------------
 
 
