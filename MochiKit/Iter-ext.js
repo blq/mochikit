@@ -311,12 +311,12 @@ MochiKit.Iter.chainFromIter = function(seq, getIter)
  * kindof equivalent to: imap(function(v){ return v[0]; }, groupby(iterable))
  * @see http://www.sgi.com/tech/stl/unique.html
  * @param {!Iterable} iterable
- * @param {(function(*, *): boolean)=} [pred=eq]
+ * @param {(function(*, *): boolean)=} [pred=ceq]
  * @return {!Iterable}
  */
 MochiKit.Iter.uniqueView = function(iterable, pred)
 {
-	pred = pred || MochiKit.Base.operator.eq; // or 'ceq'?
+	pred = pred || MochiKit.Base.operator.ceq;
 
 	var it = MochiKit.Iter.iter(iterable);
 	var first = true;
@@ -407,7 +407,8 @@ MochiKit.Iter.enumerate = function(iterable, start)
 
 /**
  * useful convenience(?)
- * ... or will it just confuse? in a deeper iterator hierachy (nested) this might not do what the user believes, i.e the exception is caught earlier and interpreted wrongly..
+ * ... or will it just confuse? in a deeper iterator hierachy (nested) this might
+ * not do what the user believes, i.e the exception is caught earlier and interpreted wrongly..
  */
 MochiKit.Iter.breakIt = function()
 {
@@ -474,19 +475,26 @@ MochiKit.Iter.izipLongest = function(iterables, fillValue)
  * alias for MochiKit.Iter.some (to match Python)
  * @see http://docs.python.org/library/functions.html#any
  */
-MochiKit.Iter.any = MochiKit.Iter.some;
+MochiKit.Iter.any = function() {
+	// wrapped so that load order of Iter.js and this file doesn't matter
+	return MochiKit.Iter.some.apply(this, arguments);
+};
 
 /**
  * alias for MochiKit.Iter.every (to match Python)
  * @see http://docs.python.org/library/functions.html#all
  */
-MochiKit.Iter.all = MochiKit.Iter.every;
+MochiKit.Iter.all = function() {
+	return MochiKit.Iter.every.apply(this, arguments);
+};
 
 /**
  * alias for MochiKit.Iter.applymap (to match Python)
  * @see http://docs.python.org/library/itertools.html#itertools.starmap
  */
-MochiKit.Iter.starmap = MochiKit.Iter.applymap;
+MochiKit.Iter.starmap = function() {
+	return MochiKit.Iter.applymap.apply(this, arguments);
+};
 
 
 /**
@@ -494,7 +502,7 @@ MochiKit.Iter.starmap = MochiKit.Iter.applymap;
  * (Python example in itertools calls this "consume")
  *
  * @param {!{ next: !Function }} iter iterator, Not iterable
- * @param {integer} n  >= 0
+ * @param {integer} n  >= 0  (todo: default to 1? == next)
  * @return {!{ next: !Function }} iter advanced n steps
  */
 MochiKit.Iter.advance = function(iter, n)
