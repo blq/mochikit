@@ -73,6 +73,10 @@
 - Added Iter.advance
 - Made Iter.iextend take an optional 'skip' param similar to Base.extend()
 - Added Iter.generateN
+- Added Iter.remapView
+- Added Iter.interleave
+- Added Iter.compressIter
+- Added Iter.combinations
 
 - Added Text-ext module
 - Added Text.humanStringCompare
