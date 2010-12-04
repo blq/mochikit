@@ -577,6 +577,55 @@ MochiKit.Iter.compressIter = function(data, selectors)
 	);
 };
 
+
+/**
+ * @see http://docs.python.org/library/itertools.html#itertools.combinations
+ * @param {!Iterable} iterable Note: must be an iterable, Not an iterator.
+ * @param {integer} r
+ * @return {!Iterable}
+ */
+MochiKit.Iter.combinations = function(iterable, r)
+{
+	var m = MochiKit, mi = MochiKit.Iter;
+
+	var pool = mi.list(iterable);
+    var n = pool.length;
+    if (r > n) {
+        return { next: mi.breakIt }; // todo: create an EmptyIter?
+    }
+
+    var indices = mi.list(mi.range(r));
+	var first = true;
+	return {
+		repr: function() { return "combinations(...)"; },
+		toString: m.Base.forwardCall("repr"),
+
+		next: function() {
+			if (first) {
+				first = false;
+				return mi.list(mi.remapView(indices, pool));
+			} // else
+			while (true) {
+				var done = true;
+				for (var i = r - 1; i >= 0; --i) {
+					if (indices[i] != (i + n - r)) {
+						done = false;
+						break;
+					}
+				}
+				if (done)
+					throw MochiKit.Iter.StopIteration;
+
+				indices[i] += 1;
+				for (var j = i + 1; j < r; ++j) {
+					indices[j] = indices[j-1] + 1;
+				}
+				return mi.list(mi.remapView(indices, pool));
+			}
+		}
+	};
+};
+
 //--------------------------------
 
 
