@@ -178,8 +178,9 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 
 
 /**
- * ...
+ * @param {!Function} func
  * @param {...*} var_args
+ * @return {!Function}
  */
 MochiKit.Base.partial2 = function(func, var_args)
 {
@@ -188,8 +189,10 @@ MochiKit.Base.partial2 = function(func, var_args)
 };
 
 /**
- * ...
+ * @param {*} self
+ * @param {!Function} func
  * @param {...*} var_args
+ * @return {!Function}
  */
 MochiKit.Base.method2 = function(self, func, var_args)
 {
@@ -198,8 +201,10 @@ MochiKit.Base.method2 = function(self, func, var_args)
 };
 
 /**
- * ...
+ * @param {!Function} func
+ * @param {*} self
  * @param {...*} var_args
+ * @return {!Function}
  */
 MochiKit.Base.bindLate2 = function(func, self, var_args)
 {
@@ -339,6 +344,7 @@ MochiKit.Base.negateComparator = function(cmp)
 
 MochiKit.Base_ext.__new__ = function() {
 	// NOP ...
+	// todo: export the placeholders here
 };
 
 
