@@ -519,6 +519,18 @@ MochiKit.Iter.isSorted = function(iterable, cmp)
 };
 
 
+/**
+ * interleave([a, b, c], [1, 2, 3], [x, y, z]) -> [a, 1, z, b, 2, y, c, 3, z]
+ * @param {!Iterable} iterable
+ * @param {...!Iterable} var_args
+ * @return {!Iterable}
+ */
+MochiKit.Iter.interleave = function(iterable, var_args)
+{
+	return MochiKit.Iter.chainFromIter(MochiKit.Iter.izip.apply(this, arguments));
+};
+
+
 //--------------------------------
 
 
