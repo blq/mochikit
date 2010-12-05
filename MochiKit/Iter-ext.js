@@ -480,25 +480,25 @@ MochiKit.Iter.izipLongest = function(iterables, fillValue)
  * alias for MochiKit.Iter.some (to match Python)
  * @see http://docs.python.org/library/functions.html#any
  */
-MochiKit.Iter.any = function() {
+MochiKit.Iter.any = function(iterable, func) {
 	// wrapped so that load order of Iter.js and this file doesn't matter
-	return MochiKit.Iter.some.apply(this, arguments);
+	return MochiKit.Iter.some(iterable, func);
 };
 
 /**
  * alias for MochiKit.Iter.every (to match Python)
  * @see http://docs.python.org/library/functions.html#all
  */
-MochiKit.Iter.all = function() {
-	return MochiKit.Iter.every.apply(this, arguments);
+MochiKit.Iter.all = function(iterable, func) {
+	return MochiKit.Iter.every(iterable, func);
 };
 
 /**
  * alias for MochiKit.Iter.applymap (to match Python)
  * @see http://docs.python.org/library/itertools.html#itertools.starmap
  */
-MochiKit.Iter.starmap = function() {
-	return MochiKit.Iter.applymap.apply(this, arguments);
+MochiKit.Iter.starmap = function(fun, seq, self) {
+	return MochiKit.Iter.applymap(fun, seq, self);
 };
 
 
@@ -594,12 +594,12 @@ MochiKit.Iter.combinations = function(iterable, r)
 	var m = MochiKit, mi = MochiKit.Iter;
 
 	var pool = mi.list(iterable);
-    var n = pool.length;
-    if (r > n) {
+	var n = pool.length;
+	if (r > n) {
 		return MochiKit.Iter.EmptyIter;
-    }
+	}
 
-    var indices = mi.list(mi.range(r));
+	var indices = mi.list(mi.range(r));
 	var first = true;
 	return {
 		repr: function() { return "combinations(...)"; },
@@ -641,7 +641,7 @@ MochiKit.Iter.combinations = function(iterable, r)
  */
 MochiKit.Iter.repeatSeq = function(iterable, n) // ..name? nCycles?
 {
-	// == chainFromIter(repeat(list(iterable), n)) but uses less memory
+	// == chainFromIter(repeat(list(iterable), n)) but uses less memory // todo: ! works if we replace range impl!
 	if (n == 0) {
 		return MochiKit.Iter.EmptyIter;
 	}

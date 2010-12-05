@@ -179,7 +179,7 @@ Can be used to traverse <a class="mochiref reference external" href="#fn-groupby
 kindof equivalent to: <tt class="docutils literal">imap(function(v){ return v[0]; }, groupby(iterable))</tt>
 see also <a class="reference external" href="http://www.sgi.com/tech/stl/unique.html">http://www.sgi.com/tech/stl/unique.html</a></p>
 <pre class="literal-block">
-uniqueView([1, 1, 2, 3, 4, 4, 4]) --&gt; [1, 2, 3, 4]
+uniqueView([1, 1, 2, 3, 4, 4, 4]) --&gt; 1, 2, 3, 4
 </pre>
 </blockquote>
 <p>
@@ -226,8 +226,8 @@ combination tuples will be produced in sorted order.</p>
 <p>Elements are treated as unique based on their position, not on their value.
 So if the input elements are unique, there will be no repeat values in each combination.</p>
 <pre class="literal-block">
-combinations('ABCD'.split(), 2) --&gt; AB AC AD BC BD CD
-combinations(range(4), 3) --&gt; 012 013 023 123
+combinations([A,B,C,D], 2) --&gt; [A,B], [A,C], [A,D], [B,C], [B,D], [C,D]
+combinations(range(4), 3) --&gt; [0,1,2], [0,1,3], [0,2,3], [1,2,3]
 </pre>
 </blockquote>
 <p>
@@ -238,7 +238,7 @@ combinations(range(4), 3) --&gt; 012 013 023 123
 corresponding element in <tt class="docutils literal">selectors</tt> that evaluates to <tt class="docutils literal">True</tt>. Stops when either the <tt class="docutils literal">data</tt>
 or <tt class="docutils literal">selectors</tt> iterables has been exhausted.</p>
 <pre class="literal-block">
-compress('ABCDEF'.split(), [1,0,1,0,1,1]) --&gt; A C E F
+compress([A,B,C,D,E,F], [1,0,1,0,1,1]) --&gt; A, C, E, F
 </pre>
 </blockquote>
 <p>
@@ -246,7 +246,7 @@ compress('ABCDEF'.split(), [1,0,1,0,1,1]) --&gt; A C E F
 <a class="mochidef reference external" href="#fn-interleave">interleave(iterable[, ...]))</a>:</p>
 <blockquote>
 <pre class="literal-block">
-interleave([a, b, c], [1, 2, 3], [x, y, z]) --&gt; [a, 1, z, b, 2, y, c, 3, z]
+interleave([a, b, c], [1, 2, 3], [x, y, z]) --&gt; a, 1, x, b, 2, y, c, 3, z
 </pre>
 </blockquote>
 <p>
@@ -259,6 +259,31 @@ Advances iterator <tt class="docutils literal">iter</tt> <tt class="docutils lit
 <a class="mochidef reference external" href="#fn-generaten">generateN(genFn, n)</a>:</p>
 <blockquote>
 Returns iterable equivalent of applying <tt class="docutils literal">genFn()</tt> <tt class="docutils literal">n</tt> times.</blockquote>
+<p>
+<a name="fn-any"></a>
+<a class="mochidef reference external" href="#fn-any">any(iterable, func)</a>:</p>
+<blockquote>
+Alias for <a class="mochiref reference external" href="Iter.html#fn-some">MochiKit.Iter.some</a></blockquote>
+<p>
+<a name="fn-all"></a>
+<a class="mochidef reference external" href="#fn-all">all(iterable, func)</a>:</p>
+<blockquote>
+Alias for <a class="mochiref reference external" href="Iter.html#fn-every">MochiKit.Iter.every</a></blockquote>
+<p>
+<a name="fn-starmap"></a>
+<a class="mochidef reference external" href="#fn-starmap">starmap(fun, seq[, self])</a>:</p>
+<blockquote>
+Alias for <a class="mochiref reference external" href="Iter.html#fn-applymap">MochiKit.Iter.applymap</a></blockquote>
+<p>
+<a name="fn-repeatseq"></a>
+<a class="mochidef reference external" href="#fn-repeatseq">repeatSeq(iterable, n)</a>:</p>
+<blockquote>
+<p>Reapeats the <tt class="docutils literal">iterable</tt> sequence <tt class="docutils literal">n</tt> times.
+Note. this assumes the iterable is Not an iterator, i.e can be restarted (doesn't use auxilary storage as cycle() does)</p>
+<pre class="literal-block">
+repeatSeq(range(3), 3) --&gt; 0, 1, 2, 0, 1, 2, 0, 1, 2
+</pre>
+</blockquote>
 </div>
 </div>
 <div class="section" id="see-also">

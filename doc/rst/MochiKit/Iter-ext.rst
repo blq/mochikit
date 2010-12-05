@@ -174,7 +174,7 @@ Functions
 
      ::
 
-        uniqueView([1, 1, 2, 3, 4, 4, 4]) --> [1, 2, 3, 4]
+        uniqueView([1, 1, 2, 3, 4, 4, 4]) --> 1, 2, 3, 4
 
 
 :mochidef:`iproduct(a, b[, ...])`:
@@ -223,8 +223,8 @@ Functions
 
     ::
 
-        combinations([A,B,C,D], 2) --> AB AC AD BC BD CD
-        combinations(range(4), 3) --> 012 013 023 123
+        combinations([A,B,C,D], 2) --> [A,B], [A,C], [A,D], [B,C], [B,D], [C,D]
+        combinations(range(4), 3) --> [0,1,2], [0,1,3], [0,2,3], [1,2,3]
 
 
 :mochidef:`compressIter(data, selectors)`:
@@ -235,14 +235,14 @@ Functions
 
     ::
 
-        compress([A,B,C,D,E,F], [1,0,1,0,1,1]) --> A C E F
+        compress([A,B,C,D,E,F], [1,0,1,0,1,1]) --> A, C, E, F
 
 
 :mochidef:`interleave(iterable[, ...]))`:
 
     ::
 
-        interleave([a, b, c], [1, 2, 3], [x, y, z]) --> [a, 1, x, b, 2, y, c, 3, z]
+        interleave([a, b, c], [1, 2, 3], [x, y, z]) --> a, 1, x, b, 2, y, c, 3, z
 
 
 :mochidef:`advance(iter, n)`:
@@ -253,6 +253,31 @@ Functions
 :mochidef:`generateN(genFn, n)`:
 
     Returns iterable equivalent of applying ``genFn()`` ``n`` times.
+
+
+:mochidef:`any(iterable, func)`:
+
+    Alias for :mochiref:`MochiKit.Iter.some`
+
+
+:mochidef:`all(iterable, func)`:
+
+    Alias for :mochiref:`MochiKit.Iter.every`
+
+
+:mochidef:`starmap(fun, seq[, self])`:
+
+    Alias for :mochiref:`MochiKit.Iter.applymap`
+
+
+:mochidef:`repeatSeq(iterable, n)`:
+
+    Reapeats the ``iterable`` sequence ``n`` times.
+    Note. this assumes the iterable is Not an iterator, i.e can be restarted (doesn't use auxilary storage as cycle() does)
+
+    ::
+
+        repeatSeq(range(3), 3) --> 0, 1, 2, 0, 1, 2, 0, 1, 2
 
 
 See Also
