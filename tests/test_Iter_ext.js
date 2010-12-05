@@ -159,6 +159,7 @@ tests.test_Iter_ext = function (t) {
 	{
 		t.eq(list(MochiKit.Iter.chainFromIter([ [1], [4,5], [9] ])), [1,4,5,9]);
 		t.eq(list(MochiKit.Iter.chainFromIter([ iter([1]), iter([4,5]), [9] ])), [1,4,5,9]);
+		t.eq(list(MochiKit.Iter.chainFromIter([])), []);
 
 		t.eq(list(chainFromIter(groupby([1,1,1,2,2,3,3]), function(v) { return v[1]; })), [1,1,1,2,2,3,3], 'indirectChain complements groupby');
 	}
@@ -176,8 +177,14 @@ tests.test_Iter_ext = function (t) {
 	test_uniqueView();
 
 
-	//----
-	t.eq( list(iproduct([1, 2, 3], ['a', 'b'])), [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b'], [3, 'a'], [3, 'b']], '');
+	function test_product()
+	{
+		t.eq( list(iproduct([1, 2, 3], ['a', 'b'])), [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b'], [3, 'a'], [3, 'b']], '');
+		t.eq( list(iproduct([], [])), []);
+		t.eq( list(iproduct([])), []);
+	}
+	test_product();
+
 
 	function test_izipLongest()
 	{
