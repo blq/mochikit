@@ -150,11 +150,7 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
 		if (e != MochiKit.Iter.StopIteration)
 			throw e;
 		// return empty dummy iter that re-throws the StopIter
-		return {
-			next: function() {
-				throw e;
-			}
-		};
+		return MochiKit.Iter.EmptyIter;
 	}
 
 	if (wrapLast)
@@ -416,6 +412,15 @@ MochiKit.Iter.breakIt = function()
 };
 
 /**
+ * @type {Iterable}
+ * @const
+ */
+MochiKit.Iter.EmptyIter = {
+	next: MochiKit.Iter.breakIt
+};
+
+
+/**
  * @see http://www.sgi.com/tech/stl/generate_n.html
  *
  * @param {!Function} genFn
@@ -591,7 +596,7 @@ MochiKit.Iter.combinations = function(iterable, r)
 	var pool = mi.list(iterable);
     var n = pool.length;
     if (r > n) {
-        return { next: mi.breakIt }; // todo: create an EmptyIter?
+		return MochiKit.Iter.EmptyIter;
     }
 
     var indices = mi.list(mi.range(r));
@@ -626,8 +631,38 @@ MochiKit.Iter.combinations = function(iterable, r)
 	};
 };
 
-//--------------------------------
 
+/**
+ * similar to cycle() with a counter, but requires an Iterable (uses no temporary mem)
+ * resembles Python's list*n syntax.
+ * @param {!Iterable} iterable
+ * @param {integer} n
+ * @return {!Iterable}
+ */
+MochiKit.Iter.repeatSeq = function(iterable, n) // ..name? nCycles?
+{
+	// == chainFromIter(repeat(list(iterable), n)) but uses less memory
+	if (n == 0) {
+		return MochiKit.Iter.EmptyIter;
+	}
+	var it = MochiKit.Iter.iter(iterable);
+
+	return {
+		next: function() {
+			try {
+				return it.next();
+			} catch (e) {
+				if (e != MochiKit.Iter.StopIteration || --n <= 0)
+					throw e;
+				it = MochiKit.Iter.iter(iterable);
+				return it.next();
+			}
+		}
+	};
+};
+
+
+//--------------------------------
 
 MochiKit.Iter_ext.__new__ = function() {
 	// NOP ...
