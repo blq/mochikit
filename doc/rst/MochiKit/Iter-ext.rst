@@ -223,7 +223,7 @@ Functions
 
     ::
 
-        combinations('ABCD'.split(), 2) --> AB AC AD BC BD CD
+        combinations([A,B,C,D], 2) --> AB AC AD BC BD CD
         combinations(range(4), 3) --> 012 013 023 123
 
 
@@ -235,14 +235,14 @@ Functions
 
     ::
 
-        compress('ABCDEF'.split(), [1,0,1,0,1,1]) --> A C E F
+        compress([A,B,C,D,E,F], [1,0,1,0,1,1]) --> A C E F
 
 
 :mochidef:`interleave(iterable[, ...]))`:
 
     ::
 
-        interleave([a, b, c], [1, 2, 3], [x, y, z]) --> [a, 1, z, b, 2, y, c, 3, z]
+        interleave([a, b, c], [1, 2, 3], [x, y, z]) --> [a, 1, x, b, 2, y, c, 3, z]
 
 
 :mochidef:`advance(iter, n)`:
