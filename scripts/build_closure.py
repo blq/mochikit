@@ -31,24 +31,23 @@ def build_modules(modules):
     '--keep_base_separate', 'true', # whether you'd like goog Closure base.js baked in or include it separately
     # ---
     # cmd line for actual compiler. must be a separate string
-    # todo: enable VERBOSE mode once last issues in code have been fixed - this is where compiler really does its job!
-    # todo: unless you compile MochiKit *toghether*  with your app scripts, ADVANCED_OPTIMIZATION can't (currently) be used, need to "export" the API functions.
-    '--compiler_flags', '\
-      --compilation_level SIMPLE_OPTIMIZATIONS\
-      --warning_level DEFAULT\
-      --summary_detail_level 3\
-      --jscomp_off nonStandardJsDocs\
-      --process_closure_primitives true\
-      \
-      --jscomp_warning deprecated\
-      --jscomp_warning visibility\
-      --jscomp_warning accessControls\
-      --jscomp_warning strictModuleDepCheck\
-      \
-      --externs scripts/closure_externs/mochikit_extern.js\
-      --externs scripts/closure_externs/generic_types.js\
-      --externs scripts/closure_externs/webkit_console.js\
-      --externs scripts/closure_externs/json.js'
+    '--compiler_flags', ' '.join([
+        '--compilation_level', 'SIMPLE_OPTIMIZATIONS', # todo: unless you compile MochiKit *toghether*  with your app scripts, ADVANCED_OPTIMIZATION can't (currently) be used, need to "export" the API functions.
+        '--warning_level DEFAULT', # todo: enable VERBOSE mode once last issues in code have been fixed - this is where compiler really does its job!
+        '--summary_detail_level', '3',
+        '--jscomp_off', 'nonStandardJsDocs',
+        '--process_closure_primitives', 'true',
+
+        '--jscomp_warning', 'deprecated',
+        '--jscomp_warning', 'visibility',
+        '--jscomp_warning', 'accessControls',
+        '--jscomp_warning', 'strictModuleDepCheck',
+
+        '--externs', 'scripts/closure_externs/mochikit_extern.js',
+        '--externs', 'scripts/closure_externs/generic_types.js',
+        '--externs', 'scripts/closure_externs/webkit_console.js',
+        '--externs', 'scripts/closure_externs/json.js'
+      ])
   ]
 
   # our own tool, similar to Google's closurebuilder.py but let's you work with *module(s)*, not files.
