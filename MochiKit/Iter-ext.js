@@ -587,6 +587,7 @@ MochiKit.Iter.compressIter = function(data, selectors)
 
 /**
  * @see http://docs.python.org/library/itertools.html#itertools.combinations
+ * ex: combinations('ABCD', 2) --> AB AC AD BC BD CD
  * impl. follows the Python example reference.
  *
  * @param {!Iterable} iterable Note: must be an iterable, Not an iterator.
@@ -629,6 +630,54 @@ MochiKit.Iter.combinations = function(iterable, r)
 				for (var j = i + 1; j < r; ++j) {
 					indices[j] = indices[j-1] + 1;
 				}
+				return mi.list(mi.remapView(indices, pool));
+			}
+		}
+	};
+};
+
+/**
+ * @see http://docs.python.org/library/itertools.html#itertools.combinations_with_replacement
+ * ex: combinationsWithReplacement([A,B,C], 2) --> AA AB AC BB BC CC
+ * impl. follows the Python example reference.
+ *
+ * @param {!Iterable} iterable
+ * @param {integer} r
+ * @return {!Iterable}
+ */
+MochiKit.Iter.combinationsWithReplacement = function(iterable, r)
+{
+	var m = MochiKit, mi = MochiKit.Iter;
+
+    var pool = mi.list(iterable);
+    var n = pool.length;
+    if (n == 0 || r == 0) {
+        return mi.EmptyIter;
+    }
+
+    var indices = mi.list(mi.repeat(0, r));
+	var first = true;
+	return {
+		repr: function() { return "combinationsWithReplacement(...)"; },
+		toString: m.Base.forwardCall("repr"),
+
+		next: function() {
+			if (first) {
+				first = false;
+				return mi.list(mi.remapView(indices, pool));
+			} // else
+			while (true) {
+				var done = true;
+				for (var i = r - 1; i >= 0; --i) {
+					if (indices[i] != n - 1) {
+						done = false;
+						break;
+					}
+				}
+				if (done)
+					throw mi.StopIteration;
+
+				indices = MochiKit.Base.concat(indices.slice(0, i), mi.list(mi.repeat(indices[i] + 1, r - i)));
 				return mi.list(mi.remapView(indices, pool));
 			}
 		}
@@ -690,7 +739,9 @@ MochiKit.Iter.permutations = function(iterable, r)
 	var cycles = mi.list(mi.range(n, n - r, -1));
 	var first = true;
 	return {
-		// repr..
+		repr: function() { return "permutations(...)"; },
+		toString: m.Base.forwardCall("repr"),
+
 		next: function() {
 			if (first) {
 				first = false;
