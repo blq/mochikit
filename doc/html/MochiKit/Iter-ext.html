@@ -47,7 +47,7 @@ assert( perimeter == 3 + 4 + 5 );
 </div>
 <div class="section" id="description">
 <h1>Description</h1>
-<p>Even more iterators</p>
+<p>Even more iterators. &quot;Closes the gap&quot; to the Python itertools module, <a class="reference external" href="http://docs.python.org/library/itertools.html">http://docs.python.org/library/itertools.html</a>, and then some.</p>
 <p>Extends the existing <a class="mochiref reference external" href="Iter.html">MochiKit.Iter</a> namespace</p>
 </div>
 <div class="section" id="dependencies">
@@ -221,7 +221,7 @@ exhausted, filling missing values with <tt class="docutils literal">fillValue</t
 <a class="mochidef reference external" href="#fn-combinations">combinations(iterables, r)</a>:</p>
 <blockquote>
 <p>Return <tt class="docutils literal">r</tt> length subsequences of elements from the input iterable.</p>
-<p>Combinations are emitted in lexicographic sort order. So, if the input iterable is sorted, the
+<p>Combinations are emitted in lexicographic sort order. So, if the input <tt class="docutils literal">iterable</tt> is sorted, the
 combination tuples will be produced in sorted order.</p>
 <p>Elements are treated as unique based on their position, not on their value.
 So if the input elements are unique, there will be no repeat values in each combination.</p>
@@ -229,6 +229,29 @@ So if the input elements are unique, there will be no repeat values in each comb
 combinations([A,B,C,D], 2) --&gt; [A,B], [A,C], [A,D], [B,C], [B,D], [C,D]
 combinations(range(4), 3) --&gt; [0,1,2], [0,1,3], [0,2,3], [1,2,3]
 </pre>
+<p>The number of items returned is <tt class="docutils literal">n! / r! / <span class="pre">(n-r)!</span></tt> when <tt class="docutils literal">0 &lt;= r &lt;= n</tt> or zero when <tt class="docutils literal">r &gt; n</tt>.</p>
+</blockquote>
+<p>
+<a name="fn-combinationswithreplacement"></a>
+<a class="mochidef reference external" href="#fn-combinationswithreplacement">combinationsWithReplacement(iterables, r)</a>:</p>
+<blockquote>
+<p>Return <tt class="docutils literal">r</tt> length subsequences of elements from the input <tt class="docutils literal">iterable</tt> allowing individual elements to be repeated more than once.</p>
+<p>Combinations are emitted in lexicographic sort order. So, if the input <tt class="docutils literal">iterable</tt> is sorted, the combination tuples will be produced in sorted order.</p>
+<p>Elements are treated as unique based on their position, not on their value. So if the input elements are unique, the generated combinations will also be unique.</p>
+<pre class="literal-block">
+combinationsWithReplacement([A,B,C], 2) --&gt; [A,A], [A,B], [A,C], [B,B], [B,C], [C,C]
+</pre>
+<p>The number of items returned is <tt class="docutils literal"><span class="pre">(n+r-1)!</span> / r! / <span class="pre">(n-1)!</span></tt> when <tt class="docutils literal">n &gt; 0</tt>.</p>
+</blockquote>
+<p>
+<a name="fn-permutations"></a>
+<a class="mochidef reference external" href="#fn-permutations">permutations(iterables[, r])</a>:</p>
+<blockquote>
+<p>Return successive <tt class="docutils literal">r</tt> length permutations of elements in the <tt class="docutils literal">iterable</tt>.</p>
+<p>If <tt class="docutils literal">r</tt> is not specified or is undefined, then <tt class="docutils literal">r</tt> defaults to the length of the <tt class="docutils literal">iterable</tt> and all possible full-length permutations are generated.</p>
+<p>Permutations are emitted in lexicographic sort order. So, if the input <tt class="docutils literal">iterable</tt> is sorted, the permutation tuples will be produced in sorted order.</p>
+<p>Elements are treated as unique based on their position, not on their value. So if the input elements are unique, there will be no repeat values in each permutation.</p>
+<p>The number of items returned is <tt class="docutils literal">n! / <span class="pre">(n-r)!</span></tt> when <tt class="docutils literal">0 &lt;= r &lt;= n</tt> or zero when <tt class="docutils literal">r &gt; n</tt>.</p>
 </blockquote>
 <p>
 <a name="fn-compressiter"></a>
@@ -284,6 +307,14 @@ Note. this assumes the iterable is Not an iterator, i.e can be restarted (doesn'
 repeatSeq(range(3), 3) --&gt; 0, 1, 2, 0, 1, 2, 0, 1, 2
 </pre>
 </blockquote>
+</div>
+<div class="section" id="objects">
+<h2>Objects</h2>
+<p>
+<a name="fn-emptyiter"></a>
+<a class="mochidef reference external" href="#fn-emptyiter">EmptyIter</a>:</p>
+<blockquote>
+Empty iterator object, use as a singleton.</blockquote>
 </div>
 </div>
 <div class="section" id="see-also">

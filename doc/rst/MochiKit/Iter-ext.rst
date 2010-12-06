@@ -36,7 +36,7 @@ Synopsis
 Description
 ===========
 
-Even more iterators
+Even more iterators. "Closes the gap" to the Python itertools module, http://docs.python.org/library/itertools.html, and then some.
 
 Extends the existing :mochiref:`MochiKit.Iter` namespace
 
@@ -215,7 +215,7 @@ Functions
 
     Return ``r`` length subsequences of elements from the input iterable.
 
-    Combinations are emitted in lexicographic sort order. So, if the input iterable is sorted, the
+    Combinations are emitted in lexicographic sort order. So, if the input ``iterable`` is sorted, the
     combination tuples will be produced in sorted order.
 
     Elements are treated as unique based on their position, not on their value.
@@ -225,6 +225,39 @@ Functions
 
         combinations([A,B,C,D], 2) --> [A,B], [A,C], [A,D], [B,C], [B,D], [C,D]
         combinations(range(4), 3) --> [0,1,2], [0,1,3], [0,2,3], [1,2,3]
+
+
+    The number of items returned is ``n! / r! / (n-r)!`` when ``0 <= r <= n`` or zero when ``r > n``.
+
+
+:mochidef:`combinationsWithReplacement(iterables, r)`:
+
+    Return ``r`` length subsequences of elements from the input ``iterable`` allowing individual elements to be repeated more than once.
+
+    Combinations are emitted in lexicographic sort order. So, if the input ``iterable`` is sorted, the combination tuples will be produced in sorted order.
+
+    Elements are treated as unique based on their position, not on their value. So if the input elements are unique, the generated combinations will also be unique.
+
+    ::
+
+        combinationsWithReplacement([A,B,C], 2) --> [A,A], [A,B], [A,C], [B,B], [B,C], [C,C]
+
+
+    The number of items returned is ``(n+r-1)! / r! / (n-1)!`` when ``n > 0``.
+
+
+:mochidef:`permutations(iterables[, r])`:
+
+    Return successive ``r`` length permutations of elements in the ``iterable``.
+
+    If ``r`` is not specified or is undefined, then ``r`` defaults to the length of the ``iterable`` and all possible full-length permutations are generated.
+
+    Permutations are emitted in lexicographic sort order. So, if the input ``iterable`` is sorted, the permutation tuples will be produced in sorted order.
+
+    Elements are treated as unique based on their position, not on their value. So if the input elements are unique, there will be no repeat values in each permutation.
+
+
+    The number of items returned is ``n! / (n-r)!`` when ``0 <= r <= n`` or zero when ``r > n``.
 
 
 :mochidef:`compressIter(data, selectors)`:
@@ -278,6 +311,14 @@ Functions
     ::
 
         repeatSeq(range(3), 3) --> 0, 1, 2, 0, 1, 2, 0, 1, 2
+
+
+Objects
+-------
+
+:mochidef:`EmptyIter`:
+
+    Empty iterator object, use as a singleton.
 
 
 See Also

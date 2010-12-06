@@ -77,9 +77,11 @@
 - Added Iter.interleave
 - Added Iter.compressIter
 - Added Iter.combinations
+- Added Iter.combinationsWithReplacement
 - Added Iter.repeatSeq
 - Added Iter.xrange
 - Added Iter.permutations
+- Added Iter.EmptyIter
 
 - Added Text-ext module
 - Added Text.humanStringCompare
