@@ -16,24 +16,31 @@
 var integer;
 
 /**
- * used in a couple of places (drop?)
- * @typedef {integer}
+ * @see MochiKit.Base.isArrayLike
+ * todo: should be same as goog.array.ArrayLike
+ * @typedef {(Array|NodeList|Arguments|{ length: integer })}
  */
-var Int;
+var ArrayLike;
+
+// attempt to separate iterator, iterable and iterator"factory" (name..?)
+
+/**
+ * @typedef {{next: function(): *}}
+ */
+var Iterator;
+
+/**
+ * @typedef {(ArrayLike|{ iter: !Iterator }|{ __iterator__: !Iterator })} // todo: deprecate .iter()
+ */
+var IteratorFactory; //..name!?? call it Sequence?
 
 /**
  * @see http://mochikit.com/doc/html/MochiKit/Iter.html#fn-iter
  * @see MochiKit.Iter.isIterable
- * @typedef {(Array|{next: function(): *}|{iter: function(): {next: function(): *}}|Arguments|NodeList)} // add {length: number} (simpy add ArrayLike?) also? (and __iterator__?).
+ * @typedef {(Iterator|IteratorFactory)}
  */
 var Iterable;
 
-/**
- * @see MochiKit.Base.isArrayLike
- * todo: should be same as goog.array.ArrayLike
- * @typedef {Array|NodeList|Arguments|{ length: number }}
- */
-var ArrayLike;
 
 /**
  * @see MochiKit.Base.isDateLike
