@@ -79,6 +79,7 @@
 - Added Iter.combinations
 - Added Iter.repeatSeq
 - Added Iter.xrange
+- Added Iter.permutations
 
 - Added Text-ext module
 - Added Text.humanStringCompare
