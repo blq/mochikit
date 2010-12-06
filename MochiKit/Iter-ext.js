@@ -416,6 +416,8 @@ MochiKit.Iter.breakIt = function()
  * @const
  */
 MochiKit.Iter.EmptyIter = {
+	repr: function() { return "EmptyIter"; },
+	toString: MochiKit.Base.forwardCall("repr"),
 	next: MochiKit.Iter.breakIt
 };
 
@@ -480,25 +482,25 @@ MochiKit.Iter.izipLongest = function(iterables, fillValue)
  * alias for MochiKit.Iter.some (to match Python)
  * @see http://docs.python.org/library/functions.html#any
  */
-MochiKit.Iter.any = function(iterable, func) {
+MochiKit.Iter.any = function(/*iterable, func*/) {
 	// wrapped so that load order of Iter.js and this file doesn't matter
-	return MochiKit.Iter.some(iterable, func);
+	return MochiKit.Iter.some.apply(this, arguments);
 };
 
 /**
  * alias for MochiKit.Iter.every (to match Python)
  * @see http://docs.python.org/library/functions.html#all
  */
-MochiKit.Iter.all = function(iterable, func) {
-	return MochiKit.Iter.every(iterable, func);
+MochiKit.Iter.all = function(/*iterable, func*/) {
+	return MochiKit.Iter.every.apply(this, arguments);
 };
 
 /**
  * alias for MochiKit.Iter.applymap (to match Python)
  * @see http://docs.python.org/library/itertools.html#itertools.starmap
  */
-MochiKit.Iter.starmap = function(fun, seq, self) {
-	return MochiKit.Iter.applymap(fun, seq, self);
+MochiKit.Iter.starmap = function(/*fun, seq, self*/) {
+	return MochiKit.Iter.applymap.apply(this, arguments);
 };
 
 
@@ -533,7 +535,7 @@ MochiKit.Iter.isSorted = function(iterable, cmp)
 
 
 /**
- * interleave([a, b, c], [1, 2, 3], [x, y, z]) -> [a, 1, z, b, 2, y, c, 3, z]
+ * interleave([a, b, c], [1, 2, 3], [x, y, z]) -> a, 1, z, b, 2, y, c, 3, z
  * @param {!Iterable} iterable
  * @param {...!Iterable} var_args
  * @return {!Iterable}
@@ -560,7 +562,7 @@ MochiKit.Iter.remapView = function(index, lst)
 
 
 /**
- * compress('ABCDEF'.split(), [1,0,1,0,1,1]) --> A C E F
+ * compress([A,B,C,D,E,F], [1,0,1,0,1,1]) --> A, C, E, F
  * @see http://docs.python.org/library/itertools.html#itertools.compress
  *
  * @param {!Iterable} data
@@ -585,6 +587,8 @@ MochiKit.Iter.compressIter = function(data, selectors)
 
 /**
  * @see http://docs.python.org/library/itertools.html#itertools.combinations
+ * impl. follows the Python example reference.
+ *
  * @param {!Iterable} iterable Note: must be an iterable, Not an iterator.
  * @param {integer} r
  * @return {!Iterable}
@@ -636,7 +640,7 @@ MochiKit.Iter.combinations = function(iterable, r)
  * similar to cycle() with a counter, but requires an Iterable (uses no temporary mem)
  * resembles Python's list*n syntax.
  * @param {!Iterable} iterable
- * @param {integer} n
+ * @param {integer} n // todo: perhaps interpret no n as infinite cycles?
  * @return {!Iterable}
  */
 MochiKit.Iter.repeatSeq = function(iterable, n) // ..name? nCycles?
@@ -657,6 +661,63 @@ MochiKit.Iter.repeatSeq = function(iterable, n) // ..name? nCycles?
 				it = MochiKit.Iter.iter(iterable);
 				return it.next();
 			}
+		}
+	};
+};
+
+
+/**
+ * @see http://docs.python.org/library/itertools.html#itertools.permutations
+ * impl. based on the Python example reference.
+ *
+ * @param {!Iterable} iterable
+ * @param {integer=} r
+ * @return {!Iterable}
+ *
+ */
+MochiKit.Iter.permutations = function(iterable, r)
+{
+	var m = MochiKit, mi = MochiKit.Iter;
+
+	var pool = mi.list(iterable);
+	var n = pool.length;
+	r = r || n;
+	if (r > n) {
+		return mi.EmptyIter;
+	}
+
+	var indices = mi.list(mi.range(n));
+	var cycles = mi.list(mi.range(n, n - r, -1));
+	var first = true;
+	return {
+		// repr..
+		next: function() {
+			if (first) {
+				first = false;
+				return mi.list(mi.remapView(mi.islice(indices, 0, r), pool));
+			}
+			if (n == 0) {
+				throw mi.StopIteration;
+			}
+			var done = true;
+			for (var i = r - 1; i >= 0; --i) {
+				cycles[i] -= 1;
+				if (cycles[i] == 0) {
+					// could use splice also but not sure it's worth it, indices is mostly short(?)
+					indices = MochiKit.Base.concat(indices.slice(0, i), indices.slice(i+1), [indices[i]]);
+					cycles[i] = n - i;
+				} else {
+					var j = cycles[i];
+					var jdx = indices.length - j;
+					var tmp = indices[i]; indices[i] = indices[jdx]; indices[jdx] = tmp; // swap
+					done = false;
+					break;
+				}
+			}
+			if (done)
+				throw mi.StopIteration;
+			// else
+			return mi.list(mi.remapView(mi.islice(indices, 0, r), pool));
 		}
 	};
 };

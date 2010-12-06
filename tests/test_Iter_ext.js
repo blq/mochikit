@@ -230,4 +230,15 @@ tests.test_Iter_ext = function (t) {
 	test_combinations();
 
 
+	function test_permutations()
+	{
+		// todo: more tests..
+		t.eq(list(permutations([])), [[]]);
+		t.eq(list(permutations([], 10)), []);
+		t.eq(list(permutations([1,2,3], 32)), []);  // r > n
+		t.eq(list(permutations(range(3), 2)), [[0,1], [0,2], [1,0], [1,2], [2,0], [2,1]]);
+	}
+	test_permutations();
+
+
 };
