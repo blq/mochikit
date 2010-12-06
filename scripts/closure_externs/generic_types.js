@@ -32,7 +32,7 @@ var Iterator;
 /**
  * @typedef {(ArrayLike|{ iter: !Iterator }|{ __iterator__: !Iterator })} // todo: deprecate .iter()
  */
-var IteratorFactory; //..name!?? call it Sequence?
+var IteratorFactory; //..name!? call it Sequence? 'Collection' seems to be Python's naming
 
 /**
  * @see http://mochikit.com/doc/html/MochiKit/Iter.html#fn-iter
