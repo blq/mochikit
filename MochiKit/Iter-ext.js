@@ -694,7 +694,7 @@ MochiKit.Iter.combinationsWithReplacement = function(iterable, r)
  */
 MochiKit.Iter.repeatSeq = function(iterable, n) // ..name? nCycles?
 {
-	// == chainFromIter(repeat(list(iterable), n)) but uses less memory // todo: ! works if we replace range impl!
+	// == chainFromIter(repeat(list(iterable), n)) but uses less memory // todo: ! actually works if we replace range impl with xrange
 	if (n == 0) {
 		return MochiKit.Iter.EmptyIter;
 	}
@@ -769,6 +769,71 @@ MochiKit.Iter.permutations = function(iterable, r)
 			return mi.list(mi.remapView(mi.islice(indices, 0, r), pool));
 		}
 	};
+};
+
+
+/**
+ * @see xrange
+ *
+ * @param {integer} start
+ * @param {integer} stop
+ * @param {integer} step
+ * @constructor
+ * @private
+ */
+MochiKit.Iter._Range = function(start, stop, step)
+{
+	// todo: overload here also?
+	this.start = start;
+	this.stop = stop;
+	this.step = step;
+};
+
+/**
+ * @return {!Iterable}
+ */
+MochiKit.Iter._Range.prototype.__iterator__ = function()
+{
+	// return "old", iterator range
+	return new MochiKit.Iter.range(this.start, this.stop, this.step);
+};
+
+/**
+ * identical interface to Iter.range, but returns an iterable _collection_ instead of iterator.
+ * the subtle difference from existing range is that this can be run multiple times.
+ * see for example: "Multiple Versus Single Iterators" at http://answers.oreilly.com/topic/1576-new-iterables-in-python-3-0/
+ * i.e the "old" range is not same as Python xrange, rather it resembles iter(xrange).
+ * this seems like it could be a drop-in, but could theoretically cause some subtle differences.
+ * calling this "new" range xrange might both be ok and confusing..? this has different naming for other reason than Python added x-name.
+ *
+ * factory for _Range
+ * @param {integer} start
+ * @param {integer=} [stop=start]
+ * @param {integer=} [step=1]
+ * @return {!Iterable}
+ */
+MochiKit.Iter.xrange = function (/* [start,] stop[, step] */)
+{
+	var start = 0;
+	var stop = 0;
+	var step = 1;
+	if (arguments.length == 1) {
+		stop = arguments[0];
+	} else if (arguments.length == 2) {
+		start = arguments[0];
+		stop = arguments[1];
+	} else if (arguments.length == 3) {
+		start = arguments[0];
+		stop = arguments[1];
+		step = arguments[2];
+	} else {
+		throw new TypeError("xrange() takes 1, 2, or 3 arguments!");
+	}
+	if (step === 0) {
+		throw new TypeError("xrange() step must not be 0");
+	}
+
+	return new MochiKit.Iter._Range(start, stop, step);
 };
 
 
