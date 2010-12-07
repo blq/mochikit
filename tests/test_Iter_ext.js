@@ -229,6 +229,52 @@ tests.test_Iter_ext = function (t) {
 	}
 	test_combinations();
 
+	function test_combinationsWithReplacement()
+	{
+        function numcombs(n, r)
+		{
+            if (n == 0) {
+				if (r != 0)
+					return 0;
+				return 1;
+            }
+          // todo:  return fact(n+r-1) / fact(r) / fact(n-1); // floor divs
+		}
+
+		var cwr = combinationsWithReplacement;
+
+		t.eq(list(cwr(['A','B','C'], 2)), [['A','A'], ['A','B'], ['A','C'], ['B','B'], ['B','C'], ['C','C']]);
+/* // todo: ..
+		for (var n = 0; n < 7; ++n) {
+			var values = map(function(x) { return 5*x-12; }, range(n));
+			for (var r = 0; r < n + 2; ++r) {
+				var result = list(cwr(values, r));
+
+				t.eq(result.length, numcombs(n, r));           			// right number of combs
+			//todo:	self.assertEqual(result.length, len(set(result)))         // no repeats
+				t.eq(result, sorted(result));   	             // lexicographic order
+
+				var regular_combs = list(combinations(values, r));           // compare to combs without replacement
+				if (n == 0 || r <= 1)
+					t.eq(result, regular_combs);            // cases that should be identical
+			//	else
+			// todo: self.assertTrue(set(result) >= set(regular_combs))  // rest should be supersets of regular combs
+
+				for (c in result) {
+					t.eq(c.length, r);                       // r-length combinations
+					var noruns = [k for k,v in groupby(c)]                  // combo without consecutive repeats
+				//	self.assertEqual(noruns.length, len(set(noruns)))     // no repeats other than consecutive
+					t.eq(list(c), sorted(c));                // keep original ordering
+					self.assertTrue(all(e in values for e in c))        // elements taken from input iterable
+					self.assertEqual(noruns, [e for e in values if e in c])     // comb is a subsequence of the input iterable
+				}
+				t.eq(result, list(cwr(values, r)));
+			}
+		}
+*/
+	}
+	test_combinationsWithReplacement();
+
 
 	function test_permutations()
 	{

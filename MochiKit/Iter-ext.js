@@ -677,7 +677,7 @@ MochiKit.Iter.combinationsWithReplacement = function(iterable, r)
 				if (done)
 					throw mi.StopIteration;
 
-				indices = MochiKit.Base.concat(indices.slice(0, i), mi.list(mi.repeat(indices[i] + 1, r - i)));
+				indices = indices.slice(0, i).concat(mi.list(mi.repeat(indices[i] + 1, r - i))); // or use push.apply?
 				return mi.list(mi.remapView(indices, pool));
 			}
 		}
@@ -720,9 +720,8 @@ MochiKit.Iter.repeatSeq = function(iterable, n) // ..name? nCycles?
  * impl. based on the Python example reference.
  *
  * @param {!Iterable} iterable
- * @param {integer=} r
+ * @param {integer=} [r=len(iterable)]
  * @return {!Iterable}
- *
  */
 MochiKit.Iter.permutations = function(iterable, r)
 {
@@ -754,8 +753,7 @@ MochiKit.Iter.permutations = function(iterable, r)
 			for (var i = r - 1; i >= 0; --i) {
 				cycles[i] -= 1;
 				if (cycles[i] == 0) {
-					// could use splice also but not sure it's worth it, indices is mostly short(?)
-					indices = MochiKit.Base.concat(indices.slice(0, i), indices.slice(i+1), [indices[i]]);
+					indices = indices.slice(0, i).concat(indices.slice(i+1), indices[i]); // or use push.apply?
 					cycles[i] = n - i;
 				} else {
 					var j = cycles[i];
