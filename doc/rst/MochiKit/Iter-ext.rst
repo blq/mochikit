@@ -313,6 +313,23 @@ Functions
         repeatSeq(range(3), 3) --> 0, 1, 2, 0, 1, 2, 0, 1, 2
 
 
+:mochidef:`xrange([start,] stop[,step])`:
+
+    Similar to :mochiref:`MochiKit.Iter.range()` but returns an iterable *collection* instead of an *iterator*.
+    This enables the range to be re-used multiple times, i.e it won't get exhausted.
+    This semantics are identical to Python.
+
+    ::
+
+        r = range(3)
+        xr = xrange(3)
+        forEach(r, log); --> 0, 1, 2
+        forEach(xr, log); --> 0, 1 ,2
+        assert( list(r) == [] )
+        assert( list(xr) == [0, 1, 2] )
+
+
+
 Objects
 -------
 

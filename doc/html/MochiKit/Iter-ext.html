@@ -307,6 +307,22 @@ Note. this assumes the iterable is Not an iterator, i.e can be restarted (doesn'
 repeatSeq(range(3), 3) --&gt; 0, 1, 2, 0, 1, 2, 0, 1, 2
 </pre>
 </blockquote>
+<p>
+<a name="fn-xrange"></a>
+<a class="mochidef reference external" href="#fn-xrange">xrange([start,] stop[,step])</a>:</p>
+<blockquote>
+<p>Similar to <a class="mochiref reference external" href="Iter.html#fn-range">MochiKit.Iter.range()</a> but returns an iterable <em>collection</em> instead of an <em>iterator</em>.
+This enables the range to be re-used multiple times, i.e it won't get exhausted.
+This semantics are identical to Python.</p>
+<pre class="literal-block">
+r = range(3)
+xr = xrange(3)
+forEach(r, log); --&gt; 0, 1, 2
+forEach(xr, log); --&gt; 0, 1 ,2
+assert( list(r) == [] )
+assert( list(xr) == [0, 1, 2] )
+</pre>
+</blockquote>
 </div>
 <div class="section" id="objects">
 <h2>Objects</h2>
