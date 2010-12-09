@@ -88,6 +88,7 @@ Set.prototype.contains = function(elem) {
 };
 
 /**
+ * todo: apply this? http://code.activestate.com/recipes/230113-implementation-of-sets-using-sorted-lists/#c3
  * @param {*} elem
  */
 Set.prototype.add = function(elem) {
