@@ -59,7 +59,7 @@ Synopsis
 
     function grade(score, breakpoints, grades) {
         breakpoints = breakpoints || [60, 70, 80, 90];
-        grades = grades || 'FDCBA';
+        grades = grades || ['F','D','C','B','A'];
 
         var i = bisect(breakpoints, score);
         return grades[i];
