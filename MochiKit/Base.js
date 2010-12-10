@@ -74,8 +74,8 @@ MochiKit.Base.update = function (self, obj/*, ... */) {
     for (var i = 1; i < arguments.length; i++) {
         var o = arguments[i];
         if (typeof(o) != 'undefined' && o !== null) {
-            for (var k in o) {
-                self[k] = o[k];
+            for (var k in o) { // todo: use o.hasOwnProperty(k) test?
+				self[k] = o[k];
             }
         }
     }
@@ -195,7 +195,7 @@ MochiKit.Base.update(MochiKit.Base, {
         for (var i = 1; i < arguments.length; i++) {
             var o = arguments[i];
             if (typeof(o) != 'undefined' && o !== null) {
-                for (var k in o) {
+                for (var k in o) { // todo: use o.hasOwnProperty(k) test?
                     var v = o[k];
                     if (typeof(self[k]) == 'object' && typeof(v) == 'object'
 						// todo: detect Array, RegExp and DOM objs also?
@@ -221,7 +221,7 @@ MochiKit.Base.update(MochiKit.Base, {
         }
         for (var i = 1; i < arguments.length; i++) {
             var o = arguments[i];
-            for (var k in o) {
+            for (var k in o) { // todo: use o.hasOwnProperty(k) test?
                 if (!(k in self)) {
                     self[k] = o[k];
                 }
@@ -734,7 +734,7 @@ MochiKit.Base.update(MochiKit.Base, {
     /** @id MochiKit.Base.bindMethods */
     bindMethods: function (self) {
         var bind = MochiKit.Base.bind;
-        for (var k in self) {
+        for (var k in self) { // todo: use o.hasOwnProperty(k) test?
             var func = self[k];
             if (typeof(func) == 'function') {
                 self[k] = bind(func, self);
@@ -991,21 +991,23 @@ MochiKit.Base.update(MochiKit.Base, {
         // generic object code path
         res = [];
         for (var k in o) {
-            var useKey;
-            if (typeof(k) == "number") {
-                useKey = '"' + k + '"';
-            } else if (typeof(k) == "string") {
-                useKey = me(k);
-            } else {
-                // skip non-string or number keys
-                continue;
-            }
-            val = me(o[k]);
-            if (typeof(val) != "string") {
-                // skip non-serializable values
-                continue;
-            }
-            res.push(useKey + ":" + val);
+			if (o.hasOwnProperty(k)) {
+				var useKey;
+				if (typeof(k) == "number") {
+					useKey = '"' + k + '"';
+				} else if (typeof(k) == "string") {
+					useKey = me(k);
+				} else {
+					// skip non-string or number keys
+					continue;
+				}
+				val = me(o[k]);
+				if (typeof(val) != "string") {
+					// skip non-serializable values
+					continue;
+				}
+				res.push(useKey + ":" + val);
+			}
         }
         return "{" + res.join(", ") + "}";
     },
@@ -1195,7 +1197,7 @@ MochiKit.Base.update(MochiKit.Base, {
         } else {
             base = base + '.';
         }
-        for (var name in namespace) {
+        for (var name in namespace) { // todo: use o.hasOwnProperty(k) test?
             var o = namespace[name];
             if (typeof(o) == 'function' && typeof(o.NAME) == 'undefined') {
                 try {
@@ -1356,7 +1358,7 @@ MochiKit.Base.moduleExport = function (namespace, module/*, ...*/) {
     var SKIP = { toString: true, NAME: true, VERSION: true };
     var mods = MochiKit.Base.extend([], arguments, 1);
     while ((module = mods.shift()) != null) {
-        for (var k in module) {
+        for (var k in module) { // todo: use o.hasOwnProperty(k) test?
             var v = module[k];
             if (v != null) {
                 var flagSet = (typeof(v.__export__) == 'boolean');
@@ -1516,7 +1518,7 @@ MochiKit.Base.__new__ = function () {
     m.jsonRegistry = new m.AdapterRegistry();
 
     m.nameFunctions(this);
-	m.nameFunctions(this.operator); 
+	m.nameFunctions(this.operator);
 };
 
 MochiKit.Base.__new__();

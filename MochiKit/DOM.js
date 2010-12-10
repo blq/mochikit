@@ -310,7 +310,7 @@ MochiKit.Base.update(MochiKit.DOM, {
         if (attrs) {
             if (self.attributeArray.compliant) {
                 // not IE, good.
-                for (var k in attrs) {
+                for (var k in attrs) { // todo: use o.hasOwnProperty(k) test?
                     var v = attrs[k];
                     if (typeof(v) == 'object' && typeof(elem[k]) == 'object') {
                         if (k == "style" && MochiKit.Style) {
@@ -334,7 +334,7 @@ MochiKit.Base.update(MochiKit.DOM, {
             } else {
                 // IE is insane in the membrane
                 var renames = self.attributeArray.renames;
-                for (var k in attrs) {
+                for (var k in attrs) { // todo: use o.hasOwnProperty(k) test?
                     v = attrs[k];
                     var renamed = renames[k];
                     if (k == "style" && typeof(v) == "string") {
