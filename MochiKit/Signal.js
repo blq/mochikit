@@ -17,6 +17,10 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 
 MochiKit.Base.module(MochiKit, 'Signal', '1.5', ['Base', 'DOM']);
 
+/**
+ * @type {!Array.<!MochiKit.Signal.Ident>}
+ * @private
+ */
 MochiKit.Signal._observers = [];
 
 /**
