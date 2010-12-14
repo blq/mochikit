@@ -27,7 +27,7 @@ MochiKit.Base.module(MochiKit, 'Random', '1.5', ['Base', '_MersenneTwister19937'
 MochiKit.Random.seed = function(x)
 {
 	x = typeof x == 'number' ? x : (new Date()).getTime();
-	MochiKit.Random._generator.init_genrand(x);
+	MochiKit.Random._generator.seed(x);
 };
 
 
@@ -40,7 +40,7 @@ MochiKit.Random.seed = function(x)
  */
 MochiKit.Random.getState = function()
 {
-	return MochiKit.Random._generator._getState();
+	return MochiKit.Random._generator.getState();
 };
 
 
@@ -53,7 +53,7 @@ MochiKit.Random.getState = function()
  */
 MochiKit.Random.setState = function(state)
 {
-	MochiKit.Random._generator._setState(state);
+	MochiKit.Random._generator.setState(state);
 };
 
 
@@ -64,9 +64,7 @@ MochiKit.Random.setState = function(state)
  */
 MochiKit.Random.random = function()
 {
-//	return Math.random();
-	return MochiKit.Random._generator.genrand_real2();
-//	return MochiKit.Random._generator.genrand_res53(); // test 53 bit version
+	return MochiKit.Random._generator.random();
 };
 
 
@@ -255,11 +253,124 @@ MochiKit.Random.sample = function(population, k)
 
 //----------------------
 
+// todo: although this setup allows different generators, compared to Python you can only use one at a time, singleton style.
+
+/**
+ * ! just for doc & Closure compiler. Should No be instantiated!
+ * @private
+ * @constructor
+ */
+MochiKit.Random._IRndGenerator = function() {};
+/**
+ * @param {integer=} [x]
+ */
+MochiKit.Random._IRndGenerator.prototype.seed = function(x) {};
+/**
+ * @return {!Object}
+ */
+MochiKit.Random._IRndGenerator.prototype.getState = function() {};
+/**
+ * @param {!Object} state
+ */
+MochiKit.Random._IRndGenerator.prototype.setState = function(state) {};
+/**
+ * @return {number} [0..1)
+ */
+MochiKit.Random._IRndGenerator.prototype.random = function() {};
+
+//------------------
+
+/**
+ * @implements {MochiKit.Random._IRndGenerator}
+ * @param {integer=} [x] seed
+ * @constructor
+ */
+MochiKit.Random.MersenneTwister = function(x)
+{
+	this._mt = new MochiKit._MersenneTwister19937();
+	this.seed(x);
+};
+
+MochiKit.Random.MersenneTwister.prototype.seed = function(x)
+{
+	x = typeof x == 'number' ? x : (new Date()).getTime();
+	this._mt.init_genrand(x);
+};
+
+MochiKit.Random.MersenneTwister.prototype.getState = function()
+{
+	return this._mt._getState();
+};
+
+MochiKit.Random.MersenneTwister.prototype.setState = function(state)
+{
+	this._mt._setState(state);
+};
+
+MochiKit.Random.MersenneTwister.prototype.random = function()
+{
+	return this._mt.genrand_real2();
+	// tood: test MT.genrand_res53();
+};
+
+//------------------
+
+/**
+ * Math.random impl.
+ * note: this will currently fail the setstate unit-test. needs to be special cased
+ * @implements {MochiKit.Random._IRndGenerator}
+ * @constructor
+ */
+MochiKit.Random.SystemRandom = function()
+{
+	// NOP
+};
+
+MochiKit.Random.SystemRandom.prototype.seed = function(x)
+{
+	// NOP
+	// todo: log
+	// todo: indicate more clearly in docs (and tests..) that seed doesn't _have_ to do anything?
+};
+
+MochiKit.Random.SystemRandom.prototype.getState = function()
+{
+	// todo: throw?
+};
+
+MochiKit.Random.SystemRandom.prototype.setState = function(state)
+{
+	// todo: throw?
+};
+
+MochiKit.Random.SystemRandom.prototype.random = function()
+{
+	return Math.random();
+};
+
+//------------------
+
+
+/**
+ * @type {MochiKit.Random._IRndGenerator}
+ * @private
+ */
+MochiKit.Random._generator = null;
+
+/**
+ * @param {MochiKit.Random._IRndGenerator} generator
+ * @private
+ */
+MochiKit.Random._setGenerator = function(generator)
+{
+	MochiKit.Random._generator = generator;
+};
+
+
 MochiKit.Random.__new__ = function() {
-	var self = MochiKit.Random;
 	// todo: make the Mersenne generator optional, with default/fallback to plain Math.random (with do-nothing seed & get/setState methods)
-	self._generator = new MochiKit._MersenneTwister19937();
-	self._generator.init_genrand((new Date()).getTime()); // == seed()
+	MochiKit.Random._setGenerator(new MochiKit.Random.MersenneTwister());
+//	MochiKit.Random._setGenerator(new MochiKit.Random.SystemRandom());
 };
 
 MochiKit.Random.__new__();
