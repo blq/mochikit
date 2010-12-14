@@ -126,12 +126,20 @@ Functions
 
     Also available via the ``bisect`` alias.
 
+:mochidef:`bisect(a, x[, lo=0, hi=a.length])`:
+
+    Alias for :mochiref:`bisectRight()`
+
 
 :mochidef:`insortRight(a, x[, lo=0, hi=a.length])`:
 
     Similar to :mochiref:`insortLeft()`, but inserting ``x`` in ``a`` after any existing entries of ``x``.
 
     Also available via the ``insort`` alias.
+
+:mochidef:`insort(a, x[, lo=0, hi=a.length])`:
+
+    Alias for :mochiref:`insortRight()`
 
 
 See Also
