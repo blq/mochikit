@@ -9165,16 +9165,16 @@ goog.require("MochiKit._MersenneTwister19937");
 MochiKit.Base.module(MochiKit,"Random","1.5",["Base","_MersenneTwister19937"]);
 MochiKit.Random.seed=function(x){
 x=typeof x=="number"?x:(new Date()).getTime();
-MochiKit.Random._generator.init_genrand(x);
+MochiKit.Random._generator.seed(x);
 };
 MochiKit.Random.getState=function(){
-return MochiKit.Random._generator._getState();
+return MochiKit.Random._generator.getState();
 };
 MochiKit.Random.setState=function(_9d5){
-MochiKit.Random._generator._setState(_9d5);
+MochiKit.Random._generator.setState(_9d5);
 };
 MochiKit.Random.random=function(){
-return MochiKit.Random._generator.genrand_real2();
+return MochiKit.Random._generator.random();
 };
 MochiKit.Random.randRange=function(_9d6,_9d7,step){
 var self=MochiKit.Random;
@@ -9246,10 +9246,50 @@ _9f0[i]=_9ed[j];
 }
 return _9f0;
 };
+MochiKit.Random._IRndGenerator=function(){
+};
+MochiKit.Random._IRndGenerator.prototype.seed=function(x){
+};
+MochiKit.Random._IRndGenerator.prototype.getState=function(){
+};
+MochiKit.Random._IRndGenerator.prototype.setState=function(_9f5){
+};
+MochiKit.Random._IRndGenerator.prototype.random=function(){
+};
+MochiKit.Random.MersenneTwister=function(x){
+this._mt=new MochiKit._MersenneTwister19937();
+this.seed(x);
+};
+MochiKit.Random.MersenneTwister.prototype.seed=function(x){
+x=typeof x=="number"?x:(new Date()).getTime();
+this._mt.init_genrand(x);
+};
+MochiKit.Random.MersenneTwister.prototype.getState=function(){
+return this._mt._getState();
+};
+MochiKit.Random.MersenneTwister.prototype.setState=function(_9f8){
+this._mt._setState(_9f8);
+};
+MochiKit.Random.MersenneTwister.prototype.random=function(){
+return this._mt.genrand_real2();
+};
+MochiKit.Random.SystemRandom=function(){
+};
+MochiKit.Random.SystemRandom.prototype.seed=function(x){
+};
+MochiKit.Random.SystemRandom.prototype.getState=function(){
+};
+MochiKit.Random.SystemRandom.prototype.setState=function(_9fa){
+};
+MochiKit.Random.SystemRandom.prototype.random=function(){
+return Math.random();
+};
+MochiKit.Random._generator=null;
+MochiKit.Random._setGenerator=function(_9fb){
+MochiKit.Random._generator=_9fb;
+};
 MochiKit.Random.__new__=function(){
-var self=MochiKit.Random;
-self._generator=new MochiKit._MersenneTwister19937();
-self._generator.init_genrand((new Date()).getTime());
+MochiKit.Random._setGenerator(new MochiKit.Random.MersenneTwister());
 };
 MochiKit.Random.__new__();
 MochiKit.Base._exportSymbols(this,MochiKit.Random);
