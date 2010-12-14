@@ -4,7 +4,7 @@
  *
  * @author Fredrik Blomqvist
  *
- * uses the MersenneTwister algorithm, http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/VERSIONS/JAVASCRIPT/java-script.html
+ * uses the Mersenne Twister algorithm, http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/VERSIONS/JAVASCRIPT/java-script.html
  *
  * todo: (optionally) support more generators, ex: http://www.erikoest.dk/rng.htm
  *
