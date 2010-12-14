@@ -12,7 +12,6 @@ if (typeof(tests) == 'undefined') { tests = {}; }
 tests.test_Random = function(t)
 {
 
-
 	function test_sample()
 	{
         // For the entire allowable range of 0 <= k <= N, validate that
@@ -35,6 +34,29 @@ tests.test_Random = function(t)
 	}
 	test_sample();
 
+
+	function test_generator_state()
+	{
+		seed(123);
+		var rndSeqA = map(random, range(10));
+
+		forEach(range(42), random); // dummy call random a nr of times
+
+		seed(123);
+		var rndSeqB = map(random, range(10));
+		t.eq(rndSeqA, rndSeqB, 're-seeding with same key produces same random numbers');
+
+
+		seed(123);
+		forEach(range(10), random);
+		var state = getState();
+		var postSeq = map(random, range(10));
+		forEach(range(42), random);
+		setState(state);
+		var cmpSeq = map(random, range(10));
+		t.eq(postSeq, cmpSeq, 'setting state reproduces same sequence of random numbers');
+	}
+	test_generator_state();
 
 	// ...
 

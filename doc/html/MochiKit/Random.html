@@ -33,7 +33,7 @@ var randomData = map(randRange, repeat(2000, 1000)); // -&gt; Array of 1000 elem
 <div class="section" id="description">
 <h1>Description</h1>
 <p>Random numbers and associated algorithms.
-The API is largely a subset of the Python random <a class="footnote-reference" href="#id4" id="id1">[1]</a> module.</p>
+The API is largely a subset of the Python random <a class="footnote-reference" href="#id5" id="id1">[1]</a> module. Uses the Mersenne Twister <a class="footnote-reference" href="#id6" id="id2">[2]</a> generator.</p>
 </div>
 <div class="section" id="dependencies">
 <h1>Dependencies</h1>
@@ -57,6 +57,24 @@ The API is largely a subset of the Python random <a class="footnote-reference" h
 <blockquote>
 Return the next random floating point number in the range <tt class="docutils literal">[0.0, 1.0)</tt>.</blockquote>
 <p>
+<a name="fn-seed"></a>
+<a class="mochidef reference external" href="#fn-seed">seed([x])</a>:</p>
+<blockquote>
+Initialize the basic random number generator. If <tt class="docutils literal">x</tt> is omitted or None, current
+system time is used; current system time is also used to initialize the generator
+when the module is first imported.</blockquote>
+<p>
+<a name="fn-getstate"></a>
+<a class="mochidef reference external" href="#fn-getstate">getState()</a>:</p>
+<blockquote>
+Return an object capturing the current internal state of the generator. This object can be passed to <a class="mochiref reference external" href="#fn-setstate">setState()</a> to restore the state.</blockquote>
+<p>
+<a name="fn-setstate"></a>
+<a class="mochidef reference external" href="#fn-setstate">setState(state)</a>:</p>
+<blockquote>
+<tt class="docutils literal">state</tt> should have been obtained from a previous call to <a class="mochiref reference external" href="#fn-getstate">getState()</a>, and <a class="mochiref reference external" href="#fn-setstate">setState()</a> restores the internal
+state of the generator to what it was at the time <a class="mochiref reference external" href="#fn-setstate">setState()</a> was called.</blockquote>
+<p>
 <a name="fn-randrange"></a>
 <a class="mochidef reference external" href="#fn-randrange">randRange([start=0], stop[, step=1])</a>:</p>
 <blockquote>
@@ -66,21 +84,22 @@ Half-open range, i.e does Not include <tt class="docutils literal">stop</tt></bl
 <a name="fn-choice"></a>
 <a class="mochidef reference external" href="#fn-choice">choice(seq)</a>:</p>
 <blockquote>
-Choose a random element from a non-empty sequence.</blockquote>
+Return a random element from the non-empty sequence <tt class="docutils literal">seq</tt>.</blockquote>
 <p>
 <a name="fn-shuffle"></a>
 <a class="mochidef reference external" href="#fn-shuffle">shuffle(values)</a>:</p>
 <blockquote>
-<p>Shuffles an array using the Fisher-Yates algorithm <a class="footnote-reference" href="#id5" id="id2">[3]</a> (Knuth). <tt class="docutils literal">O(N)</tt>
+<p>Shuffles an array using the Fisher-Yates algorithm <a class="footnote-reference" href="#id7" id="id3">[3]</a> (Knuth). <tt class="docutils literal">O(N)</tt>
 (in-place algorithm)</p>
 <p>Returns the shuffled input array to enable chaining.</p>
-<p>(..shuffling an array by sorting using a random comparator is a Bad idea <a class="footnote-reference" href="#id6" id="id3">[4]</a>)</p>
+<p>(..shuffling an array by sorting using a random comparator is a Bad idea <a class="footnote-reference" href="#id8" id="id4">[4]</a>)</p>
 </blockquote>
 <p>
 <a name="fn-sample"></a>
 <a class="mochidef reference external" href="#fn-sample">sample(population, k)</a>:</p>
 <blockquote>
-<p>Chooses <tt class="docutils literal">k</tt> unique random elements from a <tt class="docutils literal">population</tt> sequence.</p>
+<p>Return a <tt class="docutils literal">k</tt> length list of unique elements chosen from the <tt class="docutils literal">population</tt> sequence.
+Used for random sampling without replacement.</p>
 <p>Returns a new list containing elements from the population while
 leaving the original population unchanged.  The resulting list is
 in selection order so that all sub-slices will also be valid random
@@ -108,22 +127,28 @@ The end-point value b may or may not be included in the range depending on float
 </div>
 <div class="section" id="see-also">
 <h1>See Also</h1>
-<table class="docutils footnote" frame="void" id="id4" rules="none">
+<table class="docutils footnote" frame="void" id="id5" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Python random module: <a class="reference external" href="http://docs.python.org/library/random.html">http://docs.python.org/library/random.html</a></td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id5" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[3]</a></td><td>Fisher-Yates shuffle: <a class="reference external" href="http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle">http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle</a></td></tr>
-</tbody>
-</table>
 <table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[4]</a></td><td>Microsoft does shuffling: <a class="reference external" href="http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html">http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Mersenne Twister 19937: <a class="reference external" href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html">http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Fisher-Yates shuffle: <a class="reference external" href="http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle">http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Microsoft does shuffling: <a class="reference external" href="http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html">http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html</a></td></tr>
 </tbody>
 </table>
 </div>

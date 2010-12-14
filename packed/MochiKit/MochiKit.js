@@ -795,6 +795,7 @@ return null;
 }
 res=[];
 for(var k in o){
+if(o.hasOwnProperty(k)){
 var _10c;
 if(typeof (k)=="number"){
 _10c="\""+k+"\"";
@@ -810,6 +811,7 @@ if(typeof (val)!="string"){
 continue;
 }
 res.push(_10c+":"+val);
+}
 }
 return "{"+res.join(", ")+"}";
 },objEqual:function(a,b){
@@ -8430,7 +8432,7 @@ MochiKit.Base.countValue=function(_8f8,elem,cmp){
 cmp=cmp||MochiKit.Base.operator.ceq;
 var n=0;
 MochiKit.Iter.forEach(_8f8,function(e){
-if(cmp(e,item)){
+if(cmp(e,elem)){
 ++n;
 }
 });
@@ -8508,9 +8510,7 @@ catch(e){
 if(e!=MochiKit.Iter.StopIteration){
 throw e;
 }
-return {next:function(){
-throw e;
-}};
+return MochiKit.Iter.EmptyIter;
 }
 if(_90c){
 it=MochiKit.Iter.chain(it,[_90e]);
@@ -8594,7 +8594,7 @@ jt=MochiKit.Iter.iter(_91f(it.next()));
 }};
 };
 MochiKit.Iter.uniqueView=function(_923,pred){
-pred=pred||MochiKit.Base.operator.eq;
+pred=pred||MochiKit.Base.operator.ceq;
 var it=MochiKit.Iter.iter(_923);
 var _926=true;
 var prev;
@@ -8646,6 +8646,9 @@ return MochiKit.Iter.izip(MochiKit.Iter.count(_932),_931);
 MochiKit.Iter.breakIt=function(){
 throw MochiKit.Iter.StopIteration;
 };
+MochiKit.Iter.EmptyIter={repr:function(){
+return "EmptyIter";
+},toString:MochiKit.Base.forwardCall("repr"),next:MochiKit.Iter.breakIt};
 MochiKit.Iter.generateN=function(_933,n){
 return MochiKit.Iter.imap(function(){
 return _933();
@@ -8678,9 +8681,15 @@ throw MochiKit.Iter.StopIteration;
 return _938;
 }};
 };
-MochiKit.Iter.any=MochiKit.Iter.some;
-MochiKit.Iter.all=MochiKit.Iter.every;
-MochiKit.Iter.starmap=MochiKit.Iter.applymap;
+MochiKit.Iter.any=function(){
+return MochiKit.Iter.some.apply(this,arguments);
+};
+MochiKit.Iter.all=function(){
+return MochiKit.Iter.every.apply(this,arguments);
+};
+MochiKit.Iter.starmap=function(){
+return MochiKit.Iter.applymap.apply(this,arguments);
+};
 MochiKit.Iter.advance=function(iter,n){
 while(n-->0){
 iter.next();
@@ -8689,6 +8698,180 @@ return iter;
 };
 MochiKit.Iter.isSorted=function(_93c,cmp){
 return MochiKit.Iter.every(MochiKit.Iter.windowView(_93c),cmp||MochiKit.Base.operator.cle);
+};
+MochiKit.Iter.interleave=function(_93e,_93f){
+return MochiKit.Iter.chainFromIter(MochiKit.Iter.izip.apply(this,arguments));
+};
+MochiKit.Iter.remapView=function(_940,lst){
+return MochiKit.Iter.imap(MochiKit.Base.partial(MochiKit.Base.operator.getitem,lst),_940);
+};
+MochiKit.Iter.compressIter=function(data,_943){
+return MochiKit.Iter.imap(function(d_s){
+return d_s[0];
+},MochiKit.Iter.ifilter(function(d_s){
+return d_s[1]?true:false;
+},MochiKit.Iter.izip(data,_943)));
+};
+MochiKit.Iter.combinations=function(_946,r){
+var m=MochiKit,mi=MochiKit.Iter;
+var pool=mi.list(_946);
+var n=pool.length;
+if(r>n){
+return MochiKit.Iter.EmptyIter;
+}
+var _94c=mi.list(mi.range(r));
+var _94d=true;
+return {repr:function(){
+return "combinations(...)";
+},toString:m.Base.forwardCall("repr"),next:function(){
+if(_94d){
+_94d=false;
+return mi.list(mi.remapView(_94c,pool));
+}
+while(true){
+var done=true;
+for(var i=r-1;i>=0;--i){
+if(_94c[i]!=(i+n-r)){
+done=false;
+break;
+}
+}
+if(done){
+throw MochiKit.Iter.StopIteration;
+}
+_94c[i]+=1;
+for(var j=i+1;j<r;++j){
+_94c[j]=_94c[j-1]+1;
+}
+return mi.list(mi.remapView(_94c,pool));
+}
+}};
+};
+MochiKit.Iter.combinationsWithReplacement=function(_951,r){
+var m=MochiKit,mi=MochiKit.Iter;
+var pool=mi.list(_951);
+var n=pool.length;
+if(n==0||r==0){
+return mi.EmptyIter;
+}
+var _957=mi.list(mi.repeat(0,r));
+var _958=true;
+return {repr:function(){
+return "combinationsWithReplacement(...)";
+},toString:m.Base.forwardCall("repr"),next:function(){
+if(_958){
+_958=false;
+return mi.list(mi.remapView(_957,pool));
+}
+while(true){
+var done=true;
+for(var i=r-1;i>=0;--i){
+if(_957[i]!=n-1){
+done=false;
+break;
+}
+}
+if(done){
+throw mi.StopIteration;
+}
+_957=_957.slice(0,i).concat(mi.list(mi.repeat(_957[i]+1,r-i)));
+return mi.list(mi.remapView(_957,pool));
+}
+}};
+};
+MochiKit.Iter.repeatSeq=function(_95b,n){
+if(n==0){
+return MochiKit.Iter.EmptyIter;
+}
+var it=MochiKit.Iter.iter(_95b);
+return {next:function(){
+try{
+return it.next();
+}
+catch(e){
+if(e!=MochiKit.Iter.StopIteration||--n<=0){
+throw e;
+}
+it=MochiKit.Iter.iter(_95b);
+return it.next();
+}
+}};
+};
+MochiKit.Iter.permutations=function(_95e,r){
+var m=MochiKit,mi=MochiKit.Iter;
+var pool=mi.list(_95e);
+var n=pool.length;
+r=r||n;
+if(r>n){
+return mi.EmptyIter;
+}
+var _964=mi.list(mi.range(n));
+var _965=mi.list(mi.range(n,n-r,-1));
+var _966=true;
+return {repr:function(){
+return "permutations(...)";
+},toString:m.Base.forwardCall("repr"),next:function(){
+if(_966){
+_966=false;
+return mi.list(mi.remapView(mi.islice(_964,0,r),pool));
+}
+if(n==0){
+throw mi.StopIteration;
+}
+var done=true;
+for(var i=r-1;i>=0;--i){
+_965[i]-=1;
+if(_965[i]==0){
+_964=_964.slice(0,i).concat(_964.slice(i+1),_964[i]);
+_965[i]=n-i;
+}else{
+var j=_965[i];
+var jdx=_964.length-j;
+var tmp=_964[i];
+_964[i]=_964[jdx];
+_964[jdx]=tmp;
+done=false;
+break;
+}
+}
+if(done){
+throw mi.StopIteration;
+}
+return mi.list(mi.remapView(mi.islice(_964,0,r),pool));
+}};
+};
+MochiKit.Iter._Range=function(_96c,stop,step){
+this.start=_96c;
+this.stop=stop;
+this.step=step;
+};
+MochiKit.Iter._Range.prototype.__iterator__=function(){
+return new MochiKit.Iter.range(this.start,this.stop,this.step);
+};
+MochiKit.Iter.xrange=function(){
+var _96f=0;
+var stop=0;
+var step=1;
+if(arguments.length==1){
+stop=arguments[0];
+}else{
+if(arguments.length==2){
+_96f=arguments[0];
+stop=arguments[1];
+}else{
+if(arguments.length==3){
+_96f=arguments[0];
+stop=arguments[1];
+step=arguments[2];
+}else{
+throw new TypeError("xrange() takes 1, 2, or 3 arguments!");
+}
+}
+}
+if(step===0){
+throw new TypeError("xrange() step must not be 0");
+}
+return new MochiKit.Iter._Range(_96f,stop,step);
 };
 MochiKit.Iter_ext.__new__=function(){
 };
@@ -8699,8 +8882,8 @@ goog.provide("MochiKit.Text_ext");
 goog.require("MochiKit.Text");
 }
 MochiKit.Base.module(MochiKit,"Text_ext","1.5",["Text"]);
-MochiKit.Text.levenshteinDistance=function(s,t,_940){
-_940=_940||false;
+MochiKit.Text.levenshteinDistance=function(s,t,_974){
+_974=_974||false;
 var n=s.length,m=t.length;
 if(n==0){
 return m;
@@ -8722,16 +8905,16 @@ for(var i=1;i<=n;++i){
 for(var j=1;j<=m;++j){
 var cost=(t[j-1]==s[i-1]?0:1);
 var cell=Math.min(Math.min(d[i-1][j]+1,d[i][j-1]+1),d[i-1][j-1]+cost);
-if(_940&&(i>2&&j>2)){
-var _949=d[i-2][j-2]+1;
+if(_974&&(i>2&&j>2)){
+var _97d=d[i-2][j-2]+1;
 if(s[i-2]!=t[j-1]){
-++_949;
+++_97d;
 }
 if(s[i-1]!=t[j-2]){
-++_949;
+++_97d;
 }
-if(cell>_949){
-cell=_949;
+if(cell>_97d){
+cell=_97d;
 }
 }
 d[i][j]=cell;
@@ -8743,13 +8926,13 @@ MochiKit.Text.humanStringCompare=function(a,b){
 if(a==b){
 return 0;
 }
-var _94c=/^(\+|\-)?\d+/;
-var _94d=/^\D+/;
+var _980=/^(\+|\-)?\d+/;
+var _981=/^\D+/;
 while(a.length>0&&b.length>0){
 var a0=null,ainc=-1;
 var b0=null,binc=-1;
-var ma=a.match(_94d);
-var mb=b.match(_94d);
+var ma=a.match(_981);
+var mb=b.match(_981);
 if(ma!=null&&mb!=null){
 a0=ma[0].toLowerCase();
 ainc=a0.length;
@@ -8757,7 +8940,7 @@ b0=mb[0].toLowerCase();
 binc=b0.length;
 }else{
 if(ma==null){
-ma=a.match(_94c);
+ma=a.match(_980);
 a0=parseInt(ma[0],10)+2<<15;
 ainc=ma[0].length;
 }else{
@@ -8765,7 +8948,7 @@ a0=a.charAt(0).toLowerCase().charCodeAt(0);
 ainc=1;
 }
 if(mb==null){
-mb=b.match(_94c);
+mb=b.match(_980);
 b0=parseInt(mb[0],10)+2<<15;
 binc=mb[0].length;
 }else{
@@ -8808,38 +8991,38 @@ MochiKit.HeapQ._siftup(x,i,cmp);
 }
 return x;
 };
-MochiKit.HeapQ._siftdown=function(heap,_959,pos,cmp){
+MochiKit.HeapQ._siftdown=function(heap,_98d,pos,cmp){
 cmp=cmp||MochiKit.Base.operator.clt;
-var _95c=heap[pos];
-while(pos>_959){
-var _95d=(pos-1)>>1;
-var _95e=heap[_95d];
-if(cmp(_95c,_95e)){
-heap[pos]=_95e;
-pos=_95d;
+var _990=heap[pos];
+while(pos>_98d){
+var _991=(pos-1)>>1;
+var _992=heap[_991];
+if(cmp(_990,_992)){
+heap[pos]=_992;
+pos=_991;
 continue;
 }
 break;
 }
-heap[pos]=_95c;
+heap[pos]=_990;
 };
 MochiKit.HeapQ._siftup=function(heap,pos,cmp){
 cmp=cmp||MochiKit.Base.operator.clt;
-var _962=heap.length;
-var _963=pos;
-var _964=heap[pos];
-var _965=2*pos+1;
-while(_965<_962){
-var _966=_965+1;
-if(_966<_962&&!(cmp(heap[_965],heap[_966]))){
-_965=_966;
+var _996=heap.length;
+var _997=pos;
+var _998=heap[pos];
+var _999=2*pos+1;
+while(_999<_996){
+var _99a=_999+1;
+if(_99a<_996&&!(cmp(heap[_999],heap[_99a]))){
+_999=_99a;
 }
-heap[pos]=heap[_965];
-pos=_965;
-_965=2*pos+1;
+heap[pos]=heap[_999];
+pos=_999;
+_999=2*pos+1;
 }
-heap[pos]=_964;
-MochiKit.HeapQ._siftdown(heap,_963,pos,cmp);
+heap[pos]=_998;
+MochiKit.HeapQ._siftdown(heap,_997,pos,cmp);
 };
 MochiKit.HeapQ.heapPush=function(heap,item,cmp){
 cmp=cmp||MochiKit.Base.operator.clt;
@@ -8848,23 +9031,23 @@ MochiKit.HeapQ._siftdown(heap,0,heap.length-1,cmp);
 };
 MochiKit.HeapQ.heapPop=function(heap,cmp){
 cmp=cmp||MochiKit.Base.operator.clt;
-var _96c=heap.pop();
-var _96d;
+var _9a0=heap.pop();
+var _9a1;
 if(heap.length>0){
-_96d=heap[0];
-heap[0]=_96c;
+_9a1=heap[0];
+heap[0]=_9a0;
 MochiKit.HeapQ._siftup(heap,0,cmp);
 }else{
-_96d=_96c;
+_9a1=_9a0;
 }
-return _96d;
+return _9a1;
 };
 MochiKit.HeapQ.heapReplace=function(heap,item,cmp){
 cmp=cmp||MochiKit.Base.operator.clt;
-var _971=heap[0];
+var _9a5=heap[0];
 heap[0]=item;
 MochiKit.HeapQ._siftup(heap,0,cmp);
-return _971;
+return _9a5;
 };
 MochiKit.HeapQ.heapPushPop=function(heap,item,cmp){
 cmp=cmp||MochiKit.Base.operator.clt;
@@ -8876,7 +9059,7 @@ MochiKit.HeapQ._siftup(heap,0,cmp);
 }
 return item;
 };
-MochiKit.HeapQ.imergeSorted=function(_976,cmp){
+MochiKit.HeapQ.imergeSorted=function(_9aa,cmp){
 var m=MochiKit,mi=m.Iter;
 cmp=cmp||m.Base.operator.clt;
 var _cmp=function(a,b){
@@ -8884,11 +9067,11 @@ var c=cmp(a[0],b[0]);
 return c;
 };
 var h=[];
-mi.forEach(mi.izip(mi.count(),mi.imap(mi.iter,_976)),function(pair){
-var _980=pair[0],it=pair[1];
+mi.forEach(mi.izip(mi.count(),mi.imap(mi.iter,_9aa)),function(pair){
+var _9b4=pair[0],it=pair[1];
 try{
 var next=it.next;
-h.push([next(),_980,next]);
+h.push([next(),_9b4,next]);
 }
 catch(e){
 if(e!=mi.StopIteration){
@@ -8930,43 +9113,43 @@ throw MochiKit.Iter.StopIteration;
 return MochiKit.HeapQ.heapPop(heap,cmp);
 }};
 };
-MochiKit.HeapQ.nLargest=function(n,_989,cmp){
+MochiKit.HeapQ.nLargest=function(n,_9bd,cmp){
 var m=MochiKit,mi=m.Iter;
 cmp=cmp||m.Base.operator.clt;
-var it=mi.iter(_989);
-var _98e=mi.list(mi.islice(it,n));
-if(_98e.length==0){
-return _98e;
+var it=mi.iter(_9bd);
+var _9c2=mi.list(mi.islice(it,n));
+if(_9c2.length==0){
+return _9c2;
 }
-m.HeapQ.heapify(_98e,cmp);
+m.HeapQ.heapify(_9c2,cmp);
 mi.forEach(it,function(elem){
-m.HeapQ.heapPushPop(_98e,elem,cmp);
+m.HeapQ.heapPushPop(_9c2,elem,cmp);
 });
-_98e.sort(function(a,b){
+_9c2.sort(function(a,b){
 return -1*m.Base.compare(a,b);
 });
-return _98e;
+return _9c2;
 };
-MochiKit.HeapQ.nSmallest=function(n,_993,cmp){
+MochiKit.HeapQ.nSmallest=function(n,_9c7,cmp){
 var m=MochiKit,mi=m.Iter;
 cmp=cmp||m.Base.operator.clt;
-var h=mi.list(_993);
+var h=mi.list(_9c7);
 m.HeapQ.heapify(h,cmp);
 return m.Base.map(m.Base.partial(m.HeapQ.heapPop,h,cmp),mi.range(Math.min(n,h.length)));
 };
 MochiKit.HeapQ.isHeap=function(lst,cmp){
 cmp=cmp||MochiKit.Base.operator.cle;
 for(var pos=1;pos<lst.length;++pos){
-var _99b=(pos-1)>>1;
-if(!cmp(lst[_99b],lst[pos])){
+var _9cf=(pos-1)>>1;
+if(!cmp(lst[_9cf],lst[pos])){
 return false;
 }
 }
 return true;
 };
-MochiKit.HeapQ.heapSort=function(_99c,cmp){
+MochiKit.HeapQ.heapSort=function(_9d0,cmp){
 var m=MochiKit;
-var h=m.Iter.list(_99c);
+var h=m.Iter.list(_9d0);
 m.HeapQ.heapify(h,cmp);
 return m.Base.map(m.Base.partial(m.HeapQ.heapPop,h,cmp),m.Iter.range(h.length));
 };
@@ -8977,45 +9160,58 @@ MochiKit.Base._exportSymbols(this,MochiKit.HeapQ);
 if(typeof goog!="undefined"&&typeof goog.provide=="function"){
 goog.provide("MochiKit.Random");
 goog.require("MochiKit.Base");
+goog.require("MochiKit._MersenneTwister19937");
 }
-MochiKit.Base.module(MochiKit,"Random","1.5",["Base"]);
-MochiKit.Random.random=Math.random;
-MochiKit.Random.randRange=function(_9a0,_9a1,step){
+MochiKit.Base.module(MochiKit,"Random","1.5",["Base","_MersenneTwister19937"]);
+MochiKit.Random.seed=function(x){
+x=typeof x=="number"?x:(new Date()).getTime();
+MochiKit.Random._generator.init_genrand(x);
+};
+MochiKit.Random.getState=function(){
+return MochiKit.Random._generator._getState();
+};
+MochiKit.Random.setState=function(_9d5){
+MochiKit.Random._generator._setState(_9d5);
+};
+MochiKit.Random.random=function(){
+return MochiKit.Random._generator.genrand_real2();
+};
+MochiKit.Random.randRange=function(_9d6,_9d7,step){
 var self=MochiKit.Random;
 if(arguments.length==1){
-_9a1=_9a0;
-_9a0=0;
+_9d7=_9d6;
+_9d6=0;
 }
 step=step||1;
-var _9a4=_9a1-_9a0;
-if(step==1&&_9a4>0){
-return Math.floor(_9a0+Math.floor(self.random()*_9a4));
+var _9da=_9d7-_9d6;
+if(step==1&&_9da>0){
+return Math.floor(_9d6+Math.floor(self.random()*_9da));
 }
 if(step>0){
-var n=Math.floor((_9a4+step-1)/step);
+var n=Math.floor((_9da+step-1)/step);
 }else{
 if(step<0){
-var n=Math.floor((_9a4+step+1)/step);
+var n=Math.floor((_9da+step+1)/step);
 }
 }
-return _9a0+step*Math.floor(self.random()*n);
+return _9d6+step*Math.floor(self.random()*n);
 };
 MochiKit.Random.uniform=function(a,b){
 return a+(b-a)*MochiKit.Random.random();
 };
-MochiKit.Random.shuffle=function(_9a8){
-for(var i=_9a8.length-1;i>0;--i){
+MochiKit.Random.shuffle=function(_9de){
+for(var i=_9de.length-1;i>0;--i){
 var j=Math.floor(MochiKit.Random.random()*(i+1));
-var tmp=_9a8[i];
-_9a8[i]=_9a8[j];
-_9a8[j]=tmp;
+var tmp=_9de[i];
+_9de[i]=_9de[j];
+_9de[j]=tmp;
 }
-return _9a8;
+return _9de;
 };
-MochiKit.Random.deal=function(_9ac,func){
+MochiKit.Random.deal=function(_9e2,func){
 func=func||MochiKit.Base.operator.identity;
-var deck=new Array(_9ac);
-for(var i=0;i<_9ac;++i){
+var deck=new Array(_9e2);
+for(var i=0;i<_9e2;++i){
 var j=Math.floor(MochiKit.Random.random()*(i+1));
 deck[i]=deck[j];
 deck[j]=func(i);
@@ -9025,32 +9221,35 @@ return deck;
 MochiKit.Random.choice=function(seq){
 return seq[Math.floor(MochiKit.Random.random()*seq.length)];
 };
-MochiKit.Random.shuffled=function(_9b2){
-var n=_9b2.length;
+MochiKit.Random.shuffled=function(_9e8){
+var n=_9e8.length;
 var a=new Array(n);
-a[0]=_9b2[0];
+a[0]=_9e8[0];
 for(var i=1;i<n-1;++i){
 var j=Math.floor(MochiKit.Random.random()*(i+1));
 a[i]=a[j];
-a[j]=_9b2[i];
+a[j]=_9e8[i];
 }
 return a;
 };
-MochiKit.Random.sample=function(_9b7,k){
-var n=_9b7.length;
-var _9ba=new Array(k);
-var _9bb={};
+MochiKit.Random.sample=function(_9ed,k){
+var n=_9ed.length;
+var _9f0=new Array(k);
+var _9f1={};
 for(var i=0;i<k;++i){
 var j=MochiKit.Random.randRange(n);
-while(j in _9bb){
+while(j in _9f1){
 j=MochiKit.Random.randRange(n);
 }
-_9bb[j]=true;
-_9ba[i]=_9b7[j];
+_9f1[j]=true;
+_9f0[i]=_9ed[j];
 }
-return _9ba;
+return _9f0;
 };
 MochiKit.Random.__new__=function(){
+var self=MochiKit.Random;
+self._generator=new MochiKit._MersenneTwister19937();
+self._generator.init_genrand((new Date()).getTime());
 };
 MochiKit.Random.__new__();
 MochiKit.Base._exportSymbols(this,MochiKit.Random);

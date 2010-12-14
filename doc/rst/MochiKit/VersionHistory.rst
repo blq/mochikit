@@ -103,6 +103,8 @@
 - Added Random module.
 - Added Random.randRange
 - Added Random.shuffle, sample, choice, uniform
+- Added an explicit Mersenne Twister 19937 random number generator
+- Added support for Random.seed(), getState() and setState()
 
 - Added Bisect module based on the Python.bisect module API.
 - Added Bisect.bisectLeft, bisectRight, insortLeft, insortRight

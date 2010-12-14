@@ -4,7 +4,9 @@
  *
  * @author Fredrik Blomqvist
  *
- * todo: support native custom generators. having a seed to be able to get repeatedly same rands is useful
+ * uses the MersenneTwister algorithm, http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/VERSIONS/JAVASCRIPT/java-script.html
+ *
+ * todo: (optionally) support more generators, ex: http://www.erikoest.dk/rng.htm
  *
  */
 
@@ -12,18 +14,60 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.provide('MochiKit.Random');
 
 	goog.require('MochiKit.Base');
+	goog.require('MochiKit._MersenneTwister19937');
 }
 
-MochiKit.Base.module(MochiKit, 'Random', '1.5', ['Base']);
+MochiKit.Base.module(MochiKit, 'Random', '1.5', ['Base', '_MersenneTwister19937']);
+
+/**
+ * @see http://docs.python.org/library/random.html#random.seed
+ *
+ * @param {integer=} [x]
+ */
+MochiKit.Random.seed = function(x)
+{
+	x = typeof x == 'number' ? x : (new Date()).getTime();
+	MochiKit.Random._generator.init_genrand(x);
+};
 
 
 /**
- * initially just for "symmetry" but should support custom generators
+ * Return an object capturing the current internal state of the generator.
+ * This object can be passed to setState() to restore the state.
+ * @see http://docs.python.org/library/random.html#random.getstate
+ *
+ * @return {!Object} black-box state
+ */
+MochiKit.Random.getState = function()
+{
+	return MochiKit.Random._generator._getState();
+};
+
+
+/**
+ * state should have been obtained from a previous call to getState(), and setState() restores
+ * the internal state of the generator to what it was at the time setState() was called.
+ * @see http://docs.python.org/library/random.html#random.setstate
+ *
+ * @param {!Object} state obtained from getState()
+ */
+MochiKit.Random.setState = function(state)
+{
+	MochiKit.Random._generator._setState(state);
+};
+
+
+/**
  * @see http://docs.python.org/library/random.html#random.random
  *
  * @return {number} [0.0..1.0)
  */
-MochiKit.Random.random = Math.random;
+MochiKit.Random.random = function()
+{
+//	return Math.random();
+	return MochiKit.Random._generator.genrand_real2();
+//	return MochiKit.Random._generator.genrand_res53(); // test 53 bit version
+};
 
 
 /**
@@ -95,7 +139,7 @@ MochiKit.Random.uniform = function(a, b)
  *
  * todo: take optional range, start & end, indices?
  * todo: take a custom getter and setter funcs instead of just whole elem swaps? (though this yearns for a custom iterator concept..)
- * todo: support a generator? custom rand fn?
+ * todo: support a generator arg? custom rand fn?
  * todo: add a shuffleD version also?
  *
  * @param {!Array} values
@@ -211,9 +255,11 @@ MochiKit.Random.sample = function(population, k)
 
 //----------------------
 
-/** @this MochiKit.Random */
 MochiKit.Random.__new__ = function() {
-	// todo: setup generators etc here
+	var self = MochiKit.Random;
+	// todo: make the Mersenne generator optional, with default/fallback to plain Math.random (with do-nothing seed & get/setState methods)
+	self._generator = new MochiKit._MersenneTwister19937();
+	self._generator.init_genrand((new Date()).getTime()); // == seed()
 };
 
 MochiKit.Random.__new__();

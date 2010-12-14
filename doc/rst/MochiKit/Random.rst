@@ -22,7 +22,7 @@ Description
 ===========
 
 Random numbers and associated algorithms.
-The API is largely a subset of the Python random [1]_ module.
+The API is largely a subset of the Python random [1]_ module. Uses the Mersenne Twister [2]_ generator.
 
 
 Dependencies
@@ -49,6 +49,25 @@ Functions
 
     Return the next random floating point number in the range ``[0.0, 1.0)``.
 
+
+:mochidef:`seed([x])`:
+
+    Initialize the basic random number generator. If ``x`` is omitted or None, current
+    system time is used; current system time is also used to initialize the generator
+    when the module is first imported.
+
+
+:mochidef:`getState()`:
+
+    Return an object capturing the current internal state of the generator. This object can be passed to :mochiref:`setState()` to restore the state.
+
+
+:mochidef:`setState(state)`:
+
+    ``state`` should have been obtained from a previous call to :mochiref:`getState()`, and :mochiref:`setState()` restores the internal
+    state of the generator to what it was at the time :mochiref:`setState()` was called.
+
+
 :mochidef:`randRange([start=0], stop[, step=1])`:
 
     Choose a random item from ``range(start, stop[, step])``
@@ -57,7 +76,7 @@ Functions
 
 :mochidef:`choice(seq)`:
 
-    Choose a random element from a non-empty sequence.
+    Return a random element from the non-empty sequence ``seq``.
 
 
 :mochidef:`shuffle(values)`:
@@ -72,7 +91,8 @@ Functions
 
 :mochidef:`sample(population, k)`:
 
-    Chooses ``k`` unique random elements from a ``population`` sequence.
+    Return a ``k`` length list of unique elements chosen from the ``population`` sequence.
+    Used for random sampling without replacement.
 
     Returns a new list containing elements from the population while
     leaving the original population unchanged.  The resulting list is
@@ -103,7 +123,7 @@ See Also
 ========
 
 .. [1] Python random module: http://docs.python.org/library/random.html
-
+.. [2] Mersenne Twister 19937: http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
 .. [3] Fisher-Yates shuffle: http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 .. [4] Microsoft does shuffling: http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
 
