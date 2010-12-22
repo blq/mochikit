@@ -22,7 +22,8 @@ Description
 ===========
 
 Random numbers and associated algorithms.
-The API is largely a subset of the Python random [1]_ module. Uses the Mersenne Twister [2]_ generator.
+The API is largely a subset of the Python random [1]_ module. By default uses the Mersenne Twister [2]_ generator, but
+other generators, including the native ``Math.random``, can be used. See source code for details.
 
 
 Dependencies
