@@ -82,6 +82,7 @@
 - Added Iter.xrange
 - Added Iter.permutations
 - Added Iter.EmptyIter
+- Made Iter.iter() support objects with the __iterator__ decorator function (ES 1.7)
 
 - Added Text-ext module
 - Added Text.humanStringCompare
