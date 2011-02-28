@@ -51,6 +51,7 @@ MochiKit.MochiKit.SUBMODULES = [
 	"Iter-ext",
 	"Text-ext",
 	"HeapQ",
+	"_MersenneTwister19937",
 	"Random",
 	"Bisect"
 ];
