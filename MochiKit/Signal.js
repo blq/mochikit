@@ -515,6 +515,11 @@ MochiKit.Signal.Ident = function (ident) {
 MochiKit.Signal.Ident.__export__ = false;
 MochiKit.Signal.Ident.prototype = {};
 
+MochiKit.Signal.Ident.prototype.__repr__ = function() {
+	var repr = MochiKit.Base.repr;
+	return 'src:' + repr(this.source) + ', sig: ' + repr(this.signal) + ', isDOM: ' + repr(this.isDOM) + ', connected: ' + repr(this.connected);
+};
+
 MochiKit.Base.update(MochiKit.Signal, {
 
     _unloadCache: function () {
