@@ -83,7 +83,11 @@ MochiKit.Base.update = function (self, obj/*, ... */) {
 };
 
 MochiKit.Base.update(MochiKit.Base, {
-    /** @id MochiKit.Base.camelize */
+    /**
+     * @id MochiKit.Base.camelize
+     * @param {string} selector
+     * @return {string}
+     */
     camelize: function (selector) {
         /* from dojo.style.toCamelCase */
         var arr = selector.split('-');
@@ -94,7 +98,12 @@ MochiKit.Base.update(MochiKit.Base, {
         return cc;
     },
 
-    /** @id MochiKit.Base.counter */
+    /**
+     * @id MochiKit.Base.counter
+     * @param {number=} [n=1]
+     * @param {number=} [step=1]
+     * @return {function(): number}
+     */
     counter: function (n/* = 1 */, step/* = 1 */) {
         if (arguments.length === 0) {
             n = 1;
@@ -131,7 +140,10 @@ MochiKit.Base.update(MochiKit.Base, {
         return res;
     },
 
-    /** @id MochiKit.Base.flattenArray */
+    /**
+     * @id MochiKit.Base.flattenArray
+     * @return {!Array}
+     */
     flattenArray: function (lst) {
         return MochiKit.Base._flattenArray([], lst);
     },
@@ -230,7 +242,11 @@ MochiKit.Base.update(MochiKit.Base, {
         return self;
     },
 
-    /** @id MochiKit.Base.keys */
+    /**
+     * @id MochiKit.Base.keys
+     * @param {*} obj
+     * @return {!Array.<string>}
+     */
     keys: function (obj) {
         var rval = [];
         for (var prop in obj) { // todo: use o.hasOwnProperty instead/also?
@@ -239,7 +255,11 @@ MochiKit.Base.update(MochiKit.Base, {
         return rval;
     },
 
-    /** @id MochiKit.Base.values */
+    /**
+     * @id MochiKit.Base.values
+     * @param {*} obj
+     * @return {!Array.<*>}
+     */
     values: function (obj) {
         var rval = [];
         for (var prop in obj) { // todo: use o.hasOwnProperty instead/also?
@@ -248,7 +268,11 @@ MochiKit.Base.update(MochiKit.Base, {
         return rval;
     },
 
-     /** @id MochiKit.Base.items */
+     /**
+      * @id MochiKit.Base.items
+      * @param {*} obj
+      * @return {!Array.<!Array>}
+      */
     items: function (obj) {
         var rval = [];
         for (var prop in obj) { // todo: use o.hasOwnProperty instead/also?
@@ -380,7 +404,11 @@ MochiKit.Base.update(MochiKit.Base, {
         };
     },
 
-    /** @id MochiKit.Base.bool */
+    /**
+     * @id MochiKit.Base.bool
+     * @param {*} value
+     * @return {boolean}
+     */
     bool: function (value) {
         if (typeof(value) === "boolean" || value instanceof Boolean) {
             return value.valueOf();
@@ -413,7 +441,10 @@ MochiKit.Base.update(MochiKit.Base, {
         };
     },
 
-    /** @id MochiKit.Base.isNull */
+    /**
+     * @id MochiKit.Base.isNull
+     * @return {boolean}
+     */
     isNull: function (/* ... */) {
         for (var i = 0; i < arguments.length; i++) {
             if (arguments[i] !== null) {
@@ -423,7 +454,10 @@ MochiKit.Base.update(MochiKit.Base, {
         return true;
     },
 
-    /** @id MochiKit.Base.isUndefinedOrNull */
+    /**
+     * @id MochiKit.Base.isUndefinedOrNull
+     * @return {boolean}
+     */
     isUndefinedOrNull: function (/* ... */) {
         for (var i = 0; i < arguments.length; i++) {
             var o = arguments[i];
@@ -434,13 +468,21 @@ MochiKit.Base.update(MochiKit.Base, {
         return true;
     },
 
-    /** @id MochiKit.Base.isEmpty */
+    /**
+     * @id MochiKit.Base.isEmpty
+     * @return {boolean}
+     */
     isEmpty: function (obj) {
         return !MochiKit.Base.isNotEmpty.apply(this, arguments);
     },
 
-    /** @id MochiKit.Base.isNotEmpty */
-    isNotEmpty: function (obj) {
+    /**
+     * @id MochiKit.Base.isNotEmpty
+     * @param {DateLike} obj
+     * @param {...DateLike} [var_args]
+     * @return {boolean}
+     */
+    isNotEmpty: function (obj, var_args) {
         for (var i = 0; i < arguments.length; i++) {
             var o = arguments[i];
             if (!(o && o.length)) {
@@ -450,8 +492,13 @@ MochiKit.Base.update(MochiKit.Base, {
         return true;
     },
 
-    /** @id MochiKit.Base.isArrayLike */
-    isArrayLike: function () {
+    /**
+     * @id MochiKit.Base.isArrayLike
+     * @param {*} arr
+     * @param {...*} [var_args]
+     * @return {boolean}
+     */
+    isArrayLike: function (arr, var_args) {
         for (var i = 0; i < arguments.length; i++) {
             var o = arguments[i];
             var typ = typeof(o);
@@ -468,8 +515,13 @@ MochiKit.Base.update(MochiKit.Base, {
         return true;
     },
 
-    /** @id MochiKit.Base.isDateLike */
-    isDateLike: function () {
+    /**
+     * @id MochiKit.Base.isDateLike
+     * @param {*} date
+     * @param {...*} [var_args]
+     * @return {boolean}
+     */
+    isDateLike: function (date, var_args) {
         for (var i = 0; i < arguments.length; i++) {
             var o = arguments[i];
             if (typeof(o) != "object" || o === null
@@ -493,7 +545,10 @@ MochiKit.Base.update(MochiKit.Base, {
         return rval;
     },
 
-    /** @id MochiKit.Base.map */
+    /**
+     * @id MochiKit.Base.map
+     * @return {Array}
+     */
     map: function (fn, lst/*, lst... */) {
         var m = MochiKit.Base;
         var itr = MochiKit.Iter;
@@ -749,7 +804,12 @@ MochiKit.Base.update(MochiKit.Base, {
 
     _primitives: {'boolean': true, 'string': true, 'number': true},
 
-    /** @id MochiKit.Base.compare */
+    /**
+     * @id MochiKit.Base.compare
+	 * @param {*} a
+	 * @param {*} b
+ 	 * @return {integer} -1, 0, +1
+     */
     compare: function (a, b) {
         if (a == b) {
             return 0;
@@ -785,12 +845,22 @@ MochiKit.Base.update(MochiKit.Base, {
         throw new TypeError(repr(a) + " and " + repr(b) + " can not be compared");
     },
 
-    /** @id MochiKit.Base.compareDateLike */
+    /**
+     * @id MochiKit.Base.compareDateLike
+     * @param {!DateLike} a
+     * @param {!DateLike} b
+     * @return {integer}
+     */
     compareDateLike: function (a, b) {
         return MochiKit.Base.compare(a.getTime(), b.getTime());
     },
 
-    /** @id MochiKit.Base.compareArrayLike */
+    /**
+     * @id MochiKit.Base.compareArrayLike
+     * @param {!ArrayLike} a
+     * @param {!ArrayLike} b
+     * @return {integer}
+     */
     compareArrayLike: function (a, b) {
         var compare = MochiKit.Base.compare;
         var count = a.length;
@@ -815,7 +885,11 @@ MochiKit.Base.update(MochiKit.Base, {
         MochiKit.Base.reprRegistry.register(name, check, wrap, override);
     },
 
-    /** @id MochiKit.Base.repr */
+    /**
+     * @id MochiKit.Base.repr
+     * @param {*} o
+     * @return {string}
+     */
     repr: function (o) {
         if (typeof(o) == "undefined") {
             return "undefined";
@@ -856,13 +930,21 @@ MochiKit.Base.update(MochiKit.Base, {
         return ostring;
     },
 
-    /** @id MochiKit.Base.reprArrayLike */
+    /**
+     * @id MochiKit.Base.reprArrayLike
+     * @param {!ArrayLike} o
+     * @return {string}
+     */
     reprArrayLike: function (o) {
         var m = MochiKit.Base;
         return "[" + m.map(m.repr, o).join(", ") + "]";
     },
 
-    /** @id MochiKit.Base.reprString */
+    /**
+     * @id MochiKit.Base.reprString
+     * @param {string} o
+     * @return {string}
+     */
     reprString: function (o) {
         return ('"' + o.replace(/(["\\])/g, '\\$1') + '"'
             ).replace(/[\f]/g, "\\f"
@@ -873,7 +955,11 @@ MochiKit.Base.update(MochiKit.Base, {
             ).replace(/[\r]/g, "\\r");
     },
 
-    /** @id MochiKit.Base.reprNumber */
+    /**
+     * @id MochiKit.Base.reprNumber
+     * @param {number} o
+     * @return {string}
+     */
     reprNumber: function (o) {
         return o + "";
     },
@@ -1013,12 +1099,22 @@ MochiKit.Base.update(MochiKit.Base, {
     },
 
 
-    /** @id MochiKit.Base.objEqual */
+    /**
+     * @id MochiKit.Base.objEqual
+     * @param {*} a
+     * @param {*} b
+     * @return {boolean}
+     */
     objEqual: function (a, b) {
         return (MochiKit.Base.compare(a, b) === 0);
     },
 
-    /** @id MochiKit.Base.arrayEqual */
+    /**
+     * @id MochiKit.Base.arrayEqual
+     * @param {!ArrayLike} self
+     * @param {!ArrayLike} arr
+     * @return {boolean}
+     */
     arrayEqual: function (self, arr) {
         if (self.length != arr.length) {
             return false;
@@ -1099,7 +1195,14 @@ MochiKit.Base.update(MochiKit.Base, {
         return MochiKit.Base.listMinMax(-1, arguments);
     },
 
-    /** @id MochiKit.Base.findIdentical */
+    /**
+     * @id MochiKit.Base.findIdentical
+     * @param {!ArrayLike} lst
+     * @param {*} value
+     * @param {integer=} [start=0]
+     * @param {integer=} [end=length]
+     * @return {integer}
+     */
     findIdentical: function (lst, value, start/* = 0 */, /* optional */end) {
         if (typeof(end) == "undefined" || end === null) {
             end = lst.length;
@@ -1159,7 +1262,10 @@ MochiKit.Base.update(MochiKit.Base, {
         }
     },
 
-    /** @id MochiKit.Base.findValue */
+    /**
+     * @id MochiKit.Base.findValue
+     * @return {integer}
+     */
     findValue: function (lst, value, start/* = 0 */, /* optional */end) {
         if (typeof(end) == "undefined" || end === null) {
             end = lst.length;
@@ -1261,7 +1367,12 @@ MochiKit.Base.update(MochiKit.Base, {
     },
 
 
-    /** @id MochiKit.Base.parseQueryString */
+    /**
+     * @id MochiKit.Base.parseQueryString
+     * @param {string} encodedString
+     * @param {boolean=} [useArrays=false]
+     * @return {!(Object|Array)}
+     */
     parseQueryString: function (encodedString, useArrays) {
         // strip a leading '?' from the encoded string
         var qstr = (encodedString.charAt(0) == "?")
