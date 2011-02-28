@@ -18,6 +18,9 @@ MochiKit.Base.module(MochiKit, 'Logging', '1.5', ['Base']);
 
 /**
  * @id MochiKit.Logging.LogMessage
+ * @param {integer} num
+ * @param {string} level
+ * @param {!Array} info
  * @constructor
  */
 MochiKit.Logging.LogMessage = function (num, level, info) {
@@ -57,8 +60,12 @@ MochiKit.Base.update(MochiKit.Logging, {
         };
     },
 
-    /** @id MochiKit.Logging.isLogMessage */
-    isLogMessage: function (/* ... */) {
+    /**
+     * @id MochiKit.Logging.isLogMessage
+     * @param {...*} [var_args]
+     * @return {boolean}
+     */
+    isLogMessage: function (var_args/* ... */) {
         var LogMessage = MochiKit.Logging.LogMessage;
         for (var i = 0; i < arguments.length; i++) {
             if (!(arguments[i] instanceof LogMessage)) {
@@ -68,7 +75,10 @@ MochiKit.Base.update(MochiKit.Logging, {
         return true;
     },
 
-    /** @id MochiKit.Logging.compareLogMessage */
+    /**
+     * @id MochiKit.Logging.compareLogMessage
+     * @return {integer} -1, 0, +1
+     */
     compareLogMessage: function (a, b) {
         return MochiKit.Base.compare([a.level, a.info], [b.level, b.info]);
     },
@@ -86,6 +96,7 @@ MochiKit.Base.update(MochiKit.Logging, {
 
 /**
  * @id MochiKit.Logging.Logger
+ * @param {integer=} [maxSize]
  * @constructor
  */
 MochiKit.Logging.Logger = function (/* optional */maxSize) {
@@ -152,8 +163,13 @@ MochiKit.Logging.Logger.prototype = {
         delete this.listeners[ident];
     },
 
-    /** @id MochiKit.Logging.Logger.prototype.baseLog */
-    baseLog: function (level, message/*, ...*/) {
+    /**
+     * @id MochiKit.Logging.Logger.prototype.baseLog
+     * @param {integer} level
+     * @param {string=} [message]
+     * @param {...string} [var_args]
+     */
+    baseLog: function (level, message, var_args/*, ...*/) {
         if (typeof(level) == "number") {
             if (level >= MochiKit.Logging.LogLevel.FATAL) {
                 level = 'FATAL';
@@ -192,7 +208,11 @@ MochiKit.Logging.Logger.prototype = {
         return this._messages.slice(firstMsg);
     },
 
-    /** @id MochiKit.Logging.Logger.prototype.getMessageText */
+    /**
+     * @id MochiKit.Logging.Logger.prototype.getMessageText
+     * @param {integer=} [howMany=30]
+     * @return {string}
+     */
     getMessageText: function (howMany) {
         if (typeof(howMany) == 'undefined' || howMany === null) {
             howMany = 30;
@@ -248,13 +268,20 @@ MochiKit.Logging.__new__ = function () {
 
     // indirectly find logger so it can be replaced
     var self = this;
+	/**
+	 * @param {string} name
+	 * @return {function()}
+	 */
     var connectLog = function (name) {
         return function () {
             self.logger[name].apply(self.logger, arguments);
         };
     };
 
-    /** @id MochiKit.Logging.log */
+    /**
+     * @id MochiKit.Logging.log
+	 * @param {...string} [var_args]
+     */
     this.log = connectLog('log');
     /** @id MochiKit.Logging.logError */
     this.logError = connectLog('error');

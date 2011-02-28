@@ -18,12 +18,18 @@ MochiKit.Base.module(MochiKit, 'DOM', '1.5', ['Base']);
 
 MochiKit.Base.update(MochiKit.DOM, {
 
-    /** @id MochiKit.DOM.currentWindow */
+    /**
+     * @id MochiKit.DOM.currentWindow
+     * @return {Window}
+     */
     currentWindow: function () {
         return MochiKit.DOM._window;
     },
 
-    /** @id MochiKit.DOM.currentDocument */
+    /**
+     * @id MochiKit.DOM.currentDocument
+     * @return {Document}
+     */
     currentDocument: function () {
         return MochiKit.DOM._document;
     },
@@ -230,7 +236,10 @@ MochiKit.Base.update(MochiKit.DOM, {
         return undefined;
     },
 
-    /** @id MochiKit.DOM.isChildNode */
+    /**
+     * @id MochiKit.DOM.isChildNode
+     * @return {boolean}
+     */
     isChildNode: function (node, maybeparent) {
         var self = MochiKit.DOM;
         if (typeof(node) == "string") {
@@ -741,7 +750,11 @@ MochiKit.Base.update(MochiKit.DOM, {
         });
     },
 
-    /** @id MochiKit.DOM.setElementClass */
+    /**
+     * @id MochiKit.DOM.setElementClass
+     * @param {string|!Element} element
+     * @param {string} className
+     */
     setElementClass: function (element, className) {
         var self = MochiKit.DOM;
         var obj = self.getElement(element);
@@ -763,7 +776,12 @@ MochiKit.Base.update(MochiKit.DOM, {
         }
     },
 
-    /** @id MochiKit.DOM.addElementClass */
+    /**
+     * @id MochiKit.DOM.addElementClass
+     * @param {string|!Element} element
+     * @param {string} className
+     * @return {boolean}
+     */
     addElementClass: function (element, className) {
         var self = MochiKit.DOM;
         var obj = self.getElement(element);
@@ -792,7 +810,12 @@ MochiKit.Base.update(MochiKit.DOM, {
         return true;
     },
 
-    /** @id MochiKit.DOM.removeElementClass */
+    /**
+     * @id MochiKit.DOM.removeElementClass
+     * @param {string|!Element} element
+     * @param {string} className
+     * @return {boolean}
+     */
     removeElementClass: function (element, className) {
         var self = MochiKit.DOM;
         var obj = self.getElement(element);

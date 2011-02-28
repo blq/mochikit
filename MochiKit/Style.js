@@ -21,20 +21,26 @@ MochiKit.Base.module(MochiKit, 'Style', '1.5', ['Base', 'DOM']);
 /**
  * @id MochiKit.Style.Dimensions
  * @constructor
+ * @param {number} w
+ * @param {number} h
  */
 MochiKit.Style.Dimensions = function (w, h) {
     if (!(this instanceof MochiKit.Style.Dimensions)) {
         return new MochiKit.Style.Dimensions(w, h);
     }
+    /** @type {number} */
     this.w = w;
+    /** @type {number} */
     this.h = h;
 };
 
+/** @return {string} */
 MochiKit.Style.Dimensions.prototype.__repr__ = function () {
     var repr = MochiKit.Base.repr;
     return '{w: '  + repr(this.w) + ', h: ' + repr(this.h) + '}';
 };
 
+/** @return {string} */
 MochiKit.Style.Dimensions.prototype.toString = function () {
     return this.__repr__();
 };
@@ -42,21 +48,27 @@ MochiKit.Style.Dimensions.prototype.toString = function () {
 
 /**
  * @id MochiKit.Style.Coordinates
+ * @param {number} x
+ * @param {number} y
  * @constructor
  */
 MochiKit.Style.Coordinates = function (x, y) {
     if (!(this instanceof MochiKit.Style.Coordinates)) {
         return new MochiKit.Style.Coordinates(x, y);
     }
+    /** @type {number} */
     this.x = x;
+    /** @type {number} */
     this.y = y;
 };
 
+/** @return {string} */
 MochiKit.Style.Coordinates.prototype.__repr__ = function () {
     var repr = MochiKit.Base.repr;
     return '{x: '  + repr(this.x) + ', y: ' + repr(this.y) + '}';
 };
 
+/** @return {string} */
 MochiKit.Style.Coordinates.prototype.toString = function () {
     return this.__repr__();
 };
@@ -152,7 +164,11 @@ MochiKit.Base.update(MochiKit.Style, {
         }
     },
 
-    /** @id MochiKit.Style.setOpacity */
+    /**
+     * @id MochiKit.Style.setOpacity
+     * @param {string|!Element} elem
+     * @param {number} o
+     */
     setOpacity: function (elem, o) {
         elem = MochiKit.DOM.getElement(elem);
         var self = MochiKit.Style;
@@ -302,7 +318,12 @@ MochiKit.Base.update(MochiKit.Style, {
         return c;
     },
 
-    /** @id MochiKit.Style.setElementPosition */
+    /**
+     * @id MochiKit.Style.setElementPosition
+     * @param {string|!Element} elem
+     * @param {{ x: number, y: number}|{ x: number}|{y: number}} newPos
+     * @param {string=} [units] default "px"
+     */
     setElementPosition: function (elem, newPos/* optional */, units) {
         elem = MochiKit.DOM.getElement(elem);
         if (typeof(units) == 'undefined') {
@@ -448,7 +469,12 @@ MochiKit.Base.update(MochiKit.Style, {
         return new self.Dimensions(originalWidth, originalHeight);
     },
 
-    /** @id MochiKit.Style.setElementDimensions */
+    /**
+     * @id MochiKit.Style.setElementDimensions
+     * @param {string|!Element} elem
+     * @param {{w: number, h: number}|{w: number}|{h: number}} newSize
+     * @param {string=} [units] default "px"
+     */
     setElementDimensions: function (elem, newSize/* optional */, units) {
         elem = MochiKit.DOM.getElement(elem);
         if (typeof(units) == 'undefined') {
@@ -465,6 +491,7 @@ MochiKit.Base.update(MochiKit.Style, {
         MochiKit.DOM.updateNodeAttributes(elem, {'style': newStyle});
     },
 
+    /** @return {string} */
     _getDefaultDisplay: function (elem) {
         var self = MochiKit.Style;
         var dom = MochiKit.DOM;

@@ -22,7 +22,11 @@ MochiKit.Base.update(MochiKit.Iter, {
         MochiKit.Iter.iteratorRegistry.register(name, check, iterfactory, override);
     },
 
-    /** @id MochiKit.Iter.isIterable */
+    /**
+     * @id MochiKit.Iter.isIterable
+     * @param {*} o
+     * @return {boolean}
+     */
     isIterable: function(o) {
         return o != null &&
                (typeof(o.next) == "function" || typeof(o.iter) == "function");
@@ -56,7 +60,11 @@ MochiKit.Base.update(MochiKit.Iter, {
         }
     },
 
-    /** @id MochiKit.Iter.count */
+    /**
+     * @id MochiKit.Iter.count
+     * @param {integer=} [n=0]
+     * @return {!Iterable}
+     */
     count: function (n, step/* = 1 */) {
         if (!n) {
             n = 0;
@@ -110,7 +118,10 @@ MochiKit.Base.update(MochiKit.Iter, {
         };
     },
 
-    /** @id MochiKit.Iter.repeat */
+    /**
+     * @id MochiKit.Iter.repeat
+     * @return {!Iterable}
+     */
     repeat: function (elem, /* optional */n) {
         var m = MochiKit.Base;
         if (typeof(n) == 'undefined') {
@@ -139,7 +150,10 @@ MochiKit.Base.update(MochiKit.Iter, {
         };
     },
 
-    /** @id MochiKit.Iter.next */
+    /**
+     * @id MochiKit.Iter.next
+     * @param {!Iterable} iterator
+     */
     next: function (iterator) {
         return iterator.next();
     },
@@ -243,7 +257,10 @@ MochiKit.Base.update(MochiKit.Iter, {
         };
     },
 
-    /** @id MochiKit.Iter.imap */
+    /**
+     * @id MochiKit.Iter.imap
+     * @return {!Iterable}
+     */
     imap: function (fun, p, q/*, ...*/) {
         var m = MochiKit.Base;
         var self = MochiKit.Iter;
@@ -275,7 +292,12 @@ MochiKit.Base.update(MochiKit.Iter, {
         };
     },
 
-    /** @id MochiKit.Iter.chain */
+    /**
+     * @id MochiKit.Iter.chain
+     * @param {!Iterable} p
+     * @param {...!Iterable} [var_args]
+     * @return {!Iterable}
+     */
     chain: function (p, q/*, ...*/) {
         // dumb fast path
         var self = MochiKit.Iter;
@@ -400,7 +422,11 @@ MochiKit.Base.update(MochiKit.Iter, {
         return rval;
     },
 
-    /** @id MochiKit.Iter.list */
+    /**
+     * @id MochiKit.Iter.list
+     * @param {!Iterable} iterable
+     * @return {!Array}
+     */
     list: function (iterable) {
         // Fast-path for Array and Array-like
         var rval;
@@ -538,7 +564,12 @@ MochiKit.Base.update(MochiKit.Iter, {
         }
     },
 
-    /** @id MochiKit.Iter.forEach */
+    /**
+     * @id MochiKit.Iter.forEach
+     * @param {!Iterable} iterable
+     * @param {!Function} func
+     * @param {Object=} [obj] context
+     */
     forEach: function (iterable, func, /* optional */obj) {
         var m = MochiKit.Base;
         var self = MochiKit.Iter;
@@ -562,7 +593,12 @@ MochiKit.Base.update(MochiKit.Iter, {
 		return func; // .. useful? this way you could use the fn as an accumulator (example in EoP suggest this also, but we break ES standard)
     },
 
-    /** @id MochiKit.Iter.every */
+    /**
+     * @id MochiKit.Iter.every
+     * @param {!Iterable} iterable
+     * @param {!Predicate} func
+     * @return {boolean}
+     */
     every: function (iterable, func) {
         var self = MochiKit.Iter;
         try {

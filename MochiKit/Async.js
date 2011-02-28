@@ -18,6 +18,7 @@ MochiKit.Base.module(MochiKit, 'Async', '1.5', ['Base']);
 
 /**
  * @id MochiKit.Async.Deferred
+ * @see http://mochikit.com/doc/html/MochiKit/Async.html#fn-deferred
  * @param {Function=} [canceller]
  * @constructor
  */
@@ -33,11 +34,17 @@ MochiKit.Async.Deferred = function (/* optional */ canceller) {
     this.finalized = false;
 };
 
-/** @id MochiKit.Async.Deferred.prototype.repr */
+/**
+ * @id MochiKit.Async.Deferred.prototype.repr
+ * @return {string}
+ */
 MochiKit.Async.Deferred.prototype.repr = function () {
 	return 'Deferred(' + this.id + ', ' + this.state() + ')';
 };
 
+/**
+ * @return {string}
+ */
 MochiKit.Async.Deferred.prototype.toString = MochiKit.Base.forwardCall("repr");
 
 MochiKit.Async.Deferred.prototype._nextId = MochiKit.Base.counter();
@@ -53,7 +60,10 @@ MochiKit.Async.Deferred.prototype.state = function () {
 	}
 };
 
-/** @id MochiKit.Async.Deferred.prototype.cancel */
+/**
+ * @id MochiKit.Async.Deferred.prototype.cancel
+ * @param {*=} [e]
+ */
 MochiKit.Async.Deferred.prototype.cancel = function (e) {
 	var self = MochiKit.Async;
 	if (this.fired == -1) {
@@ -98,7 +108,10 @@ MochiKit.Async.Deferred.prototype._check = function () {
 	}
 };
 
-/** @id MochiKit.Async.Deferred.prototype.callback */
+/**
+ * @id MochiKit.Async.Deferred.prototype.callback
+ * @param {*=} res
+ */
 MochiKit.Async.Deferred.prototype.callback = function (res) {
 	this._check();
 	if (res instanceof MochiKit.Async.Deferred) {
@@ -107,7 +120,10 @@ MochiKit.Async.Deferred.prototype.callback = function (res) {
 	this._resback(res);
 };
 
-/** @id MochiKit.Async.Deferred.prototype.errback */
+/**
+ * @id MochiKit.Async.Deferred.prototype.errback
+ * @param {*=} res
+ */
 MochiKit.Async.Deferred.prototype.errback = function (res) {
 	this._check();
 	var self = MochiKit.Async;
@@ -128,7 +144,12 @@ MochiKit.Async.Deferred.prototype.addBoth = function (fn) {
 	return this.addCallbacks(fn, fn);
 };
 
-/** @id MochiKit.Async.Deferred.prototype.addCallback */
+/**
+ * @id MochiKit.Async.Deferred.prototype.addCallback
+ * @param {?function(*)} fn
+ * // todo: specify extra args (partial)
+ * @return {!MochiKit.Async.Deferred} (this, chain)
+ */
 MochiKit.Async.Deferred.prototype.addCallback = function (fn) {
 	if (arguments.length > 1) {
 		fn = MochiKit.Base.partial.apply(null, arguments);
@@ -136,7 +157,11 @@ MochiKit.Async.Deferred.prototype.addCallback = function (fn) {
 	return this.addCallbacks(fn, null);
 };
 
-/** @id MochiKit.Async.Deferred.prototype.addErrback */
+/**
+ * @id MochiKit.Async.Deferred.prototype.addErrback
+ * @param {?function(*)} fn
+ * @return {!MochiKit.Async.Deferred} (this, chain)
+ */
 MochiKit.Async.Deferred.prototype.addErrback = function (fn) {
 	if (arguments.length > 1) {
 		fn = MochiKit.Base.partial.apply(null, arguments);
@@ -144,7 +169,13 @@ MochiKit.Async.Deferred.prototype.addErrback = function (fn) {
 	return this.addCallbacks(null, fn);
 };
 
-/** @id MochiKit.Async.Deferred.prototype.addCallbacks */
+/**
+ * @id MochiKit.Async.Deferred.prototype.addCallbacks
+ * pass null as cb/eb to set "don't care"
+ * @param {?function(*)} cb
+ * @param {?function(*)} eb
+ * @return {!MochiKit.Async.Deferred} (this, chain)
+ */
 MochiKit.Async.Deferred.prototype.addCallbacks = function (cb, eb) {
 	if (this.chained) {
 		throw new Error("Chained Deferreds can not be re-used");
@@ -440,7 +471,10 @@ MochiKit.Base.update(MochiKit.Async, {
         return self.doXHR(url);
     },
 
-    /** @id MochiKit.Async.loadJSONDoc */
+    /**
+     * @id MochiKit.Async.loadJSONDoc
+     * @return {!Deferred}
+     */
     loadJSONDoc: function (url/*, ...*/) {
         var self = MochiKit.Async;
         url = self._buildURL.apply(self, arguments);
@@ -452,7 +486,13 @@ MochiKit.Base.update(MochiKit.Async, {
         return d;
     },
 
-    /** @id MochiKit.Async.loadScript */
+    /**
+     * @id MochiKit.Async.loadScript
+     * todo: though we don't have/want a dependency on DOM here I'd say
+     * some way of specifying the context document elem might be useful? (typically in iframe cases)
+     * @param {string} url
+     * @return {!Deferred}
+     */
     loadScript: function (url) {
         var d = new MochiKit.Async.Deferred();
         var script = document.createElement("script");
@@ -485,7 +525,12 @@ MochiKit.Base.update(MochiKit.Async, {
         return d;
     },
 
-    /** @id MochiKit.Async.wait */
+    /**
+     * @id MochiKit.Async.wait
+     * @param {number} seconds
+     * @param {*=} [value]
+     * @return {!Deferred}
+     */
     wait: function (seconds, /* optional */value) {
         var d = new MochiKit.Async.Deferred();
         var cb = MochiKit.Base.bind("callback", d, value);
@@ -559,8 +604,14 @@ MochiKit.Async.DeferredLock.prototype.toString = MochiKit.Base.forwardCall("repr
 
 /**
  * @id MochiKit.Async.DeferredList
- * @extends {MochiKit.Async.Deferred}
+ * @see http://mochikit.com/doc/html/MochiKit/Async.html#fn-deferredlist
  * @constructor
+ * @extends {MochiKit.Async.Deferred}
+ * @param {!Array.<!MochiKit.Async.Deferred>} list
+ * @param {boolean=} [fireOnOneCallback=false]
+ * @param {boolean=} [fireOnOneErrback=false]
+ * @param {boolean=} [consumeErrors=false]
+ * @param {function()=} [canceller]
  */
 MochiKit.Async.DeferredList = function (list, /* optional */fireOnOneCallback, fireOnOneErrback, consumeErrors, canceller) {
 
