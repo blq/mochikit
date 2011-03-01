@@ -224,7 +224,7 @@ MochiKit.Async.Deferred.prototype._fire = function () {
 		// Array
 		var pair = chain.shift();
 		var f = pair[fired];
-		if (f === null) {
+		if (f === null) { // todo: allow undefined? i.e use "=="?
 			continue;
 		}
 		try {
@@ -402,7 +402,8 @@ MochiKit.Base.update(MochiKit.Async, {
             https://bugzilla.mozilla.org/show_bug.cgi?id=249843
         */
         var self = MochiKit.Async;
-        return self.callLater(0, self._doXHR, url, opts);
+        //return self.callLater(0, self._doXHR, url, opts);
+        return self._doXHR(url, opts); // test disabling the above (might help stack-traces when debugging)
     },
 
     _doXHR: function (url, opts) {
