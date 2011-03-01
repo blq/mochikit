@@ -134,9 +134,9 @@ MochiKit.Text.truncate = function (str, maxLength, tail) {
  * max + 1 elements in the returned list.
  *
  * @param {string} str the string to split
- * @param {String|RegExp} [separator] the separator char or regexp to use,
+ * @param {string|RegExp} [separator] the separator char or regexp to use,
  *            defaults to newline
- * @param {Number} [max] the maximum number of parts to return
+ * @param {number} [max] the maximum number of parts to return
  * @return {Array} an array of parts of the string
  */
 MochiKit.Text.split = function (str, separator, max) {
@@ -158,9 +158,9 @@ MochiKit.Text.split = function (str, separator, max) {
  * using splits from the right
  *
  * @param {string} str the string to split
- * @param {String|RegExp} [separator] the separator char or regexp to use,
+ * @param {string|RegExp} [separator] the separator char or regexp to use,
  *            defaults to newline
- * @param {Number} [max] the maximum number of parts to return
+ * @param {number} [max] the maximum number of parts to return
  * @return {Array} an array of parts of the string
  */
 MochiKit.Text.rsplit = function (str, separator, max) {
@@ -191,7 +191,7 @@ MochiKit.Text.rsplit = function (str, separator, max) {
  * @throws FormatPatternError if the format pattern was invalid
  */
 MochiKit.Text.formatter = function (pattern, locale) {
-    if (typeof(locale) == "undefined") {
+    if (locale == null) {
         locale = MochiKit.Format.formatLocale();
     } else if (typeof(locale) == "string") {
         locale = MochiKit.Format.formatLocale(locale);
@@ -239,7 +239,7 @@ MochiKit.Text.format = function (pattern/*, ...*/) {
  *
  * @return {string} the formatted output string
  *
- * @throws FormatPatternError if the format pattern was invalid
+ * @throws FormatPatternError if the format specifier was invalid
  */
 MochiKit.Text.formatValue = function (spec, value, locale) {
     var self = MochiKit.Text;
@@ -251,7 +251,7 @@ MochiKit.Text.formatValue = function (spec, value, locale) {
             value = value[spec.path[i]];
         }
     }
-    if (typeof(locale) == "undefined") {
+    if (locale == null) {
         locale = MochiKit.Format.formatLocale();
     } else if (typeof(locale) == "string") {
         locale = MochiKit.Format.formatLocale(locale);
@@ -268,8 +268,7 @@ MochiKit.Text.formatValue = function (spec, value, locale) {
         } else if (value === Number.NEGATIVE_INFINITY) {
             str = "-\u221e";
         } else {
-            var sign = (spec.sign === "-") ? "" : spec.sign;
-            sign = (value < 0) ? "-" : sign;
+            var sign = (value < 0) ? "-" : spec.sign;
             value = Math.abs(value);
             if (spec.format === "%") {
                 str = self._truncToPercent(value, spec.precision);
@@ -292,7 +291,7 @@ MochiKit.Text.formatValue = function (spec, value, locale) {
             } else if (spec.padding == "0") {
                 str = self.padLeft(str, spec.width - sign.length, "0");
             }
-            str = self._localizeNumber(str, locale, spec.grouping);
+            str = self._localizeNumber(str, locale, spec.group);
             str = sign + str;
         }
         if (str !== "" && spec.format === "%") {
@@ -302,7 +301,7 @@ MochiKit.Text.formatValue = function (spec, value, locale) {
         if (spec.format == "r") {
             str = MochiKit.Base.repr(value);
         } else {
-            str = (value == null) ? "null" : value.toString();
+            str = (value == null) ? "" : value.toString();
         }
         str = self.truncate(str, spec.precision);
     }
@@ -322,16 +321,16 @@ MochiKit.Text.formatValue = function (spec, value, locale) {
  *
  * @param {string} num the formatted number string
  * @param {Object} locale the formatting locale to use
- * @param {boolean} grouping the grouping flag
+ * @param {boolean} group the grouping flag
  *
  * @return {string} the localized number string
  */
-MochiKit.Text._localizeNumber = function (num, locale, grouping) {
+MochiKit.Text._localizeNumber = function (num, locale, group) {
     var parts = num.split(/\./);
     var whole = parts[0];
     var frac = (parts.length == 1) ? "" : parts[1];
     var res = (frac.length > 0) ? locale.decimal : "";
-    while (grouping && frac.length > 3) {
+    while (group && frac.length > 3) {
         res = res + frac.substring(0, 3) + locale.separator;
         frac = frac.substring(3);
         if (whole.charAt(0) == "0") {
@@ -339,9 +338,9 @@ MochiKit.Text._localizeNumber = function (num, locale, grouping) {
         }
     }
     if (frac.length > 0) {
-        res += frac;
+        res = res + frac;
     }
-    while (grouping && whole.length > 3) {
+    while (group && whole.length > 3) {
         var pos = whole.length - 3;
         res = locale.separator + whole.substring(pos) + res;
         whole = whole.substring((whole.charAt(0) == "0") ? 1 : 0, pos);
@@ -442,7 +441,7 @@ MochiKit.Text._parseFormat = function (pattern, startPos, endPos) {
 MochiKit.Text._parseFormatFlags = function (pattern, startPos, endPos) {
     var update = MochiKit.Base.update;
     var info = { type: "string", format: "s", width: 0, precision: -1,
-                 align: ">", sign: "-", padding: " ", grouping: false };
+                 align: ">", sign: "", padding: " ", group: false };
     // TODO: replace with MochiKit.Format.rstrip?
     var text = pattern.substring(startPos, endPos).replace(/\s+$/, "");
     var m = /^([<>+ 0,-]+)?(\d+)?(\.\d*)?([srbdoxXf%])?(.*)$/.exec(text);
@@ -456,11 +455,11 @@ MochiKit.Text._parseFormatFlags = function (pattern, startPos, endPos) {
         if (chr == "<" || chr == ">") {
             info.align = chr;
         } else if (chr == "+" || chr == "-" || chr == " ") {
-            info.sign = chr;
+            info.sign = (chr == "-") ? "" : chr;
         } else if (chr == "0") {
             info.padding = chr;
         } else if (chr == ",") {
-            info.grouping = true;
+            info.group = true;
         }
     }
     if (width) {
