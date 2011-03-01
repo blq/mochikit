@@ -856,8 +856,14 @@ MochiKit.Base.update(MochiKit.DOM, {
         return res;
     },
 
-    /** @id MochiKit.DOM.hasElementClass */
-    hasElementClass: function (element, className/*...*/) {
+    /**
+     * @id MochiKit.DOM.hasElementClass
+     * @param {string|!Element} element
+     * @param {string} className
+     * @param {...string} [var_args]
+     * @return {boolean}
+     */
+    hasElementClass: function (element, className, var_args/*...*/) {
         var obj = MochiKit.DOM.getElement(element);
         if (obj == null) {
             return false;
@@ -1104,6 +1110,7 @@ MochiKit.Base.update(MochiKit.DOM, {
             };
             attributeArray.compliant = false;
             attributeArray.renames = {
+	    	// todo: verify if we might need to add: accesskey, maxlength, tabindex, valign 
                 "class": "className",
                 "checked": "defaultChecked",
                 "usemap": "useMap",
