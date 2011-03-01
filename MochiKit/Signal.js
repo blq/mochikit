@@ -520,7 +520,7 @@ MochiKit.Signal.Ident.prototype.__repr__ = function() {
 	return 'src:' + repr(this.source) + ', sig: ' + repr(this.signal) + ', isDOM: ' + repr(this.isDOM) + ', connected: ' + repr(this.connected);
 };
 
-MochiKit.Base.update(MochiKit.Signal, {
+MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 
     _unloadCache: function () {
         var self = MochiKit.Signal;

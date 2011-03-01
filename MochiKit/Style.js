@@ -74,7 +74,7 @@ MochiKit.Style.Coordinates.prototype.toString = function () {
 };
 
 
-MochiKit.Base.update(MochiKit.Style, {
+MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
 
     /** @id MochiKit.Style.getStyle */
     getStyle: function (elem, cssProperty) {

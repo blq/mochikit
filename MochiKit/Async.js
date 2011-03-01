@@ -264,7 +264,7 @@ MochiKit.Async.Deferred.prototype._fire = function () {
 };
 
 
-MochiKit.Base.update(MochiKit.Async, {
+MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
     /** @id MochiKit.Async.evalJSONRequest */
     evalJSONRequest: function (req) {
         return MochiKit.Base.evalJSON(req.responseText);

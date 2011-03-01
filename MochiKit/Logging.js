@@ -44,7 +44,7 @@ MochiKit.Logging.LogMessage.prototype = {
     toString: MochiKit.Base.forwardCall("repr")
 };
 
-MochiKit.Base.update(MochiKit.Logging, {
+MochiKit.Base.update(MochiKit.Logging, /** @lends {MochiKit.Logging} */{
     /** @id MochiKit.Logging.logLevelAtLeast */
     logLevelAtLeast: function (minLevel) {
         var self = MochiKit.Logging;

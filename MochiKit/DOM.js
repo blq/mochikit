@@ -16,7 +16,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 
 MochiKit.Base.module(MochiKit, 'DOM', '1.5', ['Base']);
 
-MochiKit.Base.update(MochiKit.DOM, {
+MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 
     /**
      * @id MochiKit.DOM.currentWindow
@@ -1110,7 +1110,7 @@ MochiKit.Base.update(MochiKit.DOM, {
             };
             attributeArray.compliant = false;
             attributeArray.renames = {
-	    	// todo: verify if we might need to add: accesskey, maxlength, tabindex, valign 
+	    	// todo: verify if we might need to add: accesskey, maxlength, tabindex, valign
                 "class": "className",
                 "checked": "defaultChecked",
                 "usemap": "useMap",

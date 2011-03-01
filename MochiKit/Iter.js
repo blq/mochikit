@@ -16,7 +16,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 
 MochiKit.Base.module(MochiKit, 'Iter', '1.5', ['Base']);
 
-MochiKit.Base.update(MochiKit.Iter, {
+MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
     /** @id MochiKit.Iter.registerIteratorFactory */
     registerIteratorFactory: function (name, check, iterfactory, /* optional */ override) {
         MochiKit.Iter.iteratorRegistry.register(name, check, iterfactory, override);
