@@ -20,9 +20,11 @@ if (typeof(MochiKit.__export__) == "undefined") {
 }
 MochiKit.NAME = "MochiKit";
 MochiKit.VERSION = "1.5";
+/** @return {string} */
 MochiKit.__repr__ = function () {
     return "[" + this.NAME + " " + this.VERSION + "]";
 };
+/** @return {string} */
 MochiKit.toString = function () {
     return this.__repr__();
 };
@@ -39,11 +41,12 @@ MochiKit.Base = MochiKit.Base || {};
  * also verify that all the dependency modules are defined in the
  * parent, or an error will be thrown.
  *
- * @param {Object} parent the parent module (use "this" or "window" for
+ * @param {!Object} parent the parent module (use "this" or "window" for
  *            a global module)
- * @param {String} name the module name, e.g. "Base"
- * @param {String} version the module version, e.g. "1.5"
+ * @param {string} name the module name, e.g. "Base"
+ * @param {string} version the module version, e.g. "1.5"
  * @param {Array} [deps] the array of module dependencies (as strings)
+ * @return {!Object}
  */
 MochiKit.Base.module = function (parent, name, version, deps) {
     var module = parent[name] = parent[name] || {};
@@ -390,14 +393,20 @@ MochiKit.Base.update(MochiKit.Base, {
 		delitem: function(a, b) { delete a[b]; }
     },
 
-    /** @id MochiKit.Base.forwardCall */
+    /**
+     * @id MochiKit.Base.forwardCall
+     * @return {!Function}
+     */
     forwardCall: function (func) {
         return function () {
             return this[func].apply(this, arguments);
         };
     },
 
-    /** @id MochiKit.Base.itemgetter */
+    /**
+     * @id MochiKit.Base.itemgetter
+     * @return {!Function}
+     */
     itemgetter: function (func) {
         return function (arg) {
             return arg[func];
@@ -424,7 +433,10 @@ MochiKit.Base.update(MochiKit.Base, {
         }
     },
 
-    /** @id MochiKit.Base.typeMatcher */
+    /**
+     * @id MochiKit.Base.typeMatcher
+     * @return {!Function} predicate
+     */
     typeMatcher: function (/* typ */) {
         var types = {};
         for (var i = 0; i < arguments.length; i++) {
@@ -470,16 +482,18 @@ MochiKit.Base.update(MochiKit.Base, {
 
     /**
      * @id MochiKit.Base.isEmpty
+     * @param {ArrayLike} obj
+     * @param {...ArrayLike} [var_args]
      * @return {boolean}
      */
-    isEmpty: function (obj) {
+    isEmpty: function (obj, var_args) {
         return !MochiKit.Base.isNotEmpty.apply(this, arguments);
     },
 
     /**
      * @id MochiKit.Base.isNotEmpty
-     * @param {DateLike} obj
-     * @param {...DateLike} [var_args]
+     * @param {ArrayLike} obj
+     * @param {...ArrayLike} [var_args]
      * @return {boolean}
      */
     isNotEmpty: function (obj, var_args) {
@@ -630,7 +644,9 @@ MochiKit.Base.update(MochiKit.Base, {
         return rval;
     },
 
-    /** @id MochiKit.Base.filter */
+    /**
+     * @id MochiKit.Base.filter
+     */
     filter: function (fn, lst, self) {
         var rval = [];
         // allow an iterable to be passed
@@ -666,7 +682,7 @@ MochiKit.Base.update(MochiKit.Base, {
         return rval;
     },
 
-
+	/** @return {!Function} */
     _wrapDumbFunction: function (func) {
         return function () {
             // fast path!
@@ -684,7 +700,10 @@ MochiKit.Base.update(MochiKit.Base, {
         };
     },
 
-    /** @id MochiKit.Base.methodcaller */
+    /**
+     * @id MochiKit.Base.methodcaller
+     * @return {!Function}
+     */
     methodcaller: function (func/*, args... */) {
         var args = MochiKit.Base.extend(null, arguments, 1);
         if (typeof(func) == "function") {
@@ -698,14 +717,25 @@ MochiKit.Base.update(MochiKit.Base, {
         }
     },
 
-    /** @id MochiKit.Base.method */
+    /**
+     * @id MochiKit.Base.method
+     * @param {Object} self
+     * @param {!Function|string} func
+     * @return {!Function}
+     */
     method: function (self, func) {
         var m = MochiKit.Base;
         return m.bind.apply(this, m.extend([func, self], arguments, 2));
     },
 
-    /** @id MochiKit.Base.compose */
-    compose: function (f1, f2/*, f3, ... fN */) {
+    /**
+     * @id MochiKit.Base.compose
+     * @param {!Function} f1
+     * @param {!Function f2}
+     * @param {...!Function} [var_args]
+     * @return {!Function}
+     */
+    compose: function (f1, f2/*, f3, ... fN */, var_args) {
         var fnlist = [];
         var m = MochiKit.Base;
         if (arguments.length === 0) {
@@ -980,7 +1010,11 @@ MochiKit.Base.update(MochiKit.Base, {
         return (m) ? m[1] : s;
     },
 
-    /** @id MochiKit.Base.serializeJSON */
+    /**
+     * @id MochiKit.Base.serializeJSON
+     * @param {*} o
+     * @return {string}
+     */
     serializeJSON: function (o) {
         var objtype = typeof(o);
         if (objtype == "number" || objtype == "boolean") {
@@ -1218,9 +1252,11 @@ MochiKit.Base.update(MochiKit.Base, {
         return -1;
     },
 
-    /** @id MochiKit.Base.mean */
+    /**
+     * @id MochiKit.Base.mean
+     * @see http://www.nist.gov/dads/HTML/mean.html
+     */
     mean: function(/* lst... */) {
-        /* http://www.nist.gov/dads/HTML/mean.html */
         var sum = 0;
 
         var m = MochiKit.Base;
@@ -1316,7 +1352,10 @@ MochiKit.Base.update(MochiKit.Base, {
     },
 
 
-    /** @id MochiKit.Base.queryString */
+    /**
+     * @id MochiKit.Base.queryString
+     * @return {string}
+     */
     queryString: function (names, values) {
         // check to see if names is a string or a DOM element, and if
         // MochiKit.DOM is available.  If so, drop it like it's a form
@@ -1443,7 +1482,11 @@ MochiKit.Base.AdapterRegistry.prototype = {
         throw MochiKit.Base.NotFound;
     },
 
-    /** @id MochiKit.Base.AdapterRegistry.prototype.unregister */
+    /**
+     * @id MochiKit.Base.AdapterRegistry.prototype.unregister
+     * @param {string} name
+     * @return {boolean}
+     */
     unregister: function (name) {
         for (var i = 0; i < this.pairs.length; i++) {
             var pair = this.pairs[i];
@@ -1505,7 +1548,7 @@ MochiKit.Base._exportSymbols = function (namespace, module) {
  * be located in another module, which must be loaded, or an
  * exception will be thrown.
  *
- * @param {Object/string} module the source module or module name
+ * @param {Object|string} module the source module or module name
  *            (e.g. 'DOM' or 'MochiKit.DOM')
  * @param {string} name the deprecated function name (e.g. 'getStyle')
  * @param {string} target the fully qualified name of the target
@@ -1566,7 +1609,7 @@ MochiKit.Base.__new__ = function () {
             return escape(unencoded
                 ).replace(/\+/g, '%2B'
                 ).replace(/\"/g,'%22'
-                ).rval.replace(/\'/g, '%27');
+                ).replace(/\'/g, '%27');
         };
     }
 
