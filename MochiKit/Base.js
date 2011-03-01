@@ -85,7 +85,7 @@ MochiKit.Base.update = function (self, obj/*, ... */) {
     return self;
 };
 
-MochiKit.Base.update(MochiKit.Base, {
+MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
     /**
      * @id MochiKit.Base.camelize
      * @param {string} selector
@@ -731,7 +731,7 @@ MochiKit.Base.update(MochiKit.Base, {
     /**
      * @id MochiKit.Base.compose
      * @param {!Function} f1
-     * @param {!Function f2}
+     * @param {!Function} f2
      * @param {...!Function} [var_args]
      * @return {!Function}
      */
