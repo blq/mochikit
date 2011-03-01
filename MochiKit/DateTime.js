@@ -47,7 +47,7 @@ MochiKit.DateTime.isoTimestamp = function (str) {
         return null;
     }
     var year, month, day, hour, min, sec, msec;
-    year = parseInt(res[1], 10);
+    year = parseInt(res[1], 10); // todo: should do same leading 0s fix as isoDate above
     if (typeof(res[2]) == "undefined" || res[2] === '') {
         return new Date(year);
     }
