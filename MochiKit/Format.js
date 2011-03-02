@@ -285,7 +285,7 @@ MochiKit.Format._shiftNumber = function (num, exp) {
 
 /** @id MochiKit.Format.percentFormat */
 MochiKit.Format.percentFormat = function (aNumber) {
-    return MochiKit.Format.twoDigitFloat(100 * aNumber) + '%';
+    return MochiKit.Format.twoDigitFloat(100 * aNumber) + '%'; // err? use percent symbol
 };
 
 MochiKit.Format.LOCALE = {
