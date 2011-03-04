@@ -83,6 +83,8 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
      * @id MochiKit.Iter.cycle
      * todo: add a fast (no mem) path for Array?
      * todo: should indicate the additional memory in the docs
+     * @param {!Iterable} p
+     * @return {!Iterable}
      */
     cycle: function (p) {
         var self = MochiKit.Iter;

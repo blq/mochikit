@@ -45,8 +45,8 @@ MochiKit.Base = MochiKit.Base || {};
  *            a global module)
  * @param {string} name the module name, e.g. "Base"
  * @param {string} version the module version, e.g. "1.5"
- * @param {Array} [deps] the array of module dependencies (as strings)
- * @return {!Object}
+ * @param {Array.<string>} [deps] the array of module dependencies (as strings)
+ * @return {!Object} // todo: describe this
  */
 MochiKit.Base.module = function (parent, name, version, deps) {
     var module = parent[name] = parent[name] || {};
@@ -395,11 +395,12 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 
     /**
      * @id MochiKit.Base.forwardCall
+     * @param {string} name
      * @return {!Function}
      */
-    forwardCall: function (func) {
+    forwardCall: function (name) {
         return function () {
-            return this[func].apply(this, arguments);
+            return this[name].apply(this, arguments);
         };
     },
 
