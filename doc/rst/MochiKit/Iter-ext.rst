@@ -305,7 +305,7 @@ Functions
 
 :mochidef:`repeatSeq(iterable, n)`:
 
-    Reapeats the ``iterable`` sequence ``n`` times.
+    Repeats the ``iterable`` sequence ``n`` times.
     Note. this assumes the iterable is Not an iterator, i.e can be restarted (doesn't use auxilary storage as cycle() does)
 
     ::
@@ -327,6 +327,13 @@ Functions
         forEach(xr, log); --> 0, 1 ,2
         assert( list(r) == [] )
         assert( list(xr) == [0, 1, 2] )
+
+
+:mochidef:`javaLikeIterator(iterator)`:
+
+	converts the "Java style" ``iterator`` to the JS 1.7 interface.
+
+	see http://download.oracle.com/javase/1.5.0/docs/api/java/util/Iterator.html
 
 
 

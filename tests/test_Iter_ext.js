@@ -287,4 +287,26 @@ tests.test_Iter_ext = function (t) {
 	test_permutations();
 
 
+	function test_javaLikeIter()
+	{
+		function dummyJavaIterator(data)
+		{
+			var _data = data;
+			var index = 0;
+
+			return {
+				hasNext: function() {
+					return index < _data.length;
+				},
+				next: function() {
+					return _data[index++];
+				}
+			};
+		}
+
+		var lst = [1, 2, 3, 4, 5];
+		t.eq(list(javaLikeIterator(dummyJavaIterator(lst))), [1, 2, 3, 4, 5], "javaLikeIterator ok");
+	}
+	test_javaLikeIter();
+
 };

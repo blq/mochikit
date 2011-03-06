@@ -112,6 +112,8 @@
 - Added a SortedCollection example class based on the Bisect module
 - Added a Set example class based on the Bisect module
 
+- Added a javaLikeIterator to support .hasNext/.next style iterators
+
 
 2009-XX-YY      v1.4.3 (bug fix release)
 

@@ -301,7 +301,7 @@ Alias for <a class="mochiref reference external" href="Iter.html#fn-applymap">Mo
 <a name="fn-repeatseq"></a>
 <a class="mochidef reference external" href="#fn-repeatseq">repeatSeq(iterable, n)</a>:</p>
 <blockquote>
-<p>Reapeats the <tt class="docutils literal">iterable</tt> sequence <tt class="docutils literal">n</tt> times.
+<p>Repeats the <tt class="docutils literal">iterable</tt> sequence <tt class="docutils literal">n</tt> times.
 Note. this assumes the iterable is Not an iterator, i.e can be restarted (doesn't use auxilary storage as cycle() does)</p>
 <pre class="literal-block">
 repeatSeq(range(3), 3) --&gt; 0, 1, 2, 0, 1, 2, 0, 1, 2
@@ -322,6 +322,13 @@ forEach(xr, log); --&gt; 0, 1 ,2
 assert( list(r) == [] )
 assert( list(xr) == [0, 1, 2] )
 </pre>
+</blockquote>
+<p>
+<a name="fn-javalikeiterator"></a>
+<a class="mochidef reference external" href="#fn-javalikeiterator">javaLikeIterator(iterator)</a>:</p>
+<blockquote>
+<p>converts the &quot;Java style&quot; <tt class="docutils literal">iterator</tt> to the JS 1.7 interface.</p>
+<p>see <a class="reference external" href="http://download.oracle.com/javase/1.5.0/docs/api/java/util/Iterator.html">http://download.oracle.com/javase/1.5.0/docs/api/java/util/Iterator.html</a></p>
 </blockquote>
 </div>
 <div class="section" id="objects">

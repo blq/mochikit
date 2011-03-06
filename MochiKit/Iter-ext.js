@@ -837,6 +837,46 @@ MochiKit.Iter.xrange = function (/* [start,] stop[, step] */)
 };
 
 
+/**
+ * @param {*} iterator
+ * @return {boolean}
+ */
+MochiKit.Iter.isJavaLikeIterator = function(iterator)
+{
+	return iterator && typeof iterator.hasNext == 'function' && typeof iterator.next == 'function';
+};
+
+/**
+ * converts "Java style" iterators to the JS 1.7 interface.
+ * @see http://download.oracle.com/javase/1.5.0/docs/api/java/util/Iterator.html
+ * @param {!{hasNext: function(): boolean, next: !Function}} iterator
+ * @return {!Iterable}
+ */
+MochiKit.Iter.javaLikeIterator = function(iterator)
+{
+	return {
+		repr: function() { return "javaLikeIterator"; },
+		toString: MochiKit.Base.forwardCall("repr"),
+
+		next: function() {
+			if (!iterator.hasNext())
+				throw MochiKit.Iter.StopIteration;
+			return iterator.next();
+		}
+	};
+};
+
+// perhaps always add this?
+MochiKit.Iter.registerJavaLikeIteratorSupport = function()
+{
+	MochiKit,Iter.registerIteratorFactory(
+        "javaStyleIterator",
+        MochiKit.Iter.isJavaLikeIterator,
+        MochiKit.Iter.javaLikeIterator
+    );
+};
+
+
 //--------------------------------
 
 MochiKit.Iter_ext.__new__ = function() {
