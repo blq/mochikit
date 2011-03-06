@@ -609,7 +609,7 @@ Functions
         Available in MochiKit 1.3.1+
 
 
-:mochidef:`filter(fn, lst)`:
+:mochidef:`filter(fn, lst[, self])`:
 
     Returns a new ``Array`` composed of all elements from ``lst``
     where ``fn(lst[i])`` returns a true value.
