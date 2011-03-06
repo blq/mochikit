@@ -131,6 +131,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         }
     },
 
+	/**
+	 * @param {!Array} res
+	 * @param {!Array} lst
+	 * @return {!Array} res extended with flattened lst
+	 */
     _flattenArray: function (res, lst) {
         for (var i = 0; i < lst.length; i++) {
             var o = lst[i];
@@ -145,6 +150,7 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 
     /**
      * @id MochiKit.Base.flattenArray
+     * @param {!Array} lst
      * @return {!Array}
      */
     flattenArray: function (lst) {
@@ -169,7 +175,13 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return res;
     },
 
-    /** @id MochiKit.Base.extend */
+    /**
+     * @id MochiKit.Base.extend
+     * @param {Array} self
+     * @param {ArrayLike} obj (can be an iterator if Iter module is loaded)
+     * @param {integer=} [skip=0]
+     * @return {!Array}
+     */
     extend: function (self, obj, /* optional */skip) {
         // Extend an array with an array-like object starting
         // from the skip index
@@ -229,8 +241,14 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return self;
     },
 
-    /** @id MochiKit.Base.setdefault */
-    setdefault: function (self, obj/*, ...*/) {
+    /**
+     * @id MochiKit.Base.setdefault
+     * @param {Object} self
+     * @param {!Object} obj
+     * @param {...!Object} [var_args]
+     * @return {!Object}
+     */
+    setdefault: function (self, obj, var_args/*, ...*/) {
         if (self === null || self === undefined) {
             self = {};
         }
@@ -456,9 +474,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 
     /**
      * @id MochiKit.Base.isNull
+     * @param {*} obj
+     * @param {...*} [var_args]
      * @return {boolean}
      */
-    isNull: function (/* ... */) {
+    isNull: function (obj, var_args/* ... */) {
         for (var i = 0; i < arguments.length; i++) {
             if (arguments[i] !== null) {
                 return false;
@@ -469,9 +489,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 
     /**
      * @id MochiKit.Base.isUndefinedOrNull
+     * @param {*} obj
+     * @param {...*} [var_args]
      * @return {boolean}
      */
-    isUndefinedOrNull: function (/* ... */) {
+    isUndefinedOrNull: function (obj, var_args/* ... */) {
         for (var i = 0; i < arguments.length; i++) {
             var o = arguments[i];
             if (!(typeof(o) == 'undefined' || o === null)) {
@@ -548,8 +570,14 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
     },
 
 
-    /** @id MochiKit.Base.xmap */
-    xmap: function (fn/*, obj... */) {
+    /**
+     * @id MochiKit.Base.xmap
+     * @param {Function} fn
+     * @param {*} obj
+     * @param {...*} [var_args]
+     * @return {!Array}
+     */
+    xmap: function (fn, obj, var_args/*... */) {
         if (fn === null) {
             return MochiKit.Base.extend(null, arguments, 1);
         }
@@ -562,6 +590,9 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 
     /**
      * @id MochiKit.Base.map
+     * @param {!Function} fn
+     * @param {ArrayLike|Iterable} lst
+     * todo: describe multiple lists
      * @return {Array}
      */
     map: function (fn, lst/*, lst... */) {
@@ -630,8 +661,14 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         }
     },
 
-    /** @id MochiKit.Base.xfilter */
-    xfilter: function (fn/*, obj... */) {
+    /**
+     * @id MochiKit.Base.xfilter
+     * @param {Function} fn
+     * @param {*} obj
+     * @param {...*} [var_args]
+     * @return {!Array}
+     */
+    xfilter: function (fn, obj, var_args/*... */) {
         var rval = [];
         if (fn === null) {
             fn = MochiKit.Base.operator.truth;
@@ -647,6 +684,10 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 
     /**
      * @id MochiKit.Base.filter
+     * @param {function(): boolean} fn
+     * @param {ArrayLike|Iterable} lst
+     * @param {Object=} [self] // todo: this arg is not described in the docs?
+     * @return {!Array}
      */
     filter: function (fn, lst, self) {
         var rval = [];
@@ -703,9 +744,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 
     /**
      * @id MochiKit.Base.methodcaller
+     * @param {!Function|string} func
+     * @param {...*} [var_args]
      * @return {!Function}
      */
-    methodcaller: function (func/*, args... */) {
+    methodcaller: function (func, var_args/* ,... */) {
         var args = MochiKit.Base.extend(null, arguments, 1);
         if (typeof(func) == "function") {
             return function (obj) {
@@ -758,8 +801,14 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         };
     },
 
-    /** @id MochiKit.Base.bind */
-    bind: function (func, self/* args... */) {
+    /**
+     * @id MochiKit.Base.bind
+     * @param {!Function|string} func
+     * @param {Object} self
+     * @param {...*} [var_args]
+     * @return {!Function}
+     */
+    bind: function (func, self, var_args/* ... */) {
         if (typeof(func) == "string") {
             func = self[func];
         }
@@ -1001,7 +1050,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
     },
 
 
-    /** @id MochiKit.Base.evalJSON */
+    /**
+     * @id MochiKit.Base.evalJSON
+     * @param {string} jsonText
+     * @return {Object}
+     */
     evalJSON: function (jsonText) {
         return eval("(" + MochiKit.Base._filterJSON(jsonText) + ")");
     },
@@ -1157,8 +1210,13 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return (MochiKit.Base.compare(self, arr) === 0);
     },
 
-    /** @id MochiKit.Base.concat */
-    concat: function (/* lst... */) {
+    /**
+     * @id MochiKit.Base.concat
+     * @param {ArrayLike} lst
+     * @param {...ArrayLike} [var_args]
+     * @return {!Array}
+     */
+    concat: function (lst, var_args/* ... */) {
         var rval = [];
         var extend = MochiKit.Base.extend;
         for (var i = 0; i < arguments.length; i++) {
@@ -1283,9 +1341,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return sum/count;
     },
 
-    /** @id MochiKit.Base.median */
+    /**
+     * @id MochiKit.Base.median
+     * @see http://www.nist.gov/dads/HTML/median.html
+     */
     median: function(/* lst... */) {
-        /* http://www.nist.gov/dads/HTML/median.html */
         var data = MochiKit.Base.flattenArguments(arguments);
         if (data.length === 0) {
             throw new TypeError('median() requires at least one argument');
@@ -1616,6 +1676,7 @@ MochiKit.Base.__new__ = function () {
 
     /**
      * @id MochiKit.Base.NamedError
+     * @param {string} name
      * @extends {Error}
      * @constructor
      */
