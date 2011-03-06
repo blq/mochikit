@@ -6,7 +6,7 @@
  *
  * uses the Mersenne Twister algorithm, http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/VERSIONS/JAVASCRIPT/java-script.html
  *
- * todo: (optionally) support more generators, ex: http://www.erikoest.dk/rng.htm
+ * todo: support more generators, ex: http://www.erikoest.dk/rng.htm or http://davidbau.com/encode/seedrandom.js
  *
  */
 
@@ -310,7 +310,7 @@ MochiKit.Random.MersenneTwister.prototype.setState = function(state)
 MochiKit.Random.MersenneTwister.prototype.random = function()
 {
 	return this._mt.genrand_real2();
-	// tood: test MT.genrand_res53();
+	// todo: test MT.genrand_res53();
 };
 
 //------------------
