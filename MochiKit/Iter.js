@@ -173,7 +173,12 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         };
     },
 
-    /** @id MochiKit.Iter.ifilter */
+    /**
+     * @id MochiKit.Iter.ifilter
+     * @param {Predicate} pred
+     * @param {!Iterable} seq
+     * @return {!Iterable}
+     */
     ifilter: function (pred, seq) {
         var m = MochiKit.Base;
         seq = MochiKit.Iter.iter(seq);
@@ -219,7 +224,14 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         };
     },
 
-    /** @id MochiKit.Iter.islice */
+    /**
+     * @id MochiKit.Iter.islice
+     * @param {!Iterable} seq
+     * @param {integer=} start
+     * @param {integer=} stop
+     * @param {integer=} [step=1]
+     * @return {!Iterable}
+     */
     islice: function (seq/*, [start,] stop[, step] */) {
         var self = MochiKit.Iter;
         var m = MochiKit.Base;
