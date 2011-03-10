@@ -135,7 +135,12 @@ MochiKit.Format.formatLocale = function (locale) {
     }
 };
 
-/** @id MochiKit.Format.twoDigitAverage */
+/**
+ * @id MochiKit.Format.twoDigitAverage
+ * @param {number} numerator
+ * @param {number} denominator
+ * @return {string}
+ */
 MochiKit.Format.twoDigitAverage = function (numerator, denominator) {
     if (denominator) {
         var res = numerator / denominator;
@@ -146,7 +151,11 @@ MochiKit.Format.twoDigitAverage = function (numerator, denominator) {
     return "0";
 };
 
-/** @id MochiKit.Format.twoDigitFloat */
+/**
+ * @id MochiKit.Format.twoDigitFloat
+ * @param {number} aNumber
+ * @return {string}
+ */
 MochiKit.Format.twoDigitFloat = function (aNumber) {
     var res = MochiKit.Format.roundToFixed(aNumber, 2);
     if (res.indexOf(".00") > 0) {
@@ -158,7 +167,12 @@ MochiKit.Format.twoDigitFloat = function (aNumber) {
     }
 };
 
-/** @id MochiKit.Format.lstrip */
+/**
+ * @id MochiKit.Format.lstrip
+ * @param {string} str
+ * @param {string=} [chars]
+ * @return {string}
+ */
 MochiKit.Format.lstrip = function (str, /* optional */chars) {
     str = str + "";
     if (typeof(str) != "string") {
@@ -171,7 +185,12 @@ MochiKit.Format.lstrip = function (str, /* optional */chars) {
     }
 };
 
-/** @id MochiKit.Format.rstrip */
+/**
+ * @id MochiKit.Format.rstrip
+ * @param {string} str
+ * @param {string=} [chars]
+ * @return {string}
+ */
 MochiKit.Format.rstrip = function (str, /* optional */chars) {
     str = str + "";
     if (typeof(str) != "string") {
@@ -184,13 +203,23 @@ MochiKit.Format.rstrip = function (str, /* optional */chars) {
     }
 };
 
-/** @id MochiKit.Format.strip */
+/**
+ * @id MochiKit.Format.strip
+ * @param {string} str
+ * @param {string=} [chars]
+ * @return {string}
+ */
 MochiKit.Format.strip = function (str, /* optional */chars) {
     var self = MochiKit.Format;
     return self.rstrip(self.lstrip(str, chars), chars);
 };
 
-/** @id MochiKit.Format.truncToFixed */
+/**
+ * @id MochiKit.Format.truncToFixed
+ * @param {number} aNumber
+ * @param {number} precision
+ * @return {string}
+ */
 MochiKit.Format.truncToFixed = function (aNumber, precision) {
     var fixed = MochiKit.Format._numberToFixed(aNumber, precision);
     var fracPos = fixed.indexOf(".");
@@ -201,7 +230,11 @@ MochiKit.Format.truncToFixed = function (aNumber, precision) {
     return fixed;
 };
 
-/** @id MochiKit.Format.roundToFixed */
+/** @id MochiKit.Format.roundToFixed
+ * @param {number} aNumber
+ * @param {number} precision
+ * @return {string}
+ */
 MochiKit.Format.roundToFixed = function (aNumber, precision) {
     var fixed = MochiKit.Format._numberToFixed(aNumber, precision);
     var fracPos = fixed.indexOf(".");
@@ -283,7 +316,11 @@ MochiKit.Format._shiftNumber = function (num, exp) {
     return num;
 };
 
-/** @id MochiKit.Format.percentFormat */
+/**
+ * @id MochiKit.Format.percentFormat
+ * @param {number} aNumber
+ * @return {string}
+ */
 MochiKit.Format.percentFormat = function (aNumber) {
     return MochiKit.Format.twoDigitFloat(100 * aNumber) + '%'; // err? use percent symbol
 };
