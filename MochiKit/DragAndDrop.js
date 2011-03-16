@@ -117,7 +117,10 @@ MochiKit.DragAndDrop.Droppables = {
     }
 };
 
-/** @id MochiKit.DragAndDrop.Droppable */
+/**
+ * @id MochiKit.DragAndDrop.Droppable
+ * @constructor
+ */
 MochiKit.DragAndDrop.Droppable = function (element, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -346,7 +349,10 @@ MochiKit.DragAndDrop.Draggables = {
     }
 };
 
-/** @id MochiKit.DragAndDrop.Draggable */
+/**
+ * @id MochiKit.DragAndDrop.Draggable
+ * @constructor
+ */
 MochiKit.DragAndDrop.Draggable = function (element, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {

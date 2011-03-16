@@ -97,6 +97,7 @@ MochiKit.DateTime.isoTimestamp = function (str) {
  * @id MochiKit.DateTime.toISOTime 
  * @param {Date} date
  * @param {boolean=} [realISO=false]
+ * @return {?string}
  */
 MochiKit.DateTime.toISOTime = function (date, realISO/* = false */) {
     if (typeof(date) == "undefined" || date === null) {
@@ -108,18 +109,18 @@ MochiKit.DateTime.toISOTime = function (date, realISO/* = false */) {
         date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
     }
     var lst = [
-        (realISO ? _padTwo(date.getHours()) : date.getHours()),
+        (realISO ? _padTwo(date.getHours()) : "" + date.getHours()),
         _padTwo(date.getMinutes()),
         _padTwo(date.getSeconds())
     ];
     return lst.join(":") + (realISO ? "Z" : "");
 };
 
-/** 
- * @id MochiKit.DateTime.toISOTimeStamp 
+/**
+ * @id MochiKit.DateTime.toISOTimeStamp
  * @param {Date} date
  * @param {boolean=} [realISO=false]
- * @return {string}
+ * @return {?string}
  */
 MochiKit.DateTime.toISOTimestamp = function (date, realISO/* = false*/) {
     if (typeof(date) == "undefined" || date === null) {
@@ -134,10 +135,10 @@ MochiKit.DateTime.toISOTimestamp = function (date, realISO/* = false*/) {
     return MochiKit.DateTime.toISODate(date) + sep + time;
 };
 
-/** 
- * @id MochiKit.DateTime.toISODate 
+/**
+ * @id MochiKit.DateTime.toISODate
  * @param {Date} date
- * @return {string}
+ * @return {?string}
  */
 MochiKit.DateTime.toISODate = function (date) {
     if (typeof(date) == "undefined" || date === null) {
@@ -192,9 +193,9 @@ MochiKit.DateTime._padFour = function(n) {
 };
 
 /** 
- * @id MochiKit.DateTime.toPaddedAmericanDate 
+ * @id MochiKit.DateTime.toPaddedAmericanDate
  * @param {Date} d
- * @return {string}
+ * @return {?string}
  */
 MochiKit.DateTime.toPaddedAmericanDate = function (d) {
     if (typeof(d) == "undefined" || d === null) {
@@ -208,10 +209,10 @@ MochiKit.DateTime.toPaddedAmericanDate = function (d) {
     ].join('/');
 };
 
-/** 
- * @id MochiKit.DateTime.toAmericanDate 
+/**
+ * @id MochiKit.DateTime.toAmericanDate
  * @param {Date} d
- * @return {string}
+ * @return {?string}
  */
 MochiKit.DateTime.toAmericanDate = function (d) {
     if (typeof(d) == "undefined" || d === null) {
