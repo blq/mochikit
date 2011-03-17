@@ -3,7 +3,7 @@
  * @fileoverview
  * Common generic types not dependent on a particular implementation (at least not explicitly..)
  *
- * ..pretty sketchy for now, will change
+ * ..pretty sketchy for now
  *
  * @externs
  *
@@ -17,7 +17,7 @@ var integer;
 
 /**
  * @see MochiKit.Base.isArrayLike
- * todo: should be same as goog.array.ArrayLike
+ * (should be same as goog.array.ArrayLike)
  * @typedef {(Array|NodeList|Arguments|{ length: integer })}
  */
 var ArrayLike;
@@ -25,19 +25,19 @@ var ArrayLike;
 // attempt to separate iterator, iterable and iterator"factory" (name..?)
 
 /**
- * @typedef {{next: function(): *}}
+ * @typedef {{next: !Function}}
  */
 var Iterator;
 
 /**
- * @typedef {(ArrayLike|{ iter: !Iterator }|{ __iterator__: !Iterator })} // todo: deprecate .iter()
+ * @typedef {({ iter: function(): !Iterator }|{ __iterator__: function(): !Iterator })} // todo: deprecate .iter()
  */
 var IteratorFactory; //..name!? call it Sequence? 'Collection' seems to be Python's naming
 
 /**
  * @see http://mochikit.com/doc/html/MochiKit/Iter.html#fn-iter
  * @see MochiKit.Iter.isIterable
- * @typedef {(Iterator|IteratorFactory)}
+ * @typedef {(Iterator|ArrayLike|IteratorFactory)}
  */
 var Iterable;
 

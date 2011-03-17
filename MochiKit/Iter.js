@@ -17,7 +17,13 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 MochiKit.Base.module(MochiKit, 'Iter', '1.5', ['Base']);
 
 MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
-    /** @id MochiKit.Iter.registerIteratorFactory */
+    /**
+     * @id MochiKit.Iter.registerIteratorFactory
+     * @param {string} name
+     * @param {!Predicate} check
+     * @param {function(*): !Iterator} iterfactory
+     * @param {boolean=} [override]
+     */
     registerIteratorFactory: function (name, check, iterfactory, /* optional */ override) {
         MochiKit.Iter.iteratorRegistry.register(name, check, iterfactory, override);
     },
@@ -32,7 +38,12 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
                (typeof(o.next) == "function" || typeof(o.iter) == "function");
     },
 
-    /** @id MochiKit.Iter.iter */
+    /**
+     * @id MochiKit.Iter.iter
+     * @param {!Iterable} iterable
+     * @param {*=} [sentinel]
+     * @return {!Iterator}
+     */
     iter: function (iterable, /* optional */ sentinel) {
         var self = MochiKit.Iter;
         if (arguments.length == 2) {
@@ -62,8 +73,9 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
 
     /**
      * @id MochiKit.Iter.count
-     * @param {integer=} [n=0]
-     * @return {!Iterable}
+     * @param {number=} [n=0]
+     * @param {number=} [step=1]
+     * @return {!Iterator}
      */
     count: function (n, step/* = 1 */) {
         if (!n) {
@@ -84,7 +96,7 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
      * todo: add a fast (no mem) path for Array?
      * todo: should indicate the additional memory in the docs
      * @param {!Iterable} p
-     * @return {!Iterable}
+     * @return {!Iterator}
      */
     cycle: function (p) {
         var self = MochiKit.Iter;
@@ -122,7 +134,9 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
 
     /**
      * @id MochiKit.Iter.repeat
-     * @return {!Iterable}
+     * @param {*} elem
+     * @param {number=} [n=infinity]
+     * @return {!Iterator}
      */
     repeat: function (elem, /* optional */n) {
         var m = MochiKit.Base;
@@ -154,13 +168,19 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
 
     /**
      * @id MochiKit.Iter.next
-     * @param {!Iterable} iterator
+     * @param {!Iterator} iterator
+     * @return {*}
      */
     next: function (iterator) {
         return iterator.next();
     },
 
-    /** @id MochiKit.Iter.izip */
+    /**
+     * @id MochiKit.Iter.izip
+     * @param {!Iterable} p
+     * ...
+     * @return {!Iterator}
+     */
     izip: function (p, q/*, ...*/) {
         var m = MochiKit.Base;
         var self = MochiKit.Iter;
@@ -175,9 +195,9 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
 
     /**
      * @id MochiKit.Iter.ifilter
-     * @param {Predicate} pred
+     * @param {?Predicate} [pred=truth]
      * @param {!Iterable} seq
-     * @return {!Iterable}
+     * @return {!Iterator}
      */
     ifilter: function (pred, seq) {
         var m = MochiKit.Base;
@@ -201,7 +221,12 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         };
     },
 
-    /** @id MochiKit.Iter.ifilterfalse */
+    /**
+     * @id MochiKit.Iter.ifilterfalse
+     * @param {?Predicate} [pred=truth]
+     * @param {!Iterable} seq
+     * @return {!Iterator}
+     */
     ifilterfalse: function (pred, seq) {
         var m = MochiKit.Base;
         seq = MochiKit.Iter.iter(seq);
@@ -230,7 +255,7 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
      * @param {integer=} start
      * @param {integer=} stop
      * @param {integer=} [step=1]
-     * @return {!Iterable}
+     * @return {!Iterator}
      */
     islice: function (seq/*, [start,] stop[, step] */) {
         var self = MochiKit.Iter;
@@ -273,7 +298,10 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
 
     /**
      * @id MochiKit.Iter.imap
-     * @return {!Iterable}
+     * @param {!Function} fun
+     * @param {!Iterable} p
+     * ...
+     * @return {!Iterator}
      */
     imap: function (fun, p, q/*, ...*/) {
         var m = MochiKit.Base;
@@ -293,6 +321,10 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
     /**
 	 * side note: in Python this is called 'starmap'.
      * @id MochiKit.Iter.applymap
+     * @param {!Function} fun
+     * @param {!Iterable} seq
+     * @param {*=} [self]
+     * @return {!Iterator}
      */
     applymap: function (fun, seq, self) {
         seq = MochiKit.Iter.iter(seq);
@@ -310,7 +342,7 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
      * @id MochiKit.Iter.chain
      * @param {!Iterable} p
      * @param {...!Iterable} [var_args]
-     * @return {!Iterable}
+     * @return {!Iterator}
      */
     chain: function (p, q/*, ...*/) {
         // dumb fast path
@@ -345,7 +377,12 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         };
     },
 
-    /** @id MochiKit.Iter.takewhile */
+    /**
+     * @id MochiKit.Iter.takewhile
+     * @param {!Predicate} pred
+     * @param {!Iterable} seq
+     * @return {!Iterator}
+     */
     takewhile: function (pred, seq) {
         var self = MochiKit.Iter;
         seq = self.iter(seq);
@@ -365,7 +402,12 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         };
     },
 
-    /** @id MochiKit.Iter.dropwhile */
+    /**
+     * @id MochiKit.Iter.dropwhile
+     * @param {!Predicate} pred
+     * @param {!Iterable} seq
+     * @return {!Iterator}
+     */
     dropwhile: function (pred, seq) {
         seq = MochiKit.Iter.iter(seq);
         var m = MochiKit.Base;
@@ -415,7 +457,12 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         };
     },
 
-    /** @id MochiKit.Iter.tee */
+    /**
+     * @id MochiKit.Iter.tee
+     * @param {!Iterable} iterable
+     * @param {number=} [n=2]
+     * @return {!Array}
+     */
     tee: function (iterable, n/* = 2 */) {
         var rval = [];
         var sync = {
@@ -478,7 +525,13 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
     },
 
 
-    /** @id MochiKit.Iter.reduce */
+    /**
+     * @id MochiKit.Iter.reduce
+     * @param {function(*, *): *} fn
+     * @param {!Iterable} iterable
+     * @param {*=} [initial]
+     * @return {*}
+     */
     reduce: function (fn, iterable, /* optional */initial) {
         var i = 0;
         var x = initial;
@@ -507,7 +560,13 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         return x;
     },
 
-    /** @id MochiKit.Iter.range */
+    /**
+     * @id MochiKit.Iter.range
+     * @param {number} start interepreted as stop if only one arg is give
+     * @param {number=} [stop]
+     * @param {number=} [step=1]
+     * @return {!Iterator}
+     */
     range: function (/* [start,] stop[, step] */) {
         var start = 0;
         var stop = 0;
@@ -543,7 +602,12 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         };
     },
 
-    /** @id MochiKit.Iter.sum */
+    /**
+     * @id MochiKit.Iter.sum
+     * @param {!Iterable} iterable
+     * @param {number=} [start=0]
+     * @return {number}
+     */
     sum: function (iterable, start/* = 0 */) {
         if (typeof(start) == "undefined" || start === null) {
             start = 0;
@@ -563,7 +627,10 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         return x;
     },
 
-    /** @id MochiKit.Iter.exhaust */
+    /**
+     * @id MochiKit.Iter.exhaust
+     * @param {!Iterable} iterable
+     */
     exhaust: function (iterable) {
         var self = MochiKit.Iter;
         iterable = self.iter(iterable);
@@ -626,7 +693,12 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         }
     },
 
-    /** @id MochiKit.Iter.sorted */
+    /**
+     * @id MochiKit.Iter.sorted
+     * @param {!Iterable} iterable
+     * @param {Comparator=} [cmp=compare]
+     * @return {!Array}
+     */
     sorted: function (iterable, /* optional */cmp) {
         var rval = MochiKit.Iter.list(iterable);
         if (arguments.length == 1) {
@@ -636,14 +708,23 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         return rval;
     },
 
-    /** @id MochiKit.Iter.reversed */
+    /**
+     * @id MochiKit.Iter.reversed
+     * @param {!Iterable} iterable
+     * @return {!Array}
+     */
     reversed: function (iterable) {
         var rval = MochiKit.Iter.list(iterable);
         rval.reverse();
         return rval;
     },
 
-    /** @id MochiKit.Iter.some */
+    /**
+     * @id MochiKit.Iter.some
+     * @param {Iterable} iterable
+     * @param {!Predicate} func
+     * @return {boolean}
+     */
     some: function (iterable, func) {
         var self = MochiKit.Iter;
         try {
@@ -657,7 +738,13 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         }
     },
 
-    /** @id MochiKit.Iter.iextend */
+    /** 
+	 * @id MochiKit.Iter.iextend 
+	 * @param {!Array} lst
+	 * @param {!Iterable} iterable
+	 * @param {integer=} [skip=0]
+	 * @return {!Array}
+	 */
     iextend: function (lst, iterable, /* optional */skip) { // todo: add support for a start pos? similar to Base.extend, resulting in a kindof islice/iextend combo.
 		skip = skip || 0;
         var m = MochiKit.Base;
@@ -685,7 +772,12 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         return lst;
     },
 
-    /** @id MochiKit.Iter.groupby */
+    /**
+     * @id MochiKit.Iter.groupby
+     * @param {!Iterable} iterable
+     * @param {Function=} [keyfunc]
+     * @return {!Iterator}
+     */
     groupby: function(iterable, /* optional */ keyfunc) {
         var m = MochiKit.Base;
         var self = MochiKit.Iter;
@@ -742,7 +834,12 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         };
     },
 
-    /** @id MochiKit.Iter.groupby_as_array */
+    /**
+     * @id MochiKit.Iter.groupby_as_array
+     * @param {!Iterable} iterable
+     * @param {Function=} [keyfunc]
+     * @return {!Array}
+     */
     groupby_as_array: function (iterable, /* optional */ keyfunc) {
         var m = MochiKit.Base;
         var self = MochiKit.Iter;
@@ -776,7 +873,11 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         return result;
     },
 
-    /** @id MochiKit.Iter.arrayLikeIter */
+    /**
+     * @id MochiKit.Iter.arrayLikeIter
+     * @param {!ArrayLike} iterable
+     * @return {!Iterator}
+     */
     arrayLikeIter: function (iterable) {
         var i = 0;
         return {
@@ -791,12 +892,20 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
         };
     },
 
-    /** @id MochiKit.Iter.hasIterateNext */
+    /**
+     * @id MochiKit.Iter.hasIterateNext
+     * @param {*} iterable
+     * @return {boolean}
+     */
     hasIterateNext: function (iterable) {
         return (iterable && typeof(iterable.iterateNext) == "function");
     },
 
-    /** @id MochiKit.Iter.iterateNextIter */
+    /**
+     * @id MochiKit.Iter.iterateNextIter
+     * @param {!{iterateNext: !Function}} iterable
+     * @return {!Iterator}
+     */
     iterateNextIter: function (iterable) {
         return {
             repr: function () { return "iterateNextIter(...)"; },

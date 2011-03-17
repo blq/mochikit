@@ -1294,7 +1294,7 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
      * @param {*} value
      * @param {integer=} [start=0]
      * @param {integer=} [end=length]
-     * @return {integer}
+     * @return {integer} -1 if not found
      */
     findIdentical: function (lst, value, start/* = 0 */, /* optional */end) {
         if (typeof(end) == "undefined" || end === null) {
@@ -1314,6 +1314,8 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
     /**
      * @id MochiKit.Base.mean
      * @see http://www.nist.gov/dads/HTML/mean.html
+	 * ...
+	 * @return {number}
      */
     mean: function(/* lst... */) {
         var sum = 0;
@@ -1344,6 +1346,8 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
     /**
      * @id MochiKit.Base.median
      * @see http://www.nist.gov/dads/HTML/median.html
+	 * ..
+	 * @return {number}
      */
     median: function(/* lst... */) {
         var data = MochiKit.Base.flattenArguments(arguments);
