@@ -591,6 +591,7 @@ goog.typeOf = function(value) {
       } else if (value instanceof Object) {
         return s;
       }
+
       // HACK: In order to use an Object prototype method on the arbitrary
       //   value, the compiler requires the value be cast to type Object,
       //   even though the ECMA spec explicitly allows it.
@@ -602,6 +603,7 @@ goog.typeOf = function(value) {
       if (className == '[object Window]') {
         return 'object';
       }
+
       // We cannot always use constructor == Array or instanceof Array because
       // different frames have different Array objects. In IE6, if the iframe
       // where the array was created is destroyed, the array loses its
@@ -1154,24 +1156,6 @@ goog.globalEval = function(script) {
 
 
 /**
- * A macro for defining composite types.
- *
- * By assigning goog.typedef to a name, this tells JSCompiler that this is not
- * the name of a class, but rather it's the name of a composite type.
- *
- * For example,
- * /** @type {Array|NodeList} / goog.ArrayLike = goog.typedef;
- * will tell JSCompiler to replace all appearances of goog.ArrayLike in type
- * definitions with the union of Array and NodeList.
- *
- * Does nothing in uncompiled code.
- *
- * @deprecated Please use the {@code @typedef} annotation.
- */
-goog.typedef = true;
-
-
-/**
  * Optional map of CSS class names to obfuscated names used with
  * goog.getCssName().
  * @type {Object|undefined}
@@ -1225,7 +1209,7 @@ goog.cssNameMappingStyle_;
  */
 goog.getCssName = function(className, opt_modifier) {
   var getMapping = function(cssName) {
-    return goog.cssNameMapping_[cssName];
+    return goog.cssNameMapping_[cssName] || cssName;
   };
 
   var renameByParts = function(cssName) {
@@ -1233,26 +1217,15 @@ goog.getCssName = function(className, opt_modifier) {
     var parts = cssName.split('-');
     var mapped = [];
     for (var i = 0; i < parts.length; i++) {
-      var mapping = getMapping(parts[i]);
-      if (!mapping) {
-        // If any of the parts fail to match,
-        // just return the whole string unmodified.
-        // The compiler will emit a warning about this.
-        return cssName;
-      }
-      mapped.push(mapping);
+      mapped.push(getMapping(parts[i]));
     }
     return mapped.join('-');
-  };
-
-  var renameByWhole = function(cssName) {
-    return getMapping(cssName) || cssName;
   };
 
   var rename;
   if (goog.cssNameMapping_) {
     rename = goog.cssNameMappingStyle_ == 'BY_WHOLE' ?
-        renameByWhole : renameByParts;
+        getMapping : renameByParts;
   } else {
     rename = function(a) {
       return a;
