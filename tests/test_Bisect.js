@@ -147,7 +147,7 @@ tests.test_Bisect = function (t) {
 		grades = grades || 'FDCBA';
 
 		var i = bisect(breakpoints, score);
-		return grades[i];
+		return grades.charAt(i);
 	}
 
 	t.eq(map(grade, [33, 99, 77, 70, 89, 90, 100]), ['F', 'A', 'C', 'C', 'B', 'A', 'A'], 'grading ok');
