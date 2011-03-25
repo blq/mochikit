@@ -5,7 +5,7 @@
  *
  * Test.Simple doesn't work on IE < 6.
  * TODO:
- *  * Support the Test.Simple API used by MochiKit, to be able to test MochiKit 
+ *  * Support the Test.Simple API used by MochiKit, to be able to test MochiKit
  * itself against IE 5.5
  *
 **/
@@ -47,6 +47,8 @@ SimpleTest._scopeFilter = { 'window': true,
                             'scrollMaxY': true,
                             'mozInnerScreenX': true,
                             'mozInnerScreenY': true,
+							'mozAnimationStartTime': true,
+							'mozPaintCount': true,
                             'clipboardData': true,
                             'addEventListener': true,
                             'clientInformation': true,
@@ -70,7 +72,7 @@ SimpleTest.init = function (globalScope) {
 };
 
 /**
- * Finishes the tests. This is automatically called, except when 
+ * Finishes the tests. This is automatically called, except when
  * SimpleTest.waitForExplicitFinish() has been invoked. This method will clock
  * the test suite execution time and check the global scope for variable
  * pollution.
@@ -266,7 +268,7 @@ SimpleTest.waitForExplicitFinish = function () {
 };
 
 /**
- * Talks to the TestRunner if being ran on a iframe and the parent has a 
+ * Talks to the TestRunner if being ran on a iframe and the parent has a
  * TestRunner object.
 **/
 SimpleTest.talkToRunner = function () {
@@ -450,7 +452,7 @@ SimpleTest._formatStack = function (stack) {
 
     out += vars[0] + ' = ' + vals[0] + SimpleTest.LF;
     out += vars[1] + ' = ' + vals[1] + SimpleTest.LF;
-    
+
     return '    ' + out;
 };
 
