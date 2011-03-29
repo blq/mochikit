@@ -4,11 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.7: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8: http://docutils.sourceforge.net/" />
 <title>MochiKit Documentation Index</title>
 
 <link rel="stylesheet" href="../../../include/css/documentation.css" type="text/css" />
-<script type="text/javascript" src="../../../packed/MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="../../../MochiKit/MochiKit.js"></script>
 <script type="text/javascript" src="../../js/toc.js"></script>
 </head>
 <body>
@@ -37,6 +37,12 @@ pane</li>
 <li><a class="mochiref reference external" href="Sortable.html">MochiKit.Sortable</a> - sortable</li>
 <li><a class="mochiref reference external" href="Text.html">MochiKit.Text</a> - string formatting and helper functions</li>
 <li><a class="mochiref reference external" href="Visual.html">MochiKit.Visual</a> - visual effects</li>
+<li><a class="mochiref reference external" href="Base-ext.html">MochiKit.Base-ext</a> - even more functional programming</li>
+<li><a class="mochiref reference external" href="Iter-ext.html">MochiKit.Iter-ext</a> - even more iterators</li>
+<li><a class="mochiref reference external" href="Text-ext.html">MochiKit.Text-ext</a> - more text/string algorithms</li>
+<li><a class="mochiref reference external" href="HeapQ.html">MochiKit.HeapQ</a> - Heap queue algorithm</li>
+<li><a class="mochiref reference external" href="Random.html">MochiKit.Random</a> - Random numbers and algorithms</li>
+<li><a class="mochiref reference external" href="Bisect.html">MochiKit.Bisect</a> - Array bisection algorithm</li>
 </ul>
 </div>
 <div class="section" id="notes">
@@ -107,6 +113,72 @@ Note that this affects Date object serialization is some browsers.</li>
 <li>Added state() method for MochiKit.Async.Deferred. Also clarified docs on
 available properties.</li>
 <li>Added MochiKit.DOM.IFRAME, LINK and SCRIPT functions.</li>
+<li>Removed MochiKit.Style dependency from MochiKit.Signal. This also subtly
+changes the mouse event coordinate values, but should be compatible.</li>
+<li>Added new MochiKit.Base.module() and moduleExport() functions.</li>
+<li><em>https://github.com/blq/mochikit fork changes start here</em></li>
+<li>Made all modules have Google Closure module dependency specifications</li>
+<li>Added Base-ext module</li>
+<li>Added &quot;bind 2.0&quot;. Support for placeholder arguments and nesting. Similar to the C++ Boost bind lib.</li>
+<li>Added Base.bind2, partial2, method2, bindLate2,</li>
+<li>Added Base.protect, apply</li>
+<li>Added Base.isBoundFunction</li>
+<li>Added Base.partition</li>
+<li>Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat</li>
+<li>Added an optional 'step' parameter to Base.counter()</li>
+<li>Made all base Base.operators named (have .NAME property)</li>
+<li>Added Base.countValue</li>
+<li>Added Iter-ext module</li>
+<li>Added Iter.treePreOrder, treeLevelOrder, treePostOrder</li>
+<li>Added Iter.pairIter</li>
+<li>Added Iter.windowView</li>
+<li>Added Iter.uniqueView</li>
+<li>Added Iter.izipLongest</li>
+<li>Added Iter.iproduct</li>
+<li>Added Iter.enumerate</li>
+<li>Added Iter.chainFromIter</li>
+<li>Added Iter.iflattenArray</li>
+<li>Added Iter.filterMap</li>
+<li>Added alias to Iter.any=some, all=every, starmap=applymap</li>
+<li>Added Iter.isSorted</li>
+<li>Added an optional 'step' parameter to Iter.count() (symmetry with Base.counter() change)</li>
+<li>Fixed Iter.islice bug. consuming one item too much. Added unit tests to verify.</li>
+<li>Added Iter.advance</li>
+<li>Made Iter.iextend take an optional 'skip' param similar to Base.extend()</li>
+<li>Added Iter.generateN</li>
+<li>Added Iter.remapView</li>
+<li>Added Iter.interleave</li>
+<li>Added Iter.compressIter</li>
+<li>Added Iter.combinations</li>
+<li>Added Iter.combinationsWithReplacement</li>
+<li>Added Iter.repeatSeq</li>
+<li>Added Iter.xrange</li>
+<li>Added Iter.permutations</li>
+<li>Added Iter.EmptyIter</li>
+<li>Made Iter.iter() support objects with the __iterator__ decorator function (ES 1.7)</li>
+<li>Added Text-ext module</li>
+<li>Added Text.humanStringCompare</li>
+<li>Added Text.levenshteinDistance</li>
+<li>Added HeapQ module based on the Python.heapq module API.</li>
+<li>Added HeapQ.heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort</li>
+<li>Added example priority queue class based on the heap functions</li>
+<li>Added HeapQ.imergeSorted</li>
+<li>Added HeapQ.nSmallest and nLargest (partial sorting)</li>
+<li>Added HeapQ.heapIter</li>
+<li>Made DOM.removeElement silently handle null, as well as already removed elements</li>
+<li>Added DOM.getElementsByClassName that uses browser-optimized paths</li>
+<li>Made the simplest tagName=* case in DOM.getElementsByTagAndClassName use the optimization</li>
+<li>Changed Async.addCallback/addErrback to interpret no return value as piping, i.e pass on the last non-void value.</li>
+<li>Added Random module.</li>
+<li>Added Random.randRange</li>
+<li>Added Random.shuffle, sample, choice, uniform</li>
+<li>Added an explicit Mersenne Twister 19937 random number generator</li>
+<li>Added support for Random.seed(), getState() and setState()</li>
+<li>Added Bisect module based on the Python.bisect module API.</li>
+<li>Added Bisect.bisectLeft, bisectRight, insortLeft, insortRight</li>
+<li>Added a SortedCollection example class based on the Bisect module</li>
+<li>Added a Set example class based on the Bisect module</li>
+<li>Added a javaLikeIterator to support .hasNext/.next style iterators</li>
 </ul>
 <p>2009-XX-YY      v1.4.3 (bug fix release)</p>
 <ul class="simple">
@@ -487,7 +559,7 @@ though.</li>
 </div>
 <div class="section" id="copyright">
 <h1>Copyright</h1>
-<p>Copyright 2005-2008 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
+<p>Copyright 2005-2010 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
 dual-licensed free software; you can redistribute it and/or modify it
 under the terms of the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a> or the <a class="reference external" href="http://www.opensource.org/licenses/afl-2.1.php">Academic Free License
 v2.1</a>.</p>

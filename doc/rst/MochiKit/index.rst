@@ -23,6 +23,12 @@ MochiKit - makes JavaScript suck a bit less
 - :mochiref:`MochiKit.Sortable` - sortable
 - :mochiref:`MochiKit.Text` - string formatting and helper functions
 - :mochiref:`MochiKit.Visual` - visual effects
+- :mochiref:`MochiKit.Base-ext` - even more functional programming
+- :mochiref:`MochiKit.Iter-ext` - even more iterators
+- :mochiref:`MochiKit.Text-ext` - more text/string algorithms
+- :mochiref:`MochiKit.HeapQ` - Heap queue algorithm
+- :mochiref:`MochiKit.Random` - Random numbers and algorithms
+- :mochiref:`MochiKit.Bisect` - Array bisection algorithm
 
 
 Notes
@@ -71,7 +77,7 @@ Version History
 Copyright
 =========
 
-Copyright 2005-2008 Bob Ippolito <bob@redivi.com>. This program is
+Copyright 2005-2010 Bob Ippolito <bob@redivi.com>. This program is
 dual-licensed free software; you can redistribute it and/or modify it
 under the terms of the `MIT License`_ or the `Academic Free License
 v2.1`_.

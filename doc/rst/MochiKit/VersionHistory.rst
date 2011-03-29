@@ -36,6 +36,84 @@
 - Added state() method for MochiKit.Async.Deferred. Also clarified docs on
   available properties.
 - Added MochiKit.DOM.IFRAME, LINK and SCRIPT functions.
+- Removed MochiKit.Style dependency from MochiKit.Signal. This also subtly
+  changes the mouse event coordinate values, but should be compatible.
+- Added new MochiKit.Base.module() and moduleExport() functions.
+
+- *https://github.com/blq/mochikit fork changes start here*
+
+- Made all modules have Google Closure module dependency specifications
+
+- Added Base-ext module
+- Added "bind 2.0". Support for placeholder arguments and nesting. Similar to the C++ Boost bind lib.
+- Added Base.bind2, partial2, method2, bindLate2,
+- Added Base.protect, apply
+- Added Base.isBoundFunction
+- Added Base.partition
+- Added Base.operator.getitem, setitem, delitem, pow, floordiv, concat, iconcat
+- Added an optional 'step' parameter to Base.counter()
+- Made all base Base.operators named (have .NAME property)
+- Added Base.countValue
+
+- Added Iter-ext module
+- Added Iter.treePreOrder, treeLevelOrder, treePostOrder
+- Added Iter.pairIter
+- Added Iter.windowView
+- Added Iter.uniqueView
+- Added Iter.izipLongest
+- Added Iter.iproduct
+- Added Iter.enumerate
+- Added Iter.chainFromIter
+- Added Iter.iflattenArray
+- Added Iter.filterMap
+- Added alias to Iter.any=some, all=every, starmap=applymap
+- Added Iter.isSorted
+- Added an optional 'step' parameter to Iter.count() (symmetry with Base.counter() change)
+- Fixed Iter.islice bug. consuming one item too much. Added unit tests to verify.
+- Added Iter.advance
+- Made Iter.iextend take an optional 'skip' param similar to Base.extend()
+- Added Iter.generateN
+- Added Iter.remapView
+- Added Iter.interleave
+- Added Iter.compressIter
+- Added Iter.combinations
+- Added Iter.combinationsWithReplacement
+- Added Iter.repeatSeq
+- Added Iter.xrange
+- Added Iter.permutations
+- Added Iter.EmptyIter
+- Made Iter.iter() support objects with the __iterator__ decorator function (ES 1.7)
+
+- Added Text-ext module
+- Added Text.humanStringCompare
+- Added Text.levenshteinDistance
+
+- Added HeapQ module based on the Python.heapq module API.
+- Added HeapQ.heapify, heapPush, heapPop, isHeap, heapReplace, heapPushPop, heapSort
+- Added example priority queue class based on the heap functions
+- Added HeapQ.imergeSorted
+- Added HeapQ.nSmallest and nLargest (partial sorting)
+- Added HeapQ.heapIter
+
+- Made DOM.removeElement silently handle null, as well as already removed elements
+- Added DOM.getElementsByClassName that uses browser-optimized paths
+- Made the simplest tagName=* case in DOM.getElementsByTagAndClassName use the optimization
+
+- Changed Async.addCallback/addErrback to interpret no return value as piping, i.e pass on the last non-void value.
+
+- Added Random module.
+- Added Random.randRange
+- Added Random.shuffle, sample, choice, uniform
+- Added an explicit Mersenne Twister 19937 random number generator
+- Added support for Random.seed(), getState() and setState()
+
+- Added Bisect module based on the Python.bisect module API.
+- Added Bisect.bisectLeft, bisectRight, insortLeft, insortRight
+- Added a SortedCollection example class based on the Bisect module
+- Added a Set example class based on the Bisect module
+
+- Added a javaLikeIterator to support .hasNext/.next style iterators
+
 
 2009-XX-YY      v1.4.3 (bug fix release)
 
@@ -131,7 +209,7 @@
 - New MochiKit.Base.operator.seq and sne to support strict comparison
 - MochiKit.Base.isArrayLike no longer returns true for DOM text nodes
 - Added readonly-readOnly to the list of DOM renames for Internet Explorer
-- New MochiKit.Signal event method: confirmUnload (sets returnValue for 
+- New MochiKit.Signal event method: confirmUnload (sets returnValue for
   onbeforeunload)
 - Fix interpreter help() function for Firefox and IE
 - API version compatibility notes added
@@ -211,7 +289,7 @@
 - isDateLike no longer throws error on null
 - New MochiKit.Signal module, modeled after the slot/signal mechanism in Qt
 - updated elementDimensions to calculate width from offsetWidth instead
-  of clientWidth 
+  of clientWidth
 - formContents now works with FORM tags that have a name attribute
 - Documentation now uses MochiKit to generate a function index
 
@@ -259,7 +337,7 @@
 - New groupby and groupby_as_array in MochiKit.Iter
 - Added iterator factory adapter for objects that implement iterateNext()
 - Fixed isoTimestamp to handle timestamps with time zone correctly
-- Added new MochiKit.DOM createDOMFunc aliases: SELECT, OPTION, OPTGROUP, 
+- Added new MochiKit.DOM createDOMFunc aliases: SELECT, OPTION, OPTGROUP,
   LEGEND, FIELDSET
 - New MochiKit.DOM formContents and enhancement to queryString to support it
 - Updated view_source example to use dp.SyntaxHighlighter 1.3.0

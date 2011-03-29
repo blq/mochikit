@@ -8,16 +8,23 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-MochiKit.Base._module('Text', '1.5', ['Base', 'Format']);
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.Text');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.Format');
+}
+
+MochiKit.Base.module(MochiKit, 'Text', '1.5', ['Base', 'Format']);
 
 /**
  * Checks if a text string starts with the specified substring. If
  * either of the two strings is null, false will be returned.
  *
- * @param {String} substr the substring to search for
- * @param {String} str the string to search in
+ * @param {string} substr the substring to search for
+ * @param {string} str the string to search in
  *
- * @return {Boolean} true if the string starts with the substring, or
+ * @return {boolean} true if the string starts with the substring, or
  *         false otherwise
  */
 MochiKit.Text.startsWith = function (substr, str) {
@@ -28,10 +35,10 @@ MochiKit.Text.startsWith = function (substr, str) {
  * Checks if a text string ends with the specified substring. If
  * either of the two strings is null, false will be returned.
  *
- * @param {String} substr the substring to search for
- * @param {String} str the string to search in
+ * @param {string} substr the substring to search for
+ * @param {string} str the string to search in
  *
- * @return {Boolean} true if the string ends with the substring, or
+ * @return {boolean} true if the string ends with the substring, or
  *         false otherwise
  */
 MochiKit.Text.endsWith = function (substr, str) {
@@ -43,10 +50,10 @@ MochiKit.Text.endsWith = function (substr, str) {
  * Checks if a text string contains the specified substring. If
  * either of the two strings is null, false will be returned.
  *
- * @param {String} substr the substring to search for
- * @param {String} str the string to search in
+ * @param {string} substr the substring to search for
+ * @param {string} str the string to search in
  *
- * @return {Boolean} true if the string contains the substring, or
+ * @return {boolean} true if the string contains the substring, or
  *         false otherwise
  */
 MochiKit.Text.contains = function (substr, str) {
@@ -57,12 +64,12 @@ MochiKit.Text.contains = function (substr, str) {
  * Adds a character to the left-hand side of a string until it
  * reaches the specified minimum length.
  *
- * @param {String} str the string to process
- * @param {Number} minLength the requested minimum length
- * @param {String} fillChar the padding character to add, defaults
+ * @param {string} str the string to process
+ * @param {number} minLength the requested minimum length
+ * @param {string} fillChar the padding character to add, defaults
  *            to a space
  *
- * @return {String} the padded string
+ * @return {string} the padded string
  */
 MochiKit.Text.padLeft = function (str, minLength, fillChar) {
     str = str || "";
@@ -77,12 +84,12 @@ MochiKit.Text.padLeft = function (str, minLength, fillChar) {
  * Adds a character to the right-hand side of a string until it
  * reaches the specified minimum length.
  *
- * @param {String} str the string to process
- * @param {Number} minLength the requested minimum length
- * @param {String} fillChar the padding character to add, defaults
+ * @param {string} str the string to process
+ * @param {number} minLength the requested minimum length
+ * @param {string} fillChar the padding character to add, defaults
  *            to a space
  *
- * @return {String} the padded string
+ * @return {string} the padded string
  */
 MochiKit.Text.padRight = function (str, minLength, fillChar) {
     str = str || "";
@@ -100,11 +107,11 @@ MochiKit.Text.padRight = function (str, minLength, fillChar) {
  * elements will be removed in order to accomodate the tail (that
  * will be appended). This function also works on arrays.
  *
- * @param {String} str the string to truncate
- * @param {Number} maxLength the maximum length
- * @param {String} [tail] the tail to append on truncation
+ * @param {string} str the string to truncate
+ * @param {number} maxLength the maximum length
+ * @param {string} [tail] the tail to append on truncation
  *
- * @return {String} the truncated string
+ * @return {string} the truncated string
  */
 MochiKit.Text.truncate = function (str, maxLength, tail) {
     if (str == null || str.length <= maxLength || maxLength < 0) {
@@ -126,14 +133,14 @@ MochiKit.Text.truncate = function (str, maxLength, tail) {
  * If max is given, at most max splits are done, giving at most
  * max + 1 elements in the returned list.
  *
- * @param {String} str the string to split
- * @param {String} [separator] the separator character to use,
+ * @param {string} str the string to split
+ * @param {string|RegExp} [separator] the separator char or regexp to use,
  *            defaults to newline
- * @param {Int} [max] the maximum number of parts to return
+ * @param {number} [max] the maximum number of parts to return
  * @return {Array} an array of parts of the string
  */
 MochiKit.Text.split = function (str, separator, max) {
-    if (str == null || str.length == 0) {
+    if (str == null) {
         return str;
     }
     separator = separator || '\n';
@@ -150,20 +157,20 @@ MochiKit.Text.split = function (str, separator, max) {
  * If max is given, at most max splits are done,
  * using splits from the right
  *
- * @param {String} str the string to split
- * @param {String} [separator] the separator character to use,
+ * @param {string} str the string to split
+ * @param {string|RegExp} [separator] the separator char or regexp to use,
  *            defaults to newline
- * @param {Int} [max] the maximum number of parts to return
+ * @param {number} [max] the maximum number of parts to return
  * @return {Array} an array of parts of the string
  */
 MochiKit.Text.rsplit = function (str, separator, max) {
-    if (str == null || str.length == 0) {
+    if (str == null) {
         return str;
     }
     separator = separator || '\n';
     var bits = str.split(separator);
     if ((typeof(max) == "undefined") || max >= bits.length-1){
-	return bits;
+        return bits;
     }
     bits.splice(0, bits.length-max, bits.slice(0, bits.length-max).join(separator));
     return bits;
@@ -175,7 +182,7 @@ MochiKit.Text.rsplit = function (str, separator, max) {
  * formatter pattern requires. See separate documentation for
  * information about the formatter pattern syntax.
  *
- * @param {String} pattern the formatter pattern string
+ * @param {string} pattern the formatter pattern string
  * @param {Object} [locale] the locale to use, defaults to
  *            LOCALE.en_US
  *
@@ -184,7 +191,7 @@ MochiKit.Text.rsplit = function (str, separator, max) {
  * @throws FormatPatternError if the format pattern was invalid
  */
 MochiKit.Text.formatter = function (pattern, locale) {
-    if (typeof(locale) == "undefined") {
+    if (locale == null) {
         locale = MochiKit.Format.formatLocale();
     } else if (typeof(locale) == "string") {
         locale = MochiKit.Format.formatLocale(locale);
@@ -209,10 +216,10 @@ MochiKit.Text.formatter = function (pattern, locale) {
  * See separate documentation for information about the formatter
  * pattern syntax.
  *
- * @param {String} pattern the formatter pattern string
+ * @param {string} pattern the formatter pattern string
  * @param {Object} [...] the optional values to format
  *
- * @return {String} the formatted output string
+ * @return {string} the formatted output string
  *
  * @throws FormatPatternError if the format pattern was invalid
  */
@@ -224,33 +231,36 @@ MochiKit.Text.format = function (pattern/*, ...*/) {
 /**
  * Format a value with the specified format specifier.
  *
- * @param {String/Object} spec the format specifier string or parsed
+ * @param {string|Object} spec the format specifier string or parsed
  *            format specifier object
  * @param {Object} value the value to format
  * @param {Object} [locale] the locale to use, defaults to
  *            LOCALE.en_US
  *
- * @return {String} the formatted output string
+ * @return {string} the formatted output string
  *
- * @throws FormatPatternError if the format pattern was invalid
+ * @throws FormatPatternError if the format specifier was invalid
  */
 MochiKit.Text.formatValue = function (spec, value, locale) {
     var self = MochiKit.Text;
     if (typeof(spec) === "string") {
-        spec = self._parseFormatFlags(spec, 0, spec.length - 1);
+        spec = self._parseFormatFlags(spec, 0, spec.length);
     }
     for (var i = 0; spec.path != null && i < spec.path.length; i++) {
         if (value != null) {
             value = value[spec.path[i]];
         }
     }
-    if (typeof(locale) == "undefined") {
+    if (locale == null) {
         locale = MochiKit.Format.formatLocale();
     } else if (typeof(locale) == "string") {
         locale = MochiKit.Format.formatLocale(locale);
     }
     var str = "";
-    if (spec.numeric) {
+    if (spec.type == "number") {
+        if (value instanceof Number) {
+            value = value.valueOf();
+        }
         if (typeof(value) != "number" || isNaN(value)) {
             str = "";
         } else if (value === Number.POSITIVE_INFINITY) {
@@ -258,8 +268,7 @@ MochiKit.Text.formatValue = function (spec, value, locale) {
         } else if (value === Number.NEGATIVE_INFINITY) {
             str = "-\u221e";
         } else {
-            var sign = (spec.sign === "-") ? "" : spec.sign;
-            sign = (value < 0) ? "-" : sign;
+            var sign = (value < 0) ? "-" : spec.sign;
             value = Math.abs(value);
             if (spec.format === "%") {
                 str = self._truncToPercent(value, spec.precision);
@@ -282,7 +291,7 @@ MochiKit.Text.formatValue = function (spec, value, locale) {
             } else if (spec.padding == "0") {
                 str = self.padLeft(str, spec.width - sign.length, "0");
             }
-            str = self._localizeNumber(str, locale, spec.grouping);
+            str = self._localizeNumber(str, locale, spec.group);
             str = sign + str;
         }
         if (str !== "" && spec.format === "%") {
@@ -292,7 +301,7 @@ MochiKit.Text.formatValue = function (spec, value, locale) {
         if (spec.format == "r") {
             str = MochiKit.Base.repr(value);
         } else {
-            str = (value == null) ? "null" : value.toString();
+            str = (value == null) ? "" : value.toString();
         }
         str = self.truncate(str, spec.precision);
     }
@@ -310,18 +319,18 @@ MochiKit.Text.formatValue = function (spec, value, locale) {
  * will attempt to keep the number string length intact by removing
  * padded zeros (if possible).
  *
- * @param {String} num the formatted number string
+ * @param {string} num the formatted number string
  * @param {Object} locale the formatting locale to use
- * @param {Boolean} grouping the grouping flag
+ * @param {boolean} group the grouping flag
  *
- * @return {String} the localized number string
+ * @return {string} the localized number string
  */
-MochiKit.Text._localizeNumber = function (num, locale, grouping) {
+MochiKit.Text._localizeNumber = function (num, locale, group) {
     var parts = num.split(/\./);
     var whole = parts[0];
     var frac = (parts.length == 1) ? "" : parts[1];
     var res = (frac.length > 0) ? locale.decimal : "";
-    while (grouping && frac.length > 3) {
+    while (group && frac.length > 3) {
         res = res + frac.substring(0, 3) + locale.separator;
         frac = frac.substring(3);
         if (whole.charAt(0) == "0") {
@@ -329,9 +338,9 @@ MochiKit.Text._localizeNumber = function (num, locale, grouping) {
         }
     }
     if (frac.length > 0) {
-        res += frac;
+        res = res + frac;
     }
-    while (grouping && whole.length > 3) {
+    while (group && whole.length > 3) {
         var pos = whole.length - 3;
         res = locale.separator + whole.substring(pos) + res;
         whole = whole.substring((whole.charAt(0) == "0") ? 1 : 0, pos);
@@ -343,7 +352,7 @@ MochiKit.Text._localizeNumber = function (num, locale, grouping) {
  * Parses a format pattern and returns an array of constant strings
  * and format info objects.
  *
- * @param {String} pattern the format pattern to analyze
+ * @param {string} pattern the format pattern to analyze
  *
  * @return {Array} an array of strings and format info objects
  *
@@ -352,41 +361,29 @@ MochiKit.Text._localizeNumber = function (num, locale, grouping) {
 MochiKit.Text._parsePattern = function (pattern) {
     var self = MochiKit.Text;
     var parts = [];
-    var start = 0;
-    var pos = 0;
-    for (pos = 0; pos < pattern.length; pos++) {
-        if (pattern.charAt(pos) == "{") {
-            if (pos + 1 >= pattern.length) {
-                var msg = "unescaped { char, should be escaped as {{";
-                throw new self.FormatPatternError(pattern, pos, msg);
-            } else if (pattern.charAt(pos + 1) == "{") {
-                parts.push(pattern.substring(start, pos + 1));
-                start = pos + 2;
-                pos++;
-            } else {
-                if (start < pos) {
-                    parts.push(pattern.substring(start, pos));
-                }
-                start = pattern.indexOf("}", pos) + 1;
-                if (start <= 0) {
-                    var msg = "unmatched { char, not followed by a } char";
-                    throw new self.FormatPatternError(pattern, pos, msg);
-                }
-                parts.push(self._parseFormat(pattern, pos + 1, start - 1));
-                pos = start - 1;
-            }
-        } else if (pattern.charAt(pos) == "}") {
-            if (pos + 1 >= pattern.length || pattern.charAt(pos + 1) != "}") {
-                var msg = "unescaped } char, should be escaped as }}";
-                throw new self.FormatPatternError(pattern, pos, msg);
-            }
-            parts.push(pattern.substring(start, pos + 1));
-            start = pos + 2;
-            pos++;
+    var re = /{[^{}]*}|{{?|}}?/g;
+    var lastPos = re.lastIndex = 0;
+    var m;
+    while ((m = re.exec(pattern)) != null) {
+        if (lastPos < m.index) {
+            parts.push(pattern.substring(lastPos, m.index))
+        }
+        var str = m[0];
+        lastPos = m.index + str.length;
+        if (self.startsWith("{", str) && self.endsWith("}", str)) {
+            parts.push(self._parseFormat(pattern, m.index + 1, lastPos - 1));
+        } else if (self.startsWith("{{", str) || self.startsWith("}}", str)) {
+            parts.push(str.substring(1));
+        } else if (self.startsWith("{", str)) {
+            var msg = "unescaped { char, should be escaped as {{";
+            throw new self.FormatPatternError(pattern, m.index, msg);
+        } else if (self.startsWith("}", str)) {
+            var msg = "unescaped } char, should be escaped as }}";
+            throw new self.FormatPatternError(pattern, m.index, msg);
         }
     }
-    if (start < pos) {
-        parts.push(pattern.substring(start, pos));
+    if (lastPos < pattern.length) {
+        parts.push(pattern.substring(lastPos));
     }
     return parts;
 };
@@ -394,9 +391,9 @@ MochiKit.Text._parsePattern = function (pattern) {
 /**
  * Parses a format instruction and returns a format info object.
  *
- * @param {String} pattern the format pattern string
- * @param {Number} startPos the first index of the format instruction
- * @param {Number} endPos the last index of the format instruction
+ * @param {string} pattern the format pattern string
+ * @param {number} startPos the first index of the format instruction
+ * @param {number} endPos the last index of the format instruction
  *
  * @return {Object} the format info object
  *
@@ -405,34 +402,26 @@ MochiKit.Text._parsePattern = function (pattern) {
 MochiKit.Text._parseFormat = function (pattern, startPos, endPos) {
     var self = MochiKit.Text;
     var text = pattern.substring(startPos, endPos);
-    var info;
-    var pos = text.indexOf(":");
-    if (pos == 0) {
-        info = self._parseFormatFlags(pattern, startPos + 1, endPos);
-        info.path = [];
-    } else if (pos > 0) {
-        info = self._parseFormatFlags(pattern, startPos + pos + 1, endPos);
-        info.path = text.substring(0, pos).split(".");
-    } else {
-        info = self._parseFormatFlags(pattern, endPos, endPos);
-        info.path = text.split(".");
-    }
-    var DIGITS = /^\d+$/;
+    var parts = self.split(text, ":", 1);
+    var path = parts[0];
+    var flagsPos = startPos + path.length + ((parts.length == 1) ? 0 : 1);
+    var info = self._parseFormatFlags(pattern, flagsPos, endPos);
+    info.path = (path == "") ? [] : path.split(".");
     for (var i = 0; i < info.path.length; i++) {
-        var e = info.path[i];
+        var v = info.path[i];
         // TODO: replace with MochiKit.Format.strip?
-        e = e.replace(/^\s+/, "").replace(/\s+$/, "");
-        if (e == "" && info.path.length == 1) {
-            e = 0;
-        } else if (e == "") {
+        v = v.replace(/^\s+/, "").replace(/\s+$/, "");
+        if (v == "" && info.path.length == 1) {
+            v = 0;
+        } else if (v == "") {
             var msg = "format value path contains blanks";
             throw new self.FormatPatternError(pattern, startPos, msg);
-        } else if (DIGITS.test(e)) {
-            e = parseInt(e);
+        } else if (/^\d+$/.test(v)) {
+            v = parseInt(v, 10);
         }
-        info.path[i] = e;
+        info.path[i] = v;
     }
-    if (info.path.length < 0 || typeof(info.path[0]) != "number") {
+    if (info.path.length <= 0 || typeof(info.path[0]) != "number") {
         info.path.unshift(0);
     }
     return info;
@@ -441,9 +430,9 @@ MochiKit.Text._parseFormat = function (pattern, startPos, endPos) {
 /**
  * Parses a string with format flags and returns a format info object.
  *
- * @param {String} pattern the format pattern string
- * @param {Number} startPos the first index of the format instruction
- * @param {Number} endPos the last index of the format instruction
+ * @param {string} pattern the format pattern string
+ * @param {number} startPos the first index of the format instruction
+ * @param {number} endPos the last index of the format instruction
  *
  * @return {Object} the format info object
  *
@@ -451,71 +440,48 @@ MochiKit.Text._parseFormat = function (pattern, startPos, endPos) {
  */
 MochiKit.Text._parseFormatFlags = function (pattern, startPos, endPos) {
     var update = MochiKit.Base.update;
-    var info = { numeric: false, format: "s", width: 0, precision: -1,
-                 align: ">", sign: "-", padding: " ", grouping: false };
+    var info = { type: "string", format: "s", width: 0, precision: -1,
+                 align: ">", sign: "", padding: " ", group: false };
     // TODO: replace with MochiKit.Format.rstrip?
-    var flags = pattern.substring(startPos, endPos).replace(/\s+$/, "");
-    while (flags.length > 0) {
-        var chr = flags.charAt(0);
-        var nextPos = 1;
-        switch (chr) {
-        case ">":
-        case "<":
-            update(info, { align: chr });
-            break;
-        case "+":
-        case "-":
-        case " ":
-            update(info, { sign: chr });
-            break;
-        case ",":
-            update(info, { grouping: true });
-            break;
-        case ".":
-            var chars = /^\d*/.exec(flags.substring(1))[0];
-            update(info, { precision: parseInt(chars) });
-            nextPos = 1 + chars.length;
-            break;
-        case "0":
-            update(info, { padding: chr });
-            break;
-        case "1":
-        case "2":
-        case "3":
-        case "4":
-        case "5":
-        case "6":
-        case "7":
-        case "8":
-        case "9":
-            var chars = /^\d*/.exec(flags)[0];
-            update(info, { width: parseInt(chars) });
-            nextPos = chars.length;
-            break;
-        case "s":
-        case "r":
-            update(info, { format: chr });
-            break;
-        case "b":
-            update(info, { numeric: true, format: chr, radix: 2 });
-            break;
-        case "o":
-            update(info, { numeric: true, format: chr, radix: 8 });
-            break;
-        case "x":
-        case "X":
-            update(info, { numeric: true, format: chr, radix: 16 });
-            break;
-        case "d":
-        case "f":
-        case "%":
-            update(info, { numeric: true, format: chr, radix: 10 });
-            break;
-        default:
-            var msg = "unsupported format flag: " + chr;
-            throw new MochiKit.Text.FormatPatternError(pattern, startPos, msg);
+    var text = pattern.substring(startPos, endPos).replace(/\s+$/, "");
+    var m = /^([<>+ 0,-]+)?(\d+)?(\.\d*)?([srbdoxXf%])?(.*)$/.exec(text);
+    var flags = m[1];
+    var width = m[2];
+    var precision = m[3];
+    var type = m[4];
+    var unmatched = m[5];
+    for (var i = 0; flags && i < flags.length; i++) {
+        var chr = flags.charAt(i);
+        if (chr == "<" || chr == ">") {
+            info.align = chr;
+        } else if (chr == "+" || chr == "-" || chr == " ") {
+            info.sign = (chr == "-") ? "" : chr;
+        } else if (chr == "0") {
+            info.padding = chr;
+        } else if (chr == ",") {
+            info.group = true;
         }
-        flags = flags.substring(nextPos);
+    }
+    if (width) {
+        info.width = parseInt(width, 10);
+    }
+    if (precision && precision.length > 1) {
+        info.precision = parseInt(precision.substring(1), 10);
+    }
+    if (type == "s" || type == "r") {
+        info.format = type;
+    } else if (type == "b") {
+        update(info, { type: "number", format: type, radix: 2 });
+    } else if (type == "o") {
+        update(info, { type: "number", format: type, radix: 8 });
+    } else if (type == "x" || type == "X") {
+        update(info, { type: "number", format: type, radix: 16 });
+    } else if (type == "d" || type == "f" || type == "%") {
+        update(info, { type: "number", format: type, radix: 10 });
+    }
+    if (unmatched) {
+        var msg = "unsupported format flag: " + unmatched.charAt(0);
+        throw new MochiKit.Text.FormatPatternError(pattern, startPos, msg);
     }
     return info;
 };
@@ -526,8 +492,9 @@ MochiKit.Text._parseFormatFlags = function (pattern, startPos, endPos) {
  * just move the decimal separator in the text string. It is ugly,
  * but works...
  *
- * @param {Number} value the value to format
- * @param {Number} precision the number of precision digits
+ * @param {number} value the value to format
+ * @param {number} precision the number of precision digits
+ * @return {string}
  */
 MochiKit.Text._truncToPercent = function (value, precision) {
     // TODO: This can be simplified by using MochiKit.Format._shiftNumber
@@ -551,30 +518,31 @@ MochiKit.Text._truncToPercent = function (value, precision) {
 /**
  * Creates a new format pattern error.
  *
- * @param {String} pattern the format pattern string
- * @param {Number} pos the position of the error
- * @param {String} message the error message text
+ * @param {string} pattern the format pattern string
+ * @param {number} pos the position of the error
+ * @param {string} message the error message text
  *
  * @return {Error} the format pattern error
  *
  * @class The format pattern error class. This error is thrown when
  *     a syntax error is encountered inside a format string.
- * @property {String} pattern The format pattern string.
- * @property {Number} pos The position of the error.
- * @property {String} message The error message text.
- * @extends MochiKit.Base.NamedError
+ * @property {string} pattern The format pattern string.
+ * @property {number} pos The position of the error.
+ * @property {string} message The error message text.
+ * @extends {MochiKit.Base.NamedError}
+ * @constructor
  */
 MochiKit.Text.FormatPatternError = function (pattern, pos, message) {
     this.pattern = pattern;
     this.pos = pos;
     this.message = message;
 };
-MochiKit.Text.FormatPatternError.prototype =
-    new MochiKit.Base.NamedError("MochiKit.Text.FormatPatternError");
 
+MochiKit.Text.FormatPatternError.prototype = new MochiKit.Base.NamedError("MochiKit.Text.FormatPatternError");
+MochiKit.Text.FormatPatternError.constructor = MochiKit.Text.FormatPatternError;
 
 //
-//XXX: Internet Explorer exception handling blows
+//XXX: Internet Explorer export fix
 //
 if (MochiKit.__export__) {
     formatter = MochiKit.Text.formatter;

@@ -8,7 +8,15 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-MochiKit.Base._module('Position', '1.5', ['Base', 'DOM', 'Style']);
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.Position');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.DOM');
+	goog.require('MochiKit.Style');
+}
+
+MochiKit.Base.module(MochiKit, 'Position', '1.5', ['Base', 'DOM', 'Style']);
 
 MochiKit.Base.update(MochiKit.Position, {
     // Don't export from this module

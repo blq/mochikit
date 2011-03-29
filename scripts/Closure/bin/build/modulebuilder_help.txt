@@ -1,0 +1,31 @@
+Usage: Utility for Closure Library module dependency calculation and compilation.
+ author Fredrik Blomqvist @ GpsGate.com
+
+
+Options:
+  -h, --help            show this help message and exit
+  --root=ROOTS          The paths that should be traversed to build the
+                        dependencies.
+  -o OUTPUT_MODE, --output_mode=OUTPUT_MODE
+                        The type of output to generate from this script.
+                        Options are "compiled" to produce compiled output with
+                        the Closure Compiler.  Default is "cmdline".
+  -c COMPILER_JAR, --compiler_jar=COMPILER_JAR
+                        The location of the Closure compiler .jar file.
+  --output_file=OUTPUT_FILE
+                        If specified, write output to this path instead of
+                        writing to standard output.
+  -f COMPILER_FLAGS, --compiler_flags=COMPILER_FLAGS
+                        Additional flags to pass to the Closure compiler.
+  --module=MODULES      module namespace specification. syntax:
+                        NAME:ns1,ns2,..,nsN. repeat for next module.
+  --keep_dep_tags=KEEP_DEP_TAGS
+                        (re)injects the goog.provide and goog.require tags in
+                        the modules files (to enable dep-file generation)
+  --list_unused_files=LIST_UNUSED_FILES
+                        display a list of the unused files in the root(s)
+                        after compilation
+  --keep_base_separate=KEEP_BASE_SEPARATE
+                        keep the goog base.js as a separate module. i.e dont
+                        bake into other module (NOT compatible with the
+                        "keep_dep_tags" flag)

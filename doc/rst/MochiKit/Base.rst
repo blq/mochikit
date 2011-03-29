@@ -478,7 +478,7 @@ Functions
 
     1. A boolean ``value`` is returned as-is.
     2. A string ``value`` is considered false if and only if it equals ``""``,
-       ``"false"``, ``"null"``, ``"undefined"`` or ``"0"``. 
+       ``"false"``, ``"null"``, ``"undefined"`` or ``"0"``.
     3. A number ``value`` is considered false if and only if ``isNaN(value)``
        or ``value == 0``.
     4. A array-like ``value`` is considered false if and only if
@@ -564,7 +564,7 @@ Functions
         Available in MochiKit 1.3.1+
 
 
-:mochidef:`counter(n=1)`:
+:mochidef:`counter(n=1, step=1)`:
 
     Returns a function that will return a number one greater than
     the previous returned value, starting at ``n``. For example::
@@ -609,7 +609,7 @@ Functions
         Available in MochiKit 1.3.1+
 
 
-:mochidef:`filter(fn, lst)`:
+:mochidef:`filter(fn, lst[, self])`:
 
     Returns a new ``Array`` composed of all elements from ``lst``
     where ``fn(lst[i])`` returns a true value.
@@ -673,7 +673,7 @@ Functions
 :mochidef:`flattenArray(lst)`:
 
     Return a new ``Array`` consisting of every item in lst with ``Array``
-    items expanded in-place recursively. This differs from 
+    items expanded in-place recursively. This differs from
     :mochiref:`flattenArguments` in that it only takes one argument and
     it only flattens items that are ``instanceof Array``.
 
@@ -864,14 +864,14 @@ Functions
 
         :mochiref:`map(fn, p, q, ...)`
             ->  ``[fn(p[0], q[0], ..), fn(p[1], q[1], ...), ...]``
-    
+
     If ``fn`` is ``null``, and more than one sequence is given as
     arguments, then the ``Array`` function is used.
 
         :mochiref:`map(null, p, q, ...)`
             -> :mochiref:`MochiKit.Iter.zip(p, q, ...)`
             -> ``[[p0, q0, ...], [p1, q1, ...], ...];``
-   
+
     Since this is a common idiom, :mochiref:`zip(p, q, ...)`
     is actually a shortcut for this.
 
@@ -929,8 +929,66 @@ Functions
         lst = map(methodcaller("toLowerCase"), ["THIS", "is", "LoWeRCaSe"]);
         assert( lst.join(" ") == "this is lowercase" );
 
+    also accepts a function as input, typically a prototype.function. i.e the above
+    could also be acchieved by::
+
+        methodcaller(String.prototype.toLowerCase)
+
+    This might be preferrable in case the code is to be agressively compressed to avoid getting
+    a function rename mismatch (wont happen in the ``String`` case though. Note that this also sacrifies interface based, "duck type", coding)
+
+
     *Availability*:
         Available in MochiKit 1.4+
+
+
+:mochidef:`module(parent, name, version, deps=[])`:
+
+    Creates a new ``name`` module in a ``parent`` namespace. This
+    function will create a new empty module object with ``NAME``,
+    ``VERSION``, ``toString`` and ``__repr__`` properties. It will
+    also verify that all the strings in ``deps`` are defined in
+    ``parent``, or an error will be thrown.
+
+    ``parent``:
+        The parent module or namespace (object). Use ``this`` or
+        ``window`` to create a global module.
+
+    ``name``:
+        The new module name.
+
+    ``version``:
+        The module version string, e.g. "1.5".
+
+    ``deps``:
+        The array of module dependencies, as strings.
+
+    Example::
+
+        module(MochiKit, 'Iter', '1.5', ['Base']);
+
+    *Availability*:
+        Available in MochiKit 1.5+
+
+
+:mochidef:`moduleExport(namespace, module/*, ...*/)`:
+
+    Exports all symbols from one or more modules into ``namespace``.
+    This is similar to :mochiref:`update(self, obj[, ...])`, except
+    for special handling of the ``__export__`` flag, contained
+    sub-modules (exported recursively), and names starting with
+    ``_``.
+
+    All symbols can be exported to global variables::
+
+        MochiKit.Base.moduleExport(this, MochiKit);
+
+    Or a few selected modules can be moved to a shortened name::
+
+        var dom = MochiKit.Base.moduleExport({}, MochiKit.Dom, MochiKit.Style);
+
+    *Availability*:
+        Available in MochiKit 1.5+
 
 
 :mochidef:`nameFunctions(namespace)`:
@@ -1011,7 +1069,7 @@ Functions
 :mochidef:`operator`:
 
     A table of JavaScript's operators for usage with :mochiref:`map`,
-    :mochiref:`filter`, etc.
+    :mochiref:`filter`, etc. Similar to the Python http://docs.python.org/library/operator.html module.
 
 
     Unary Logic Operators:
@@ -1051,9 +1109,13 @@ Functions
         +-------------------+-------------------+-------------------------------+
         | ``div(a, b)``     | ``a / b``         | Division                      |
         +-------------------+-------------------+-------------------------------+
+        | ``floordiv(a, b)``| ``floor(a / b)``  | Integer division              |
+        +-------------------+-------------------+-------------------------------+
         | ``mod(a, b)``     | ``a % b``         | Modulus                       |
         +-------------------+-------------------+-------------------------------+
         | ``mul(a, b)``     | ``a * b``         | Multiplication                |
+        +-------------------+-------------------+-------------------------------+
+        | ``pow(a, b)``     | ``pow(a, b)``     | Exponentiation                |
         +-------------------+-------------------+-------------------------------+
         | ``and(a, b)``     | ``a & b``         | Bitwise and                   |
         +-------------------+-------------------+-------------------------------+
@@ -1067,7 +1129,12 @@ Functions
         +-------------------+-------------------+-------------------------------+
         | ``zrshift(a, b)`` | ``a >>> b``       | Bitwise unsigned right shift  |
         +-------------------+-------------------+-------------------------------+
-
+        | ``getitem(a, b)`` | ``a[b]``          | Value of a at index b         |
+        +-------------------+-------------------+-------------------------------+
+        | ``delitem(a, b)`` | ``delete a[b]``   | Remove value of a at index b  |
+        +-------------------+-------------------+-------------------------------+
+        |``setitem(a,b,c)`` | ``a[b] = c``      | Set value of a at index b to c|
+        +-------------------+-------------------+-------------------------------+
 
 
     Built-in Comparators:
@@ -1220,7 +1287,7 @@ Functions
     defined HTML elements. For example::
 
         assert( queryString({a: [1,2]}) === "a=1&a=2" );
-    
+
     Alternate form 2 (MochiKit 1.4+):
         :mochiref:`queryString([names, values])`
 

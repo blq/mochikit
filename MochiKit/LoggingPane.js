@@ -8,7 +8,14 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-MochiKit.Base._module('LoggingPane', '1.5', ['Base', 'Logging']);
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.LoggingPane');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.Logging');
+}
+
+MochiKit.Base.module(MochiKit, 'LoggingPane', '1.5', ['Base', 'Logging']);
 
 /** @id MochiKit.LoggingPane.createLoggingPane */
 MochiKit.LoggingPane.createLoggingPane = function (inline/* = false */) {
@@ -24,7 +31,10 @@ MochiKit.LoggingPane.createLoggingPane = function (inline/* = false */) {
     return m._loggingPane;
 };
 
-/** @id MochiKit.LoggingPane.LoggingPane */
+/**
+ * @id MochiKit.LoggingPane.LoggingPane
+ * @constructor
+ */
 MochiKit.LoggingPane.LoggingPane = function (inline/* = false */, logger/* = MochiKit.Logging.logger */) {
 
     /* Use a div if inline, pop up a window if not */
@@ -146,7 +156,7 @@ MochiKit.LoggingPane.LoggingPane = function (inline/* = false */, logger/* = Moc
             infore = new RegExp(infoFilterField.value);
         } catch(e) {
             /* If there was an error with the regexes, do no filtering */
-            logDebug("Error in filter regex: " + e.message);
+            MochiKit.Logging.logDebug("Error in filter regex: " + e.message);
             return null;
         }
 
@@ -184,7 +194,7 @@ MochiKit.LoggingPane.LoggingPane = function (inline/* = false */, logger/* = Moc
         try {
             try {
               debugPane.loggingPane = null;
-            } catch(e) { logFatal("Bookmarklet was closed incorrectly."); }
+            } catch(e) { MochiKit.Logging.logFatal("Bookmarklet was closed incorrectly."); }
             if (inline) {
                 debugPane.parentNode.removeChild(debugPane);
             } else {

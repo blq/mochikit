@@ -80,6 +80,8 @@ Functions
     ``applymap(fun, seq)`` -->
     fun.apply(self, seq0), fun.apply(self, seq1), ...
 
+    (In Python this is called ``starmap``)
+
     *Availability*:
         Available in MochiKit 1.3.1+
 
@@ -92,7 +94,7 @@ Functions
         Available in MochiKit 1.3.1+
 
 
-:mochidef:`count(n=0)`:
+:mochidef:`count(n=0, step=1)`:
 
     ``count(n=0)`` --> n, n + 1, n + 2, ...
 
@@ -217,6 +219,16 @@ Functions
         Available in MochiKit 1.3.1+
 
 
+:mochidef:`isIterable(obj)`:
+
+    Returns ``true`` if the given object is ``Iterable``-like (have a
+    ``.next()`` or ``.iter()`` method)
+    [todo: move this to Base? .. and this should return true for Array and Arguments, NodeList etc]
+
+    *Availability*:
+        Available in MochiKit 1.5+
+
+
 :mochidef:`islice(seq, [start,] stop[, step])`:
 
     ``islice(seq, [start,] stop[, step])`` --> elements from
@@ -237,8 +249,8 @@ Functions
        ``.iter()``), then the result of ``iterable.iter()`` will be
        returned.
     3. If ``iterable`` is a JavaScript 1.7 iterator factory (implements
-       ``.__iterable__()``), then the result of ``iterable.__iterable__()``
-       will be returned (MochiKit 1.4+). 
+       ``.__iterator__()``), then the result of ``iterable.__iterator__()``
+       will be returned (MochiKit 1.4+).
     4. Otherwise, the iterator factory
        :mochiref:`MochiKit.Base.AdapterRegistry` is used to find a
        match.

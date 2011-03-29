@@ -8,16 +8,28 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-MochiKit.Base._module('DOM', '1.5', ['Base']);
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.DOM');
 
-MochiKit.Base.update(MochiKit.DOM, {
+	goog.require('MochiKit.Base');
+}
 
-    /** @id MochiKit.DOM.currentWindow */
+MochiKit.Base.module(MochiKit, 'DOM', '1.5', ['Base']);
+
+MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
+
+    /**
+     * @id MochiKit.DOM.currentWindow
+     * @return {Window}
+     */
     currentWindow: function () {
         return MochiKit.DOM._window;
     },
 
-    /** @id MochiKit.DOM.currentDocument */
+    /**
+     * @id MochiKit.DOM.currentDocument
+     * @return {Document}
+     */
     currentDocument: function () {
         return MochiKit.DOM._document;
     },
@@ -224,7 +236,10 @@ MochiKit.Base.update(MochiKit.DOM, {
         return undefined;
     },
 
-    /** @id MochiKit.DOM.isChildNode */
+    /**
+     * @id MochiKit.DOM.isChildNode
+     * @return {boolean}
+     */
     isChildNode: function (node, maybeparent) {
         var self = MochiKit.DOM;
         if (typeof(node) == "string") {
@@ -304,7 +319,7 @@ MochiKit.Base.update(MochiKit.DOM, {
         if (attrs) {
             if (self.attributeArray.compliant) {
                 // not IE, good.
-                for (var k in attrs) {
+                for (var k in attrs) { // todo: use o.hasOwnProperty(k) test?
                     var v = attrs[k];
                     if (typeof(v) == 'object' && typeof(elem[k]) == 'object') {
                         if (k == "style" && MochiKit.Style) {
@@ -328,7 +343,7 @@ MochiKit.Base.update(MochiKit.DOM, {
             } else {
                 // IE is insane in the membrane
                 var renames = self.attributeArray.renames;
-                for (var k in attrs) {
+                for (var k in attrs) { // todo: use o.hasOwnProperty(k) test?
                     v = attrs[k];
                     var renamed = renames[k];
                     if (k == "style" && typeof(v) == "string") {
@@ -520,7 +535,7 @@ MochiKit.Base.update(MochiKit.DOM, {
             elem = self.getElement(elem);
         }
         var e = self.coerceToDOM(elem);
-        e.parentNode.removeChild(e);
+        if (e && e.parentNode) e.parentNode.removeChild(e);
         return e;
     },
 
@@ -552,6 +567,88 @@ MochiKit.Base.update(MochiKit.DOM, {
         }
     },
 
+	/**
+	 * Sniffs for the best impl on current platform (IE _really_ needs this on larger DOMs).
+	 * todo: should merge this "deeper" with the existing getElementsByTagAndClassName function (now only in the simplest tagName=* case)
+	 *
+	 * Based on code by Robert Nyman, http://www.robertnyman.com, Code/licensing: http://code.google.com/p/getelementsbyclassname/
+	 * see also http://robertnyman.com/2008/05/27/the-ultimate-getelementsbyclassname-anno-2008/
+	 *
+	 * @param {string} className(s) separate classes by space to lookup multiple (any order, AND combination)
+	 * @param {(!Element|string)=} [elm=document] starting root node
+	 * @return {!Array.<!Element>} (Not a nodelist) empty list if no elems found
+	 */
+	getElementsByClassName: function(className, /*optional*/parent) {
+		var self = MochiKit.DOM;
+		if (self._document.getElementsByClassName) {
+			// native implementation (todo: is this case worth checking? http://robertnyman.com/2008/05/27/the-ultimate-getelementsbyclassname-anno-2008/#comment-600797)
+			self.getElementsByClassName = function(className, elm) {
+				elm = elm || self._document;
+				elm = self.getElement(elm);
+
+				var elements = elm.getElementsByClassName(className);
+				return MochiKit.Base.extend([], elements); // transform nodelist to real array
+			};
+		} else if (self._document.evaluate) {
+			// XPath impl
+			self.getElementsByClassName = function(className, elm) {
+				elm = elm || self._document;
+				elm = self.getElement(elm);
+
+				var classes = className.split(" ");
+				var classesToCheck = "";
+				for (var k = 0, kl = classes.length; k < kl; ++k) {
+					classesToCheck += "[contains(concat(' ', @class, ' '), ' " + classes[k] + " ')]";
+				}
+
+				var tag = '*'; // todo: remove tag search from expression altogether?
+				var elements = [];
+				try {
+					var xhtmlNamespace = "http://www.w3.org/1999/xhtml";
+					var namespaceResolver = (self._document.documentElement.namespaceURI === xhtmlNamespace) ? xhtmlNamespace : null; // could move this to precalc stage?
+					elements = self._document.evaluate(".//" + tag + classesToCheck, elm, namespaceResolver, 0, null);
+				} catch (e) {
+					elements = self._document.evaluate(".//" + tag + classesToCheck, elm, null, 0, null);
+				}
+
+				// todo: drop thsi Iter dep.
+				return MochiKit.Iter.list(elements); // transform to real array (iterates using iterateNext)
+			};
+		} else {
+			// fallback to getElementsByTagName and filtering
+			self.getElementsByClassName = function(className, elm) {
+				elm = elm || self._document;
+				elm = self.getElement(elm);
+
+				var classes = className.split(" ");
+				var classesToCheck = [];
+				for (var k = 0, kl = classes.length; k < kl; ++k) {
+					classesToCheck.push(new RegExp("(^|\\s)" + classes[k] + "(\\s|$)"));
+				}
+
+				var elements = elm.all ? elm.all : elm.getElementsByTagName('*');
+
+				var returnElements = [];
+				for (var l = 0, ll = elements.length; l < ll; ++l) {
+					var current = elements[l];
+
+					var match = false;
+					for (var m = 0, ml = classesToCheck.length; m < ml; ++m) {
+						match = classesToCheck[m].test(current.className);
+						if (!match)
+							break;
+					}
+					if (match) {
+						returnElements.push(current);
+					}
+				}
+				return returnElements;
+			};
+		}
+
+		return self.getElementsByClassName(className, parent);
+	},
+
     /** @id MochiKit.DOM.getElementsByTagAndClassName */
     getElementsByTagAndClassName: function (tagName, className,
             /* optional */parent) {
@@ -566,6 +663,11 @@ MochiKit.Base.update(MochiKit.DOM, {
         if (parent == null) {
             return [];
         }
+		if (tagName == '*') {
+			// simple fast-path. todo: should integrate deeper
+			return self.getElementsByClassName(className, parent);
+		}
+
         var children = (parent.getElementsByTagName(tagName)
             || self._document.all);
         if (typeof(className) == 'undefined' || className === null) {
@@ -648,7 +750,11 @@ MochiKit.Base.update(MochiKit.DOM, {
         });
     },
 
-    /** @id MochiKit.DOM.setElementClass */
+    /**
+     * @id MochiKit.DOM.setElementClass
+     * @param {string|!Element} element
+     * @param {string} className
+     */
     setElementClass: function (element, className) {
         var self = MochiKit.DOM;
         var obj = self.getElement(element);
@@ -670,7 +776,12 @@ MochiKit.Base.update(MochiKit.DOM, {
         }
     },
 
-    /** @id MochiKit.DOM.addElementClass */
+    /**
+     * @id MochiKit.DOM.addElementClass
+     * @param {string|!Element} element
+     * @param {string} className
+     * @return {boolean}
+     */
     addElementClass: function (element, className) {
         var self = MochiKit.DOM;
         var obj = self.getElement(element);
@@ -699,7 +810,12 @@ MochiKit.Base.update(MochiKit.DOM, {
         return true;
     },
 
-    /** @id MochiKit.DOM.removeElementClass */
+    /**
+     * @id MochiKit.DOM.removeElementClass
+     * @param {string|!Element} element
+     * @param {string} className
+     * @return {boolean}
+     */
     removeElementClass: function (element, className) {
         var self = MochiKit.DOM;
         var obj = self.getElement(element);
@@ -740,8 +856,14 @@ MochiKit.Base.update(MochiKit.DOM, {
         return res;
     },
 
-    /** @id MochiKit.DOM.hasElementClass */
-    hasElementClass: function (element, className/*...*/) {
+    /**
+     * @id MochiKit.DOM.hasElementClass
+     * @param {string|!Element} element
+     * @param {string} className
+     * @param {...string} [var_args]
+     * @return {boolean}
+     */
+    hasElementClass: function (element, className, var_args/*...*/) {
         var obj = MochiKit.DOM.getElement(element);
         if (obj == null) {
             return false;
@@ -874,7 +996,10 @@ MochiKit.Base.update(MochiKit.DOM, {
         }
     },
 
-    /** @id MochiKit.DOM.getFirstElementByTagAndClassName */
+    /**
+     * @id MochiKit.DOM.getFirstElementByTagAndClassName
+     * todo: insert the byClassName optimization
+     */
     getFirstElementByTagAndClassName: function (tagName, className,
             /* optional */parent) {
         var self = MochiKit.DOM;
@@ -940,6 +1065,7 @@ MochiKit.Base.update(MochiKit.DOM, {
         return null;
     },
 
+	/** @this MochiKit.DOM */
     __new__: function (win) {
 
         var m = MochiKit.Base;
@@ -984,6 +1110,7 @@ MochiKit.Base.update(MochiKit.DOM, {
             };
             attributeArray.compliant = false;
             attributeArray.renames = {
+	    	// todo: verify if we might need to add: accesskey, maxlength, tabindex, valign
                 "class": "className",
                 "checked": "defaultChecked",
                 "usemap": "useMap",
@@ -1066,6 +1193,8 @@ MochiKit.Base.update(MochiKit.DOM, {
         this.TFOOT = createDOMFunc("tfoot");
         /** @id MochiKit.DOM.TABLE */
         this.TABLE = createDOMFunc("table");
+        /** @id MochiKit.DOM.CAPTION */
+        this.CAPTION = createDOMFunc("caption");
         /** @id MochiKit.DOM.TH */
         this.TH = createDOMFunc("th");
         /** @id MochiKit.DOM.INPUT */
@@ -1128,6 +1257,24 @@ MochiKit.Base.update(MochiKit.DOM, {
         this.LINK = createDOMFunc("link");
         /** @id MochiKit.DOM.SCRIPT */
         this.SCRIPT = createDOMFunc("script");
+        /** @id MochiKit.DOM.NAV */
+        this.NAV = createDOMFunc("nav");
+        /** @id MochiKit.DOM.HEADER */
+        this.HEADER = createDOMFunc("header");
+        /** @id MochiKit.DOM.FOOTER */
+        this.FOOTER = createDOMFunc("footer");
+        /** @id MochiKit.DOM.MARK */
+        this.MARK = createDOMFunc("mark");
+        /** @id MochiKit.DOM.TIME */
+        this.TIME = createDOMFunc("time");
+        /** @id MochiKit.DOM.HGROUP */
+        this.HGROUP = createDOMFunc("hgroup");
+        /** @id MochiKit.DOM.ASIDE */
+        this.ASIDE = createDOMFunc("aside");
+        /** @id MochiKit.DOM.ARTICLE */
+        this.ARTICLE = createDOMFunc("article");
+        /** @id MochiKit.DOM.SECTION */
+        this.SECTION = createDOMFunc("section");
         /** @id MochiKit.DOM.$ */
         this.$ = this.getElement;
         /** @id MochiKit.DOM.NBSP */

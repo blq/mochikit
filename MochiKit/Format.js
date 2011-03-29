@@ -8,7 +8,13 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-MochiKit.Base._module('Format', '1.5', ['Base']);
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.Format');
+
+	goog.require('MochiKit.Base');
+}
+
+MochiKit.Base.module(MochiKit, 'Format', '1.5', ['Base']);
 
 MochiKit.Format._numberFormatter = function (placeholder, header, footer, locale, isPercent, precision, leadingZeros, separatorAt, trailingZeros) {
     return function (num) {
@@ -129,7 +135,12 @@ MochiKit.Format.formatLocale = function (locale) {
     }
 };
 
-/** @id MochiKit.Format.twoDigitAverage */
+/**
+ * @id MochiKit.Format.twoDigitAverage
+ * @param {number} numerator
+ * @param {number} denominator
+ * @return {string}
+ */
 MochiKit.Format.twoDigitAverage = function (numerator, denominator) {
     if (denominator) {
         var res = numerator / denominator;
@@ -140,7 +151,11 @@ MochiKit.Format.twoDigitAverage = function (numerator, denominator) {
     return "0";
 };
 
-/** @id MochiKit.Format.twoDigitFloat */
+/**
+ * @id MochiKit.Format.twoDigitFloat
+ * @param {number} aNumber
+ * @return {string}
+ */
 MochiKit.Format.twoDigitFloat = function (aNumber) {
     var res = MochiKit.Format.roundToFixed(aNumber, 2);
     if (res.indexOf(".00") > 0) {
@@ -152,7 +167,12 @@ MochiKit.Format.twoDigitFloat = function (aNumber) {
     }
 };
 
-/** @id MochiKit.Format.lstrip */
+/**
+ * @id MochiKit.Format.lstrip
+ * @param {string} str
+ * @param {string=} [chars]
+ * @return {string}
+ */
 MochiKit.Format.lstrip = function (str, /* optional */chars) {
     str = str + "";
     if (typeof(str) != "string") {
@@ -165,7 +185,12 @@ MochiKit.Format.lstrip = function (str, /* optional */chars) {
     }
 };
 
-/** @id MochiKit.Format.rstrip */
+/**
+ * @id MochiKit.Format.rstrip
+ * @param {string} str
+ * @param {string=} [chars]
+ * @return {string}
+ */
 MochiKit.Format.rstrip = function (str, /* optional */chars) {
     str = str + "";
     if (typeof(str) != "string") {
@@ -178,13 +203,23 @@ MochiKit.Format.rstrip = function (str, /* optional */chars) {
     }
 };
 
-/** @id MochiKit.Format.strip */
+/**
+ * @id MochiKit.Format.strip
+ * @param {string} str
+ * @param {string=} [chars]
+ * @return {string}
+ */
 MochiKit.Format.strip = function (str, /* optional */chars) {
     var self = MochiKit.Format;
     return self.rstrip(self.lstrip(str, chars), chars);
 };
 
-/** @id MochiKit.Format.truncToFixed */
+/**
+ * @id MochiKit.Format.truncToFixed
+ * @param {number} aNumber
+ * @param {number} precision
+ * @return {string}
+ */
 MochiKit.Format.truncToFixed = function (aNumber, precision) {
     var fixed = MochiKit.Format._numberToFixed(aNumber, precision);
     var fracPos = fixed.indexOf(".");
@@ -195,7 +230,11 @@ MochiKit.Format.truncToFixed = function (aNumber, precision) {
     return fixed;
 };
 
-/** @id MochiKit.Format.roundToFixed */
+/** @id MochiKit.Format.roundToFixed
+ * @param {number} aNumber
+ * @param {number} precision
+ * @return {string}
+ */
 MochiKit.Format.roundToFixed = function (aNumber, precision) {
     var fixed = MochiKit.Format._numberToFixed(aNumber, precision);
     var fracPos = fixed.indexOf(".");
@@ -213,15 +252,15 @@ MochiKit.Format.roundToFixed = function (aNumber, precision) {
  * or the right. It also guarantees a specified minimum number of
  * fractional digits (but no maximum).
  *
- * @param {Number} aNumber the number to convert
- * @param {Number} precision the minimum number of decimal digits
+ * @param {number} aNumber the number to convert
+ * @param {number} precision the minimum number of decimal digits
  *
- * @return {String} the fixed format number string
+ * @return {string} the fixed format number string
  */
 MochiKit.Format._numberToFixed = function (aNumber, precision) {
     var str = aNumber.toString();
     var parts = str.split(/[eE]/);
-    var exp = (parts.length === 1) ? 0 : parseInt(parts[1]) || 0;
+    var exp = (parts.length === 1) ? 0 : parseInt(parts[1], 10) || 0;
     var fixed = MochiKit.Format._shiftNumber(parts[0], exp);
     parts = fixed.split(/\./);
     var whole = parts[0];
@@ -241,10 +280,10 @@ MochiKit.Format._numberToFixed = function (aNumber, precision) {
  * This function handles negative values and will add and remove
  * leading and trailing zeros as needed.
  *
- * @param {String} num the fixed format number string
- * @param {Number} exp the base-10 exponent to apply
+ * @param {string} num the fixed format number string
+ * @param {number} exp the base-10 exponent to apply
  *
- * @return {String} the new fixed format number string
+ * @return {string} the new fixed format number string
  */
 MochiKit.Format._shiftNumber = function (num, exp) {
     var pos = num.indexOf(".");
@@ -277,9 +316,13 @@ MochiKit.Format._shiftNumber = function (num, exp) {
     return num;
 };
 
-/** @id MochiKit.Format.percentFormat */
+/**
+ * @id MochiKit.Format.percentFormat
+ * @param {number} aNumber
+ * @return {string}
+ */
 MochiKit.Format.percentFormat = function (aNumber) {
-    return MochiKit.Format.twoDigitFloat(100 * aNumber) + '%';
+    return MochiKit.Format.twoDigitFloat(100 * aNumber) + '%'; // err? use percent symbol
 };
 
 MochiKit.Format.LOCALE = {
@@ -291,6 +334,7 @@ MochiKit.Format.LOCALE = {
     __export__: false
 };
 
+/** @this MochiKit.Format */
 MochiKit.Format.__new__ = function () {
     MochiKit.Base.nameFunctions(this);
     var base = this.NAME + ".";

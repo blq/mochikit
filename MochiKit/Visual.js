@@ -8,7 +8,17 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-MochiKit.Base._module('Visual', '1.5', ['Base', 'DOM', 'Style', 'Color', 'Position']);
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.Visual');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.DOM');
+	goog.require('MochiKit.Style');
+	goog.require('MochiKit.Color');
+	goog.require('MochiKit.Position');
+}
+
+MochiKit.Base.module(MochiKit, 'Visual', '1.5', ['Base', 'DOM', 'Style', 'Color', 'Position']);
 
 MochiKit.Visual._RoundCorners = function (e, options) {
     e = MochiKit.DOM.getElement(e);

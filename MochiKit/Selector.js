@@ -8,8 +8,19 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-MochiKit.Base._module('Selector', '1.5', ['Base', 'DOM', 'Iter']);
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.Selector');
 
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.DOM');
+	goog.require('MochiKit.Iter');
+}
+
+MochiKit.Base.module(MochiKit, 'Selector', '1.5', ['Base', 'DOM', 'Iter']);
+
+/**
+ * @constructor
+ */
 MochiKit.Selector.Selector = function (expression) {
     this.params = {classNames: [], pseudoClassNames: []};
     this.expression = expression.toString().replace(/(^\s+|\s+$)/g, '');
@@ -127,8 +138,8 @@ MochiKit.Selector.Selector.prototype = {
                             a = 2;
                             b = 0;
                         } else {
-                            a = match[2] && parseInt(match) || null;
-                            b = parseInt(match[3]);
+                            a = match[2] && parseInt(match, 10) || null;
+                            b = parseInt(match[3], 10);
                         }
                         conditions.push('this.nthChild(element,' + a + ',' + b
                                         + ',' + !!pseudoClass.match('^nth-last')    // Reverse
@@ -382,6 +393,7 @@ MochiKit.Base.update(MochiKit.Selector, {
         return MochiKit.Selector.findChildElements(MochiKit.DOM.currentDocument(), arguments);
     },
 
+	/** @this MochiKit.Selector */
     __new__: function () {
         this.$$ = this.findDocElements;
         MochiKit.Base.nameFunctions(this);

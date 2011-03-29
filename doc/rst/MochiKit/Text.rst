@@ -25,10 +25,9 @@ Synopsis
 Description
 ===========
 
-:mochiref:`MochiKit.Text` provides helper functions for creating or
-managing text (also known as strings). Formatting strings and
-stringifying numbers is boring, so a couple useful functions in that
-domain live here.
+MochiKit.Text provides helper functions for manipulating text (also
+known as strings). A generic mechanism for formatting text and numbers
+also live here.
 
 
 Dependencies
@@ -74,22 +73,29 @@ properties in a value object. Both methods can be combined or deeply
 nested, using a dot (``.``) to separate the sub-parts.
 
 The ``specification`` part is optional and specifies which value
-formatting to apply to the value. This is the only part of the
-formatting pattern used by the :mochiref:`formatValue` function.
-The specification itself consists of a number of parts:
+formatting to apply to the value.
+
+
+Format Specifications
+---------------------
+
+The format specification outlines how a value is to be converted
+into a text representation (a string). This is the only part of
+the formatting pattern accepted by the :mochiref:`formatValue`
+function. It consists of a number of parts:
 
 ::
 
     [flags][width][.precision][type]
 
-All the various parts are optional and have the following meaning:
+All the parts are optional and have the following meaning:
 
 * ``flags`` specifies the text alignment and numeric sign, padding and
   grouping flags. See the table below for available options.
-* ``width`` specifies the minimum field width.
-* ``precision`` indicates how many digits should be displayed after the
-  decimal point in a floating point conversion. For a non-numeric
-  ``type`` the field indicates the maximum field size.
+* ``width`` a number specifying the minimum field width.
+* ``precision`` a number indicating how many digits should be displayed
+  after the decimal point in a floating point conversion. For a
+  non-numeric ``type``, the field indicates the maximum field size.
 * ``type`` indicates the desired formatting type to use. See the table
   below for available options.
 
@@ -268,20 +274,24 @@ Functions
 
 :mochidef:`split(str, separator="\\n" [, max])`:
 
-    Splits ``str`` using a ``separator`` string. 
+    Splits ``str`` using a ``separator`` string or regular expression. 
     If ``max`` is given, at most ``max`` splits will be performed
     (giving at most ``max`` + 1 parts returned).
+    
+    Returns an ``Array`` with the input ``str`` even if it was empty
+    or no splits were made.
 
     If ``max`` is omitted, this is equivalent to the built in
-    ``str.split(separator)``.
-    The difference to the built in method can be illustrated by:
+    ``str.split(separator)``. The difference to the built in method
+    can be illustrated by:
 
-    >>> "lovely bunch of coconuts".split(" ", 2)
-    ["lovely", "bunch"]
+    ::
 
+        >>> "lovely bunch of coconuts".split(" ", 2)
+        ["lovely", "bunch"]
 
-    >>> MochiKit.Text.split("lovely bunch of coconuts", " ", 2)
-    ["lovely", "bunch", "of coconuts"]
+        >>> MochiKit.Text.split("lovely bunch of coconuts", " ", 2)
+        ["lovely", "bunch", "of coconuts"]
 
     *Availability*:
         Available in MochiKit 1.5+
@@ -289,12 +299,14 @@ Functions
 
 :mochidef:`rsplit(str, separator="\\n" [, max])`:
 
-    Splits ``str`` using a ``separator`` string. 
+    Splits ``str`` using a ``separator`` string or regular expression. 
     This is similar to ``split``, except that if ``max`` is given,
-    splits are performed from the right hand side first
+    splits are performed from the right hand side first.
 
-    >>> MochiKit.Text.rsplit("lovely bunch of coconuts", " ", 2)
-    ["lovely bunch", "of", "coconuts"]
+    ::
+
+        >>> MochiKit.Text.rsplit("lovely bunch of coconuts", " ", 2)
+        ["lovely bunch", "of", "coconuts"]
 
     *Availability*:
         Available in MochiKit 1.5+

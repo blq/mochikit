@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.8: http://docutils.sourceforge.net/" />
+<title>MochiKit.Random - Random numbers and algorithms</title>
+
+<link rel="stylesheet" href="../../../include/css/documentation.css" type="text/css" />
+<script type="text/javascript" src="../../../MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="../../js/toc.js"></script>
+</head>
+<body>
+<a href="http://mochikit.com"><img id="mainlink" src="../../../include/img/g_logo_doc.gif" alt="MochiKit" /></a>
+<a class='indexlink' href='index.html'>Back to docs index</a>
+<div class="document">
+<div class="section" id="name">
+<h1>Name</h1>
+<p><em>THIS IS NOT YET AN OFFICIAL MOCHIKIT COMPONENT</em></p>
+<p>MochiKit.Random - Random numbers and algorithms</p>
+<dl class="docutils">
+<dt><em>Availability</em>:</dt>
+<dd>Available in MochiKit 1.5+</dd>
+</dl>
+</div>
+<div class="section" id="synopsis">
+<h1>Synopsis</h1>
+<pre class="literal-block">
+var randomData = map(randRange, repeat(2000, 1000)); // -&gt; Array of 1000 elements with random numbers from 0 to 1999
+</pre>
+</div>
+<div class="section" id="description">
+<h1>Description</h1>
+<p>Random numbers and associated algorithms.
+The API is largely a subset of the Python random <a class="footnote-reference" href="#id5" id="id1">[1]</a> module. By default uses the Mersenne Twister <a class="footnote-reference" href="#id6" id="id2">[2]</a> generator, but
+other generators, including the native <tt class="docutils literal">Math.random</tt>, can be used. See source code for details.</p>
+</div>
+<div class="section" id="dependencies">
+<h1>Dependencies</h1>
+<ul class="simple">
+<li><a class="mochiref reference external" href="Base.html">MochiKit.Base</a></li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h1>Overview</h1>
+<div class="section" id="random-numbers">
+<h2>Random numbers</h2>
+</div>
+</div>
+<div class="section" id="api-reference">
+<h1>API Reference</h1>
+<div class="section" id="functions">
+<h2>Functions</h2>
+<p>
+<a name="fn-random"></a>
+<a class="mochidef reference external" href="#fn-random">random()</a>:</p>
+<blockquote>
+Return the next random floating point number in the range <tt class="docutils literal">[0.0, 1.0)</tt>.</blockquote>
+<p>
+<a name="fn-seed"></a>
+<a class="mochidef reference external" href="#fn-seed">seed([x])</a>:</p>
+<blockquote>
+Initialize the basic random number generator. If <tt class="docutils literal">x</tt> is omitted or None, current
+system time is used; current system time is also used to initialize the generator
+when the module is first imported.</blockquote>
+<p>
+<a name="fn-getstate"></a>
+<a class="mochidef reference external" href="#fn-getstate">getState()</a>:</p>
+<blockquote>
+Return an object capturing the current internal state of the generator. This object can be passed to <a class="mochiref reference external" href="#fn-setstate">setState()</a> to restore the state.</blockquote>
+<p>
+<a name="fn-setstate"></a>
+<a class="mochidef reference external" href="#fn-setstate">setState(state)</a>:</p>
+<blockquote>
+<tt class="docutils literal">state</tt> should have been obtained from a previous call to <a class="mochiref reference external" href="#fn-getstate">getState()</a>, and <a class="mochiref reference external" href="#fn-setstate">setState()</a> restores the internal
+state of the generator to what it was at the time <a class="mochiref reference external" href="#fn-setstate">setState()</a> was called.</blockquote>
+<p>
+<a name="fn-randrange"></a>
+<a class="mochidef reference external" href="#fn-randrange">randRange([start=0], stop[, step=1])</a>:</p>
+<blockquote>
+Choose a random item from <tt class="docutils literal">range(start, stop[, step])</tt>
+Half-open range, i.e does Not include <tt class="docutils literal">stop</tt></blockquote>
+<p>
+<a name="fn-choice"></a>
+<a class="mochidef reference external" href="#fn-choice">choice(seq)</a>:</p>
+<blockquote>
+Return a random element from the non-empty sequence <tt class="docutils literal">seq</tt>.</blockquote>
+<p>
+<a name="fn-shuffle"></a>
+<a class="mochidef reference external" href="#fn-shuffle">shuffle(values)</a>:</p>
+<blockquote>
+<p>Shuffles an array using the Fisher-Yates algorithm <a class="footnote-reference" href="#id7" id="id3">[3]</a> (Knuth). <tt class="docutils literal">O(N)</tt>
+(in-place algorithm)</p>
+<p>Returns the shuffled input array to enable chaining.</p>
+<p>(..shuffling an array by sorting using a random comparator is a Bad idea <a class="footnote-reference" href="#id8" id="id4">[4]</a>)</p>
+</blockquote>
+<p>
+<a name="fn-sample"></a>
+<a class="mochidef reference external" href="#fn-sample">sample(population, k)</a>:</p>
+<blockquote>
+<p>Return a <tt class="docutils literal">k</tt> length list of unique elements chosen from the <tt class="docutils literal">population</tt> sequence.
+Used for random sampling without replacement.</p>
+<p>Returns a new list containing elements from the population while
+leaving the original population unchanged.  The resulting list is
+in selection order so that all sub-slices will also be valid random
+samples.  This allows raffle winners (the sample) to be partitioned
+into grand prize and second place winners (the subslices).</p>
+<p>Note: does not support iterator as input, use list(iterable).</p>
+</blockquote>
+<p>
+<a name="fn-deal"></a>
+<a class="mochidef reference external" href="#fn-deal">deal(numItems, opt_func)</a>:</p>
+<blockquote>
+<p>Generates a unique random range of numbers from <tt class="docutils literal"><span class="pre">0..N-1</span></tt> (or rather <tt class="docutils literal"><span class="pre">f(0)..f(N-1)</span></tt> ) (no number occurs twice. think dealing a deck of cards)</p>
+<p>todo: might drop this. equivalent to:</p>
+<pre class="literal-block">
+deal = shuffle(map(func || operator.identity, range(numItems)));
+</pre>
+</blockquote>
+<p>
+<a name="fn-uniform"></a>
+<a class="mochidef reference external" href="#fn-uniform">uniform(a, b)</a>:</p>
+<blockquote>
+Return a random floating point number <tt class="docutils literal">N</tt> such that <tt class="docutils literal">a &lt;= N &lt;= b</tt> for <tt class="docutils literal">a &lt;= b</tt> and <tt class="docutils literal">b &lt;= N &lt;= a</tt> for <tt class="docutils literal">b &lt; a</tt>.
+The end-point value b may or may not be included in the range depending on floating-point rounding in the equation <tt class="docutils literal">a + <span class="pre">(b-a)</span> * random()</tt>.</blockquote>
+</div>
+</div>
+<div class="section" id="see-also">
+<h1>See Also</h1>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Python random module: <a class="reference external" href="http://docs.python.org/library/random.html">http://docs.python.org/library/random.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Mersenne Twister 19937: <a class="reference external" href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html">http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Fisher-Yates shuffle: <a class="reference external" href="http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle">http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Microsoft does shuffling: <a class="reference external" href="http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html">http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="authors">
+<h1>Authors</h1>
+<ul class="simple">
+<li>Fredrik Blomqvist &lt;fblomqvist at gmail.com&gt;</li>
+</ul>
+</div>
+<div class="section" id="copyright">
+<h1>Copyright</h1>
+<p>Copyright 2005-2010 Bob Ippolito &lt;<a class="reference external" href="mailto:bob&#64;redivi.com">bob&#64;redivi.com</a>&gt;. This program is
+dual-licensed free software; you can redistribute it and/or modify it
+under the terms of the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a> or the <a class="reference external" href="http://www.opensource.org/licenses/afl-2.1.php">Academic Free License
+v2.1</a>.</p>
+</div>
+</div>
+
+</body>
+</html>

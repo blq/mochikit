@@ -8,7 +8,18 @@ Copyright (c) 2005 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 
 ***/
 
-MochiKit.Base._module('DragAndDrop', '1.5', ['Base', 'Iter', 'DOM', 'Signal', 'Visual', 'Position']);
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.DragAndDrop');
+
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.Iter');
+	goog.require('MochiKit.DOM');
+	goog.require('MochiKit.Signal');
+	goog.require('MochiKit.Visual');
+	goog.require('MochiKit.Position');
+}
+
+MochiKit.Base.module(MochiKit, 'DragAndDrop', '1.5', ['Base', 'Iter', 'DOM', 'Signal', 'Visual', 'Position']);
 
 MochiKit.DragAndDrop.Droppables = {
     /***
@@ -106,7 +117,10 @@ MochiKit.DragAndDrop.Droppables = {
     }
 };
 
-/** @id MochiKit.DragAndDrop.Droppable */
+/**
+ * @id MochiKit.DragAndDrop.Droppable
+ * @constructor
+ */
 MochiKit.DragAndDrop.Droppable = function (element, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -306,8 +320,9 @@ MochiKit.DragAndDrop.Draggables = {
         var pointer = event.mouse();
         // Mozilla-based browsers fire successive mousemove events with
         // the same coordinates, prevent needless redrawing (moz bug?)
-        if (this._lastPointer && (MochiKit.Base.repr(this._lastPointer.page) ==
-                                  MochiKit.Base.repr(pointer.page))) {
+        if (this._lastPointer &&
+            this._lastPointer.page.x == pointer.page.x &&
+            this._lastPointer.page.y == pointer.page.y) {
             return;
         }
         this._lastPointer = pointer;
@@ -334,7 +349,10 @@ MochiKit.DragAndDrop.Draggables = {
     }
 };
 
-/** @id MochiKit.DragAndDrop.Draggable */
+/**
+ * @id MochiKit.DragAndDrop.Draggable
+ * @constructor
+ */
 MochiKit.DragAndDrop.Draggable = function (element, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -442,8 +460,8 @@ MochiKit.DragAndDrop.Draggable.prototype = {
     currentDelta: function () {
         var s = MochiKit.Style.getStyle;
         return [
-          parseInt(s(this.element, 'left') || '0'),
-          parseInt(s(this.element, 'top') || '0')];
+          parseInt(s(this.element, 'left') || '0', 10),
+          parseInt(s(this.element, 'top') || '0', 10)];
     },
 
     /** @id MochiKit.DragAndDrop.initDrag */

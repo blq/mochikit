@@ -15,7 +15,6 @@
       }
       input {
           margin: 0;
-          vertical-align: -3px;
       }
       .info {
           color: #888888;
@@ -80,6 +79,10 @@ function cbInit(res) {
         versions.selectedIndex = idx;
         doLoadSource(versions.options[idx].value);
     }
+    // Fix for Safari automatic unpack of downloaded files
+    if (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)) {
+        $("packCompress").value = 'rename-to-gz';
+    }
 }
 
 // Loads the source code for a specified tree id
@@ -110,25 +113,21 @@ function cbLoadSource(res) {
 function doParseSource(src) {
 
     function moduleStart(src) {
-        var pos1 = src.indexOf("MochiKit.Base._module");
-        var pos2 = src.indexOf("MochiKit.Base._deps");
-        if (pos1 < 0) {
-            return pos2;
-        } else if (pos2 < 0) {
-            return pos1;
-        } else {
-            return Math.min(pos1, pos2);
-        }
+        var m = src.match(/MochiKit\.Base\.(_?module|_deps)/);
+        return m ? m.index : -1;
+    }
+
+    function moduleEnd(src) {
+        var m = src.match(/MochiKit\.Base\.(_exportSymbols|moduleExport).*\n/);
+        return m ? m.index + m[0].length : 0;
     }
 
     function stringLiterals(str) {
         var res = [];
-        var endPos = str.indexOf("\n");
-        var line = str.substring(0, (endPos > 0) ? endPos : str.length);
-        var matches = line.match(/"([^"]*)"|'([^']*)'/g);
-        for (var i = 0; matches != null && i < matches.length; i++) {
-            var name = matches[i];
-            res.push(name.substring(1, name.length - 1));
+        var line = str.split("\n", 1)[0];
+        var m = line.match(/"([^"\n]*)"|'([^'\n]*)'/g);
+        for (var i = 0; m != null && i < m.length; i++) {
+            res.push(strip(m[i], "\"\'"));
         }
         return res;
     }
@@ -150,10 +149,9 @@ function doParseSource(src) {
             }
             MODULES[moduleName] = { deps: deps, packed: "" };
         }
-        pos = src.indexOf("MochiKit.Base._exportSymbols");
-        pos = src.indexOf("\n", pos);
-        MODULES[moduleName].packed += src.substring(0, pos + 1);
-        src = src.substring(pos + 1);
+        pos = moduleEnd(src);
+        MODULES[moduleName].packed += src.substring(0, pos);
+        src = src.substring(pos);
     }
     MODULES["Base"].packedTail = src;
     for (var key in MODULES) {
@@ -323,6 +321,7 @@ function doSubmit() {
               <hr style="margin-top: 200px;">
               <h3>Additional Options:</h3>
               <label><input id="packExport" checked="checked" type="checkbox"> Export Globals</label><br>
+              <label><input id="packCompress" name="compress" value="gz" checked="checked" type="checkbox"> GZIP Compression</label><br>
             </td>
             <td id="packModules" style="padding-left: 10px;">
             </td>

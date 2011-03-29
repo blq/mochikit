@@ -175,6 +175,7 @@ tests.test_Style = function () {
     is(pos.x, 0, 'test getViewportPosition x');
     is(pos.y, 0, 'test getViewportPosition y');
 
+	// todo: http://trac.mochikit.com/ticket/364 ? I get the error in FF 3.6.11, but not in Chrome 6 for example.
     dims = getElementDimensions('testCell1', true);
     is(dims.w, 80, 'default left table cell content w ok');
     is(dims.h, 30, 'default left table cell content h ok');

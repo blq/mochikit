@@ -8,386 +8,398 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-MochiKit.Base._module('Signal', '1.5', ['Base', 'DOM', 'Style']);
+if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
+	goog.provide('MochiKit.Signal');
 
+	goog.require('MochiKit.Base');
+	goog.require('MochiKit.DOM');
+}
+
+MochiKit.Base.module(MochiKit, 'Signal', '1.5', ['Base', 'DOM']);
+
+/**
+ * @type {!Array.<!MochiKit.Signal.Ident>}
+ * @private
+ */
 MochiKit.Signal._observers = [];
 
-/** @id MochiKit.Signal.Event */
+/**
+ * @id MochiKit.Signal.Event
+ * @constructor
+ */
 MochiKit.Signal.Event = function (src, e) {
     this._event = e || window.event;
     this._src = src;
 };
 MochiKit.Signal.Event.__export__ = false;
 
-MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
+MochiKit.Signal.Event.prototype.__repr__ = function () {
+	var repr = MochiKit.Base.repr;
+	var str = '{event(): ' + repr(this.event()) +
+		', src(): ' + repr(this.src()) +
+		', type(): ' + repr(this.type()) +
+		', target(): ' + repr(this.target());
 
-    __repr__: function () {
-        var repr = MochiKit.Base.repr;
-        var str = '{event(): ' + repr(this.event()) +
-            ', src(): ' + repr(this.src()) +
-            ', type(): ' + repr(this.type()) +
-            ', target(): ' + repr(this.target());
+	if (this.type() &&
+		this.type().indexOf('key') === 0 ||
+		this.type().indexOf('mouse') === 0 ||
+		this.type().indexOf('click') != -1 ||
+		this.type() == 'contextmenu') {
+		str += ', modifier(): ' + '{alt: ' + repr(this.modifier().alt) +
+		', ctrl: ' + repr(this.modifier().ctrl) +
+		', meta: ' + repr(this.modifier().meta) +
+		', shift: ' + repr(this.modifier().shift) +
+		', any: ' + repr(this.modifier().any) + '}';
+	}
 
-        if (this.type() &&
-            this.type().indexOf('key') === 0 ||
-            this.type().indexOf('mouse') === 0 ||
-            this.type().indexOf('click') != -1 ||
-            this.type() == 'contextmenu') {
-            str += ', modifier(): ' + '{alt: ' + repr(this.modifier().alt) +
-            ', ctrl: ' + repr(this.modifier().ctrl) +
-            ', meta: ' + repr(this.modifier().meta) +
-            ', shift: ' + repr(this.modifier().shift) +
-            ', any: ' + repr(this.modifier().any) + '}';
-        }
+	if (this.type() && this.type().indexOf('key') === 0) {
+		str += ', key(): {code: ' + repr(this.key().code) +
+			', string: ' + repr(this.key().string) + '}';
+	}
 
-        if (this.type() && this.type().indexOf('key') === 0) {
-            str += ', key(): {code: ' + repr(this.key().code) +
-                ', string: ' + repr(this.key().string) + '}';
-        }
+	if (this.type() && (
+		this.type().indexOf('mouse') === 0 ||
+		this.type().indexOf('click') != -1 ||
+		this.type() == 'contextmenu')) {
 
-        if (this.type() && (
-            this.type().indexOf('mouse') === 0 ||
-            this.type().indexOf('click') != -1 ||
-            this.type() == 'contextmenu')) {
+		str += ', mouse(): {page: ' + repr(this.mouse().page) +
+			', client: ' + repr(this.mouse().client);
 
-            str += ', mouse(): {page: ' + repr(this.mouse().page) +
-                ', client: ' + repr(this.mouse().client);
+		if (this.type() != 'mousemove' && this.type() != 'mousewheel') {
+			str += ', button: {left: ' + repr(this.mouse().button.left) +
+				', middle: ' + repr(this.mouse().button.middle) +
+				', right: ' + repr(this.mouse().button.right) + '}';
+		}
+		if (this.type() == 'mousewheel') {
+			str += ', wheel: ' + repr(this.mouse().wheel);
+		}
+		str += '}';
+	}
+	if (this.type() == 'mouseover' || this.type() == 'mouseout' ||
+		this.type() == 'mouseenter' || this.type() == 'mouseleave') {
+		str += ', relatedTarget(): ' + repr(this.relatedTarget());
+	}
+	str += '}';
+	return str;
+};
 
-            if (this.type() != 'mousemove' && this.type() != 'mousewheel') {
-                str += ', button: {left: ' + repr(this.mouse().button.left) +
-                    ', middle: ' + repr(this.mouse().button.middle) +
-                    ', right: ' + repr(this.mouse().button.right) + '}';
-            }
-            if (this.type() == 'mousewheel') {
-                str += ', wheel: ' + repr(this.mouse().wheel);
-            }
-            str += '}';
-        }
-        if (this.type() == 'mouseover' || this.type() == 'mouseout' || 
-            this.type() == 'mouseenter' || this.type() == 'mouseleave') {
-            str += ', relatedTarget(): ' + repr(this.relatedTarget());
-        }
-        str += '}';
-        return str;
-    },
+ /** @id MochiKit.Signal.Event.prototype.toString */
+MochiKit.Signal.Event.prototype.toString = function () {
+	return this.__repr__();
+};
 
-     /** @id MochiKit.Signal.Event.prototype.toString */
-    toString: function () {
-        return this.__repr__();
-    },
+/** @id MochiKit.Signal.Event.prototype.src */
+MochiKit.Signal.Event.prototype.src = function () {
+	return this._src;
+};
 
-    /** @id MochiKit.Signal.Event.prototype.src */
-    src: function () {
-        return this._src;
-    },
+/** @id MochiKit.Signal.Event.prototype.event  */
+MochiKit.Signal.Event.prototype.event = function () {
+	return this._event;
+};
 
-    /** @id MochiKit.Signal.Event.prototype.event  */
-    event: function () {
-        return this._event;
-    },
+/** @id MochiKit.Signal.Event.prototype.type */
+MochiKit.Signal.Event.prototype.type = function () {
+	if (this._event.type === "DOMMouseScroll") {
+		return "mousewheel";
+	} else {
+		return this._event.type || undefined;
+	}
+};
 
-    /** @id MochiKit.Signal.Event.prototype.type */
-    type: function () {
-        if (this._event.type === "DOMMouseScroll") {
-            return "mousewheel";
-        } else {
-            return this._event.type || undefined;
-        }
-    },
+/** @id MochiKit.Signal.Event.prototype.target */
+MochiKit.Signal.Event.prototype.target = function () {
+	return this._event.target || this._event.srcElement;
+};
 
-    /** @id MochiKit.Signal.Event.prototype.target */
-    target: function () {
-        return this._event.target || this._event.srcElement;
-    },
+MochiKit.Signal.Event.prototype._relatedTarget = null;
+/** @id MochiKit.Signal.Event.prototype.relatedTarget */
+MochiKit.Signal.Event.prototype.relatedTarget = function () {
+	if (this._relatedTarget !== null) {
+		return this._relatedTarget;
+	}
 
-    _relatedTarget: null,
-    /** @id MochiKit.Signal.Event.prototype.relatedTarget */
-    relatedTarget: function () {
-        if (this._relatedTarget !== null) {
-            return this._relatedTarget;
-        }
+	var elem = null;
+	if (this.type() == 'mouseover' || this.type() == 'mouseenter') {
+		elem = (this._event.relatedTarget ||
+			this._event.fromElement);
+	} else if (this.type() == 'mouseout' || this.type() == 'mouseleave') {
+		elem = (this._event.relatedTarget ||
+			this._event.toElement);
+	}
+	try {
+		if (elem !== null && elem.nodeType !== null) {
+			this._relatedTarget = elem;
+			return elem;
+		}
+	} catch (ignore) {
+		// Firefox 3 throws a permission denied error when accessing
+		// any property on XUL elements (e.g. scrollbars)...
+	}
 
-        var elem = null;
-        if (this.type() == 'mouseover' || this.type() == 'mouseenter') {
-            elem = (this._event.relatedTarget ||
-                this._event.fromElement);
-        } else if (this.type() == 'mouseout' || this.type() == 'mouseleave') {
-            elem = (this._event.relatedTarget ||
-                this._event.toElement);
-        }
-        try {
-            if (elem !== null && elem.nodeType !== null) {
-                this._relatedTarget = elem;
-                return elem;
-            }
-        } catch (ignore) {
-            // Firefox 3 throws a permission denied error when accessing
-            // any property on XUL elements (e.g. scrollbars)...
-        }
+	return undefined;
+};
 
-        return undefined;
-    },
+MochiKit.Signal.Event.prototype._modifier = null;
+/** @id MochiKit.Signal.Event.prototype.modifier */
+MochiKit.Signal.Event.prototype.modifier = function () {
+	if (this._modifier !== null) {
+		return this._modifier;
+	}
+	var m = {};
+	m.alt = this._event.altKey;
+	m.ctrl = this._event.ctrlKey;
+	m.meta = this._event.metaKey || false; // IE and Opera punt here
+	m.shift = this._event.shiftKey;
+	m.any = m.alt || m.ctrl || m.shift || m.meta;
+	this._modifier = m;
+	return m;
+};
 
-    _modifier: null,
-    /** @id MochiKit.Signal.Event.prototype.modifier */
-    modifier: function () {
-        if (this._modifier !== null) {
-            return this._modifier;
-        }
-        var m = {};
-        m.alt = this._event.altKey;
-        m.ctrl = this._event.ctrlKey;
-        m.meta = this._event.metaKey || false; // IE and Opera punt here
-        m.shift = this._event.shiftKey;
-        m.any = m.alt || m.ctrl || m.shift || m.meta;
-        this._modifier = m;
-        return m;
-    },
+MochiKit.Signal.Event.prototype._key = null;
+/** @id MochiKit.Signal.Event.prototype.key */
+MochiKit.Signal.Event.prototype.key = function () {
+	if (this._key !== null) {
+		return this._key;
+	}
+	var k = {};
+	if (this.type() && this.type().indexOf('key') === 0) {
 
-    _key: null,
-    /** @id MochiKit.Signal.Event.prototype.key */
-    key: function () {
-        if (this._key !== null) {
-            return this._key;
-        }
-        var k = {};
-        if (this.type() && this.type().indexOf('key') === 0) {
+		/*
 
-            /*
+			If you're looking for a special key, look for it in keydown or
+			keyup, but never keypress. If you're looking for a Unicode
+			chracter, look for it with keypress, but never keyup or
+			keydown.
 
-                If you're looking for a special key, look for it in keydown or
-                keyup, but never keypress. If you're looking for a Unicode
-                chracter, look for it with keypress, but never keyup or
-                keydown.
+			Notes:
 
-                Notes:
+			FF key event behavior:
+			key     event   charCode    keyCode
+			DOWN    ku,kd   0           40
+			DOWN    kp      0           40
+			ESC     ku,kd   0           27
+			ESC     kp      0           27
+			a       ku,kd   0           65
+			a       kp      97          0
+			shift+a ku,kd   0           65
+			shift+a kp      65          0
+			1       ku,kd   0           49
+			1       kp      49          0
+			shift+1 ku,kd   0           0
+			shift+1 kp      33          0
 
-                FF key event behavior:
-                key     event   charCode    keyCode
-                DOWN    ku,kd   0           40
-                DOWN    kp      0           40
-                ESC     ku,kd   0           27
-                ESC     kp      0           27
-                a       ku,kd   0           65
-                a       kp      97          0
-                shift+a ku,kd   0           65
-                shift+a kp      65          0
-                1       ku,kd   0           49
-                1       kp      49          0
-                shift+1 ku,kd   0           0
-                shift+1 kp      33          0
+			IE key event behavior:
+			(IE doesn't fire keypress events for special keys.)
+			key     event   keyCode
+			DOWN    ku,kd   40
+			DOWN    kp      undefined
+			ESC     ku,kd   27
+			ESC     kp      27
+			a       ku,kd   65
+			a       kp      97
+			shift+a ku,kd   65
+			shift+a kp      65
+			1       ku,kd   49
+			1       kp      49
+			shift+1 ku,kd   49
+			shift+1 kp      33
 
-                IE key event behavior:
-                (IE doesn't fire keypress events for special keys.)
-                key     event   keyCode
-                DOWN    ku,kd   40
-                DOWN    kp      undefined
-                ESC     ku,kd   27
-                ESC     kp      27
-                a       ku,kd   65
-                a       kp      97
-                shift+a ku,kd   65
-                shift+a kp      65
-                1       ku,kd   49
-                1       kp      49
-                shift+1 ku,kd   49
-                shift+1 kp      33
+			Safari key event behavior:
+			(Safari sets charCode and keyCode to something crazy for
+			special keys.)
+			key     event   charCode    keyCode
+			DOWN    ku,kd   63233       40
+			DOWN    kp      63233       63233
+			ESC     ku,kd   27          27
+			ESC     kp      27          27
+			a       ku,kd   97          65
+			a       kp      97          97
+			shift+a ku,kd   65          65
+			shift+a kp      65          65
+			1       ku,kd   49          49
+			1       kp      49          49
+			shift+1 ku,kd   33          49
+			shift+1 kp      33          33
 
-                Safari key event behavior:
-                (Safari sets charCode and keyCode to something crazy for
-                special keys.)
-                key     event   charCode    keyCode
-                DOWN    ku,kd   63233       40
-                DOWN    kp      63233       63233
-                ESC     ku,kd   27          27
-                ESC     kp      27          27
-                a       ku,kd   97          65
-                a       kp      97          97
-                shift+a ku,kd   65          65
-                shift+a kp      65          65
-                1       ku,kd   49          49
-                1       kp      49          49
-                shift+1 ku,kd   33          49
-                shift+1 kp      33          33
+		*/
 
-            */
+		/* look for special keys here */
+		if (this.type() == 'keydown' || this.type() == 'keyup') {
+			k.code = this._event.keyCode;
+			k.string = (MochiKit.Signal._specialKeys[k.code] ||
+				'KEY_UNKNOWN');
+			this._key = k;
+			return k;
 
-            /* look for special keys here */
-            if (this.type() == 'keydown' || this.type() == 'keyup') {
-                k.code = this._event.keyCode;
-                k.string = (MochiKit.Signal._specialKeys[k.code] ||
-                    'KEY_UNKNOWN');
-                this._key = k;
-                return k;
+		/* look for characters here */
+		} else if (this.type() == 'keypress') {
 
-            /* look for characters here */
-            } else if (this.type() == 'keypress') {
+			/*
 
-                /*
+				Special key behavior:
 
-                    Special key behavior:
+				IE: does not fire keypress events for special keys
+				FF: sets charCode to 0, and sets the correct keyCode
+				Safari: sets keyCode and charCode to something stupid
 
-                    IE: does not fire keypress events for special keys
-                    FF: sets charCode to 0, and sets the correct keyCode
-                    Safari: sets keyCode and charCode to something stupid
+			*/
 
-                */
+			k.code = 0;
+			k.string = '';
 
-                k.code = 0;
-                k.string = '';
+			if (typeof(this._event.charCode) != 'undefined' &&
+				this._event.charCode !== 0 &&
+				!MochiKit.Signal._specialMacKeys[this._event.charCode]) {
+				k.code = this._event.charCode;
+				k.string = String.fromCharCode(k.code);
+			} else if (this._event.keyCode &&
+				typeof(this._event.charCode) == 'undefined') { // IE
+				k.code = this._event.keyCode;
+				k.string = String.fromCharCode(k.code);
+			}
 
-                if (typeof(this._event.charCode) != 'undefined' &&
-                    this._event.charCode !== 0 &&
-                    !MochiKit.Signal._specialMacKeys[this._event.charCode]) {
-                    k.code = this._event.charCode;
-                    k.string = String.fromCharCode(k.code);
-                } else if (this._event.keyCode &&
-                    typeof(this._event.charCode) == 'undefined') { // IE
-                    k.code = this._event.keyCode;
-                    k.string = String.fromCharCode(k.code);
-                }
+			this._key = k;
+			return k;
+		}
+	}
+	return undefined;
+};
 
-                this._key = k;
-                return k;
-            }
-        }
-        return undefined;
-    },
+MochiKit.Signal.Event.prototype._mouse = null;
+/** @id MochiKit.Signal.Event.prototype.mouse */
+MochiKit.Signal.Event.prototype.mouse = function () {
+	if (this._mouse !== null) {
+		return this._mouse;
+	}
 
-    _mouse: null,
-    /** @id MochiKit.Signal.Event.prototype.mouse */
-    mouse: function () {
-        if (this._mouse !== null) {
-            return this._mouse;
-        }
+	var m = {};
+	var e = this._event;
 
-        var m = {};
-        var e = this._event;
+	if (this.type() && (
+		this.type().indexOf('mouse') === 0 ||
+		this.type().indexOf('drag') === 0 ||
+		this.type().indexOf('click') != -1 ||
+		this.type() == 'contextmenu')) {
 
-        if (this.type() && (
-            this.type().indexOf('mouse') === 0 ||
-            this.type().indexOf('drag') === 0 ||
-            this.type().indexOf('click') != -1 ||
-            this.type() == 'contextmenu')) {
+		m.client = { x: 0, y: 0 };
+		if (e.clientX || e.clientY) {
+			m.client.x = (!e.clientX || e.clientX < 0) ? 0 : e.clientX;
+			m.client.y = (!e.clientY || e.clientY < 0) ? 0 : e.clientY;
+		}
 
-            m.client = new MochiKit.Style.Coordinates(0, 0);
-            if (e.clientX || e.clientY) {
-                m.client.x = (!e.clientX || e.clientX < 0) ? 0 : e.clientX;
-                m.client.y = (!e.clientY || e.clientY < 0) ? 0 : e.clientY;
-            }
+		m.page = { x: 0, y: 0 };
+		if (e.pageX || e.pageY) {
+			m.page.x = (!e.pageX || e.pageX < 0) ? 0 : e.pageX;
+			m.page.y = (!e.pageY || e.pageY < 0) ? 0 : e.pageY;
+		} else {
+			/*
 
-            m.page = new MochiKit.Style.Coordinates(0, 0);
-            if (e.pageX || e.pageY) {
-                m.page.x = (!e.pageX || e.pageX < 0) ? 0 : e.pageX;
-                m.page.y = (!e.pageY || e.pageY < 0) ? 0 : e.pageY;
-            } else {
-                /*
+				The IE shortcut can be off by two. We fix it. See:
+				http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/getboundingclientrect.asp
 
-                    The IE shortcut can be off by two. We fix it. See:
-                    http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/getboundingclientrect.asp
+				This is similar to the method used in
+				MochiKit.Style.getElementPosition().
 
-                    This is similar to the method used in
-                    MochiKit.Style.getElementPosition().
+			*/
+			var de = MochiKit.DOM._document.documentElement;
+			var b = MochiKit.DOM._document.body;
 
-                */
-                var de = MochiKit.DOM._document.documentElement;
-                var b = MochiKit.DOM._document.body;
+			m.page.x = e.clientX +
+				(de.scrollLeft || b.scrollLeft) -
+				(de.clientLeft || 0);
 
-                m.page.x = e.clientX +
-                    (de.scrollLeft || b.scrollLeft) -
-                    (de.clientLeft || 0);
+			m.page.y = e.clientY +
+				(de.scrollTop || b.scrollTop) -
+				(de.clientTop || 0);
 
-                m.page.y = e.clientY +
-                    (de.scrollTop || b.scrollTop) -
-                    (de.clientTop || 0);
+		}
+		if (this.type() != 'mousemove' && this.type() != 'mousewheel') {
+			m.button = {};
+			m.button.left = false;
+			m.button.right = false;
+			m.button.middle = false;
 
-            }
-            if (this.type() != 'mousemove' && this.type() != 'mousewheel') {
-                m.button = {};
-                m.button.left = false;
-                m.button.right = false;
-                m.button.middle = false;
+			/* we could check e.button, but which is more consistent */
+			if (e.which) {
+				m.button.left = (e.which == 1);
+				m.button.middle = (e.which == 2);
+				m.button.right = (e.which == 3);
 
-                /* we could check e.button, but which is more consistent */
-                if (e.which) {
-                    m.button.left = (e.which == 1);
-                    m.button.middle = (e.which == 2);
-                    m.button.right = (e.which == 3);
+				/*
 
-                    /*
+					Mac browsers and right click:
 
-                        Mac browsers and right click:
+						- Safari doesn't fire any click events on a right
+						  click:
+						  http://bugs.webkit.org/show_bug.cgi?id=6595
 
-                            - Safari doesn't fire any click events on a right
-                              click:
-                              http://bugs.webkit.org/show_bug.cgi?id=6595
+						- Firefox fires the event, and sets ctrlKey = true
 
-                            - Firefox fires the event, and sets ctrlKey = true
+						- Opera fires the event, and sets metaKey = true
 
-                            - Opera fires the event, and sets metaKey = true
+					oncontextmenu is fired on right clicks between
+					browsers and across platforms.
 
-                        oncontextmenu is fired on right clicks between
-                        browsers and across platforms.
+				*/
 
-                    */
+			} else {
+				m.button.left = !!(e.button & 1);
+				m.button.right = !!(e.button & 2);
+				m.button.middle = !!(e.button & 4);
+			}
+		}
+		if (this.type() == 'mousewheel') {
+			m.wheel = { x: 0, y: 0 };
+			if (e.wheelDeltaX || e.wheelDeltaY) {
+				m.wheel.x = e.wheelDeltaX / -40 || 0;
+				m.wheel.y = e.wheelDeltaY / -40 || 0;
+			} else if (e.wheelDelta) {
+				m.wheel.y = e.wheelDelta / -40;
+			} else {
+				m.wheel.y = e.detail || 0;
+			}
+		}
+		this._mouse = m;
+		return m;
+	}
+	return undefined;
+};
 
-                } else {
-                    m.button.left = !!(e.button & 1);
-                    m.button.right = !!(e.button & 2);
-                    m.button.middle = !!(e.button & 4);
-                }
-            }
-            if (this.type() == 'mousewheel') {
-                m.wheel = new MochiKit.Style.Coordinates(0, 0);
-                if (e.wheelDeltaX || e.wheelDeltaY) {
-                    m.wheel.x = e.wheelDeltaX / -40 || 0;
-                    m.wheel.y = e.wheelDeltaY / -40 || 0;
-                } else if (e.wheelDelta) {
-                    m.wheel.y = e.wheelDelta / -40;
-                } else {
-                    m.wheel.y = e.detail || 0;
-                }
-            }
-            this._mouse = m;
-            return m;
-        }
-        return undefined;
-    },
+/** @id MochiKit.Signal.Event.prototype.stop */
+MochiKit.Signal.Event.prototype.stop = function () {
+	this.stopPropagation();
+	this.preventDefault();
+};
 
-    /** @id MochiKit.Signal.Event.prototype.stop */
-    stop: function () {
-        this.stopPropagation();
-        this.preventDefault();
-    },
+/** @id MochiKit.Signal.Event.prototype.stopPropagation */
+MochiKit.Signal.Event.prototype.stopPropagation = function () {
+	if (this._event.stopPropagation) {
+		this._event.stopPropagation();
+	} else {
+		this._event.cancelBubble = true;
+	}
+};
 
-    /** @id MochiKit.Signal.Event.prototype.stopPropagation */
-    stopPropagation: function () {
-        if (this._event.stopPropagation) {
-            this._event.stopPropagation();
-        } else {
-            this._event.cancelBubble = true;
-        }
-    },
+/** @id MochiKit.Signal.Event.prototype.preventDefault */
+MochiKit.Signal.Event.prototype.preventDefault = function () {
+	if (this._event.preventDefault) {
+		this._event.preventDefault();
+	} else if (this._confirmUnload === null) {
+		this._event.returnValue = false;
+	}
+};
 
-    /** @id MochiKit.Signal.Event.prototype.preventDefault */
-    preventDefault: function () {
-        if (this._event.preventDefault) {
-            this._event.preventDefault();
-        } else if (this._confirmUnload === null) {
-            this._event.returnValue = false;
-        }
-    },
+MochiKit.Signal.Event.prototype._confirmUnload = null;
 
-    _confirmUnload: null,
+/** @id MochiKit.Signal.Event.prototype.confirmUnload */
+MochiKit.Signal.Event.prototype.confirmUnload = function (msg) {
+	if (this.type() == 'beforeunload') {
+		this._confirmUnload = msg;
+		this._event.returnValue = msg;
+	}
+};
 
-    /** @id MochiKit.Signal.Event.prototype.confirmUnload */
-    confirmUnload: function (msg) {
-        if (this.type() == 'beforeunload') {
-            this._confirmUnload = msg;
-            this._event.returnValue = msg;
-        }
-    }
-});
 
 /* Safari sets keyCode to these special values onkeypress. */
 MochiKit.Signal._specialMacKeys = {
@@ -487,7 +499,10 @@ MochiKit.Signal._specialKeys = {
     }
 })();
 
-/* Internal object to keep track of created signals. */
+/**
+ * Internal object to keep track of created signals.
+ * @constructor
+ */
 MochiKit.Signal.Ident = function (ident) {
     this.source = ident.source;
     this.signal = ident.signal;
@@ -500,7 +515,12 @@ MochiKit.Signal.Ident = function (ident) {
 MochiKit.Signal.Ident.__export__ = false;
 MochiKit.Signal.Ident.prototype = {};
 
-MochiKit.Base.update(MochiKit.Signal, {
+MochiKit.Signal.Ident.prototype.__repr__ = function() {
+	var repr = MochiKit.Base.repr;
+	return 'src:' + repr(this.source) + ', sig: ' + repr(this.signal) + ', isDOM: ' + repr(this.isDOM) + ', connected: ' + repr(this.connected);
+};
+
+MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 
     _unloadCache: function () {
         var self = MochiKit.Signal;
@@ -529,10 +549,10 @@ MochiKit.Base.update(MochiKit.Signal, {
             if (sig === 'onload' || sig === 'onunload') {
                 return function (nativeEvent) {
                     obj[func].apply(obj, [new E(src, nativeEvent)]);
-                    
+
                     var ident = new MochiKit.Signal.Ident({
                         source: src, signal: sig, objOrFunc: obj, funcOrStr: func});
-                    
+
                     MochiKit.Signal._disconnect(ident);
                 };
             } else {
@@ -544,10 +564,10 @@ MochiKit.Base.update(MochiKit.Signal, {
             if (sig === 'onload' || sig === 'onunload') {
                 return function (nativeEvent) {
                     func.apply(obj, [new E(src, nativeEvent)]);
-                    
+
                     var ident = new MochiKit.Signal.Ident({
                         source: src, signal: sig, objOrFunc: func});
-                    
+
                     MochiKit.Signal._disconnect(ident);
                 };
             } else {
@@ -655,12 +675,12 @@ MochiKit.Base.update(MochiKit.Signal, {
         }
 
         var ident = new MochiKit.Signal.Ident({
-            source: src, 
-            signal: sig, 
-            listener: listener, 
-            isDOM: isDOM, 
-            objOrFunc: objOrFunc, 
-            funcOrStr: funcOrStr, 
+            source: src,
+            signal: sig,
+            listener: listener,
+            isDOM: isDOM,
+            objOrFunc: objOrFunc,
+            funcOrStr: funcOrStr,
             connected: true
         });
         self._observers.push(ident);
@@ -851,14 +871,7 @@ MochiKit.Base.update(MochiKit.Signal, {
             }
         }
         self._lock--;
-        if (self._lock === 0 && self._dirty) {
-            self._dirty = false;
-            for (var i = observers.length - 1; i >= 0; i--) {
-                if (!observers[i].connected) {
-                    observers.splice(i, 1);
-                }
-            }
-        }
+		self._gc();
         if (errors.length == 1) {
             throw errors[0];
         } else if (errors.length > 1) {
@@ -866,10 +879,31 @@ MochiKit.Base.update(MochiKit.Signal, {
             e.errors = errors;
             throw e;
         }
-    }
+    },
+
+	/**
+	 * frees any pending disconnects (if lock allows)
+	 * @return {boolean} false if locked and no gc could be performed
+	 * @private
+	 */
+	_gc: function()	{
+		var self = MochiKit.Signal;
+		var observers = self._observers;
+        if (self._lock === 0 && self._dirty) {
+            for (var i = observers.length - 1; i >= 0; i--) {
+                if (!observers[i].connected) {
+                    observers.splice(i, 1);
+                }
+            }
+			self._dirty = false;
+			return true;
+        }
+		return false;
+	}
 
 });
 
+/** @this MochiKit.Signal */
 MochiKit.Signal.__new__ = function (win) {
     var m = MochiKit.Base;
     this._document = document;

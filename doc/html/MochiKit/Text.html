@@ -4,11 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.7: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.8: http://docutils.sourceforge.net/" />
 <title>MochiKit.Text - string formatting and helper functions</title>
 
 <link rel="stylesheet" href="../../../include/css/documentation.css" type="text/css" />
-<script type="text/javascript" src="../../../packed/MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="../../../MochiKit/MochiKit.js"></script>
 <script type="text/javascript" src="../../js/toc.js"></script>
 </head>
 <body>
@@ -35,10 +35,9 @@ assert( formatter(&quot;{:6.1%}&quot;)(0.125) == &quot; 12.5%&quot; );
 </div>
 <div class="section" id="description">
 <h1>Description</h1>
-<p><a class="mochiref reference external" href="Text.html">MochiKit.Text</a> provides helper functions for creating or
-managing text (also known as strings). Formatting strings and
-stringifying numbers is boring, so a couple useful functions in that
-domain live here.</p>
+<p>MochiKit.Text provides helper functions for manipulating text (also
+known as strings). A generic mechanism for formatting text and numbers
+also live here.</p>
 </div>
 <div class="section" id="dependencies">
 <h1>Dependencies</h1>
@@ -76,20 +75,25 @@ format, either by position in the argument list or by accessing
 properties in a value object. Both methods can be combined or deeply
 nested, using a dot (<tt class="docutils literal">.</tt>) to separate the sub-parts.</p>
 <p>The <tt class="docutils literal">specification</tt> part is optional and specifies which value
-formatting to apply to the value. This is the only part of the
-formatting pattern used by the <a class="mochiref reference external" href="#fn-formatvalue">formatValue</a> function.
-The specification itself consists of a number of parts:</p>
+formatting to apply to the value.</p>
+</div>
+<div class="section" id="format-specifications">
+<h2>Format Specifications</h2>
+<p>The format specification outlines how a value is to be converted
+into a text representation (a string). This is the only part of
+the formatting pattern accepted by the <a class="mochiref reference external" href="#fn-formatvalue">formatValue</a>
+function. It consists of a number of parts:</p>
 <pre class="literal-block">
 [flags][width][.precision][type]
 </pre>
-<p>All the various parts are optional and have the following meaning:</p>
+<p>All the parts are optional and have the following meaning:</p>
 <ul class="simple">
 <li><tt class="docutils literal">flags</tt> specifies the text alignment and numeric sign, padding and
 grouping flags. See the table below for available options.</li>
-<li><tt class="docutils literal">width</tt> specifies the minimum field width.</li>
-<li><tt class="docutils literal">precision</tt> indicates how many digits should be displayed after the
-decimal point in a floating point conversion. For a non-numeric
-<tt class="docutils literal">type</tt> the field indicates the maximum field size.</li>
+<li><tt class="docutils literal">width</tt> a number specifying the minimum field width.</li>
+<li><tt class="docutils literal">precision</tt> a number indicating how many digits should be displayed
+after the decimal point in a floating point conversion. For a
+non-numeric <tt class="docutils literal">type</tt>, the field indicates the maximum field size.</li>
 <li><tt class="docutils literal">type</tt> indicates the desired formatting type to use. See the table
 below for available options.</li>
 </ul>
@@ -304,17 +308,18 @@ consist of repeated <tt class="docutils literal">fillChar</tt> copies.</p>
 <a name="fn-split"></a>
 <a class="mochidef reference external" href="#fn-split">split(str, separator=&quot;\n&quot; [, max])</a>:</p>
 <blockquote>
-<p>Splits <tt class="docutils literal">str</tt> using a <tt class="docutils literal">separator</tt> string.
+<p>Splits <tt class="docutils literal">str</tt> using a <tt class="docutils literal">separator</tt> string or regular expression.
 If <tt class="docutils literal">max</tt> is given, at most <tt class="docutils literal">max</tt> splits will be performed
 (giving at most <tt class="docutils literal">max</tt> + 1 parts returned).</p>
+<p>Returns an <tt class="docutils literal">Array</tt> with the input <tt class="docutils literal">str</tt> even if it was empty
+or no splits were made.</p>
 <p>If <tt class="docutils literal">max</tt> is omitted, this is equivalent to the built in
-<tt class="docutils literal">str.split(separator)</tt>.
-The difference to the built in method can be illustrated by:</p>
-<pre class="doctest-block">
+<tt class="docutils literal">str.split(separator)</tt>. The difference to the built in method
+can be illustrated by:</p>
+<pre class="literal-block">
 &gt;&gt;&gt; &quot;lovely bunch of coconuts&quot;.split(&quot; &quot;, 2)
 [&quot;lovely&quot;, &quot;bunch&quot;]
-</pre>
-<pre class="doctest-block">
+
 &gt;&gt;&gt; MochiKit.Text.split(&quot;lovely bunch of coconuts&quot;, &quot; &quot;, 2)
 [&quot;lovely&quot;, &quot;bunch&quot;, &quot;of coconuts&quot;]
 </pre>
@@ -327,10 +332,10 @@ The difference to the built in method can be illustrated by:</p>
 <a name="fn-rsplit"></a>
 <a class="mochidef reference external" href="#fn-rsplit">rsplit(str, separator=&quot;\n&quot; [, max])</a>:</p>
 <blockquote>
-<p>Splits <tt class="docutils literal">str</tt> using a <tt class="docutils literal">separator</tt> string.
+<p>Splits <tt class="docutils literal">str</tt> using a <tt class="docutils literal">separator</tt> string or regular expression.
 This is similar to <tt class="docutils literal">split</tt>, except that if <tt class="docutils literal">max</tt> is given,
-splits are performed from the right hand side first</p>
-<pre class="doctest-block">
+splits are performed from the right hand side first.</p>
+<pre class="literal-block">
 &gt;&gt;&gt; MochiKit.Text.rsplit(&quot;lovely bunch of coconuts&quot;, &quot; &quot;, 2)
 [&quot;lovely bunch&quot;, &quot;of&quot;, &quot;coconuts&quot;]
 </pre>
