@@ -9,10 +9,11 @@
 if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.provide('MochiKit.Text_ext');
 
+	goog.require('MochiKit.Base');
 	goog.require('MochiKit.Text');
 }
 
-MochiKit.Base.module(MochiKit, 'Text_ext', '1.5', ['Text']);
+MochiKit.Base.module(MochiKit, 'Text_ext', '1.5', ['Base', 'Text']);
 
 
 /**
