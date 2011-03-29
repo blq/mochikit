@@ -306,11 +306,13 @@ Functions
 :mochidef:`repeatSeq(iterable, n)`:
 
     Repeats the ``iterable`` sequence ``n`` times.
-    Note. this assumes the iterable is Not an iterator, i.e can be restarted (doesn't use auxilary storage as cycle() does)
+    Note. this assumes the iterable is Not an iterator, i.e can be restarted (doesn't use auxilary storage as :mochiref:`MochiKit.Iter.cycle()` does)
 
     ::
 
-        repeatSeq(range(3), 3) --> 0, 1, 2, 0, 1, 2, 0, 1, 2
+        repeatSeq(xrange(3), 3) --> 0, 1, 2, 0, 1, 2, 0, 1, 2
+
+    (osbserve the use of :mochiref:`MochiKit.Iter.xrange()` and not :mochiref:`MochiKit.Iter.range()` above)
 
 
 :mochidef:`xrange([start,] stop[,step])`:

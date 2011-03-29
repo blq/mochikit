@@ -302,10 +302,11 @@ Alias for <a class="mochiref reference external" href="Iter.html#fn-applymap">Mo
 <a class="mochidef reference external" href="#fn-repeatseq">repeatSeq(iterable, n)</a>:</p>
 <blockquote>
 <p>Repeats the <tt class="docutils literal">iterable</tt> sequence <tt class="docutils literal">n</tt> times.
-Note. this assumes the iterable is Not an iterator, i.e can be restarted (doesn't use auxilary storage as cycle() does)</p>
+Note. this assumes the iterable is Not an iterator, i.e can be restarted (doesn't use auxilary storage as <a class="mochiref reference external" href="Iter.html#fn-cycle">MochiKit.Iter.cycle()</a> does)</p>
 <pre class="literal-block">
-repeatSeq(range(3), 3) --&gt; 0, 1, 2, 0, 1, 2, 0, 1, 2
+repeatSeq(xrange(3), 3) --&gt; 0, 1, 2, 0, 1, 2, 0, 1, 2
 </pre>
+<p>(osbserve the use <a class="mochiref reference external" href="Iter.html#fn-xrange">MochiKit.Iter.xrange()</a> and not <a class="mochiref reference external" href="Iter.html#fn-range">MochiKit.Iter.range()</a> above)</p>
 </blockquote>
 <p>
 <a name="fn-xrange"></a>
