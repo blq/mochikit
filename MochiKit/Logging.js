@@ -116,25 +116,41 @@ MochiKit.Logging.Logger.prototype = {
         this._messages.splice(0, this._messages.length);
     },
 
-    /** @id MochiKit.Logging.Logger.prototype.logToConsole */
-    logToConsole: function (msg) {
+    /**
+     * @id MochiKit.Logging.Logger.prototype.logToConsole
+     * @param {string} level
+     * @param {string} msg
+     */
+    logToConsole: function (level, msg) {
         if (typeof(window) != "undefined" && window.console
                 && window.console.log) {
             // Safari and FireBug 0.4
-            // Percent replacement is a workaround for cute Safari crashing bug
-            window.console.log(msg.replace(/%/g, '\uFF05'));
-        } else if (typeof(opera) != "undefined" && opera.postError) {
-            // Opera
-            opera.postError(msg);
-        } else if (typeof(Debug) != "undefined" && Debug.writeln) {
-            // IE Web Development Helper (?)
-            // http://www.nikhilk.net/Entry.aspx?id=93
-            Debug.writeln(msg);
-        } else if (typeof(debug) != "undefined" && debug.trace) {
-            // Atlas framework (?)
-            // http://www.nikhilk.net/Entry.aspx?id=93
-            debug.trace(msg);
-        }
+
+			var consoleLevel = window.console['firebug'] ? ({ // todo: Chrome etc seems to support these also
+				'INFO': 'info', // or 'log'?
+				'DEBUG': 'debug',
+				'WARNING': 'warn',
+				'ERROR': 'error',
+				'FATAL': 'error'
+			}[level] || 'log') : 'log';
+
+			// Percent replacement is a workaround for cute Safari crashing bug
+            window.console[consoleLevel](msg.replace(/%/g, '\uFF05'));
+        } else {
+			msg = level + ": " + msg;
+			if (typeof(opera) != "undefined" && opera.postError) {
+				// Opera
+				opera.postError(msg);
+			} else if (typeof(Debug) != "undefined" && Debug.writeln) {
+				// IE Web Development Helper (?)
+				// http://www.nikhilk.net/Entry.aspx?id=93
+				Debug.writeln(msg);
+			} else if (typeof(debug) != "undefined" && debug.trace) {
+				// Atlas framework (?)
+				// http://www.nikhilk.net/Entry.aspx?id=93
+				debug.trace(msg);
+			}
+		}
     },
 
     /** @id MochiKit.Logging.Logger.prototype.dispatchListeners */
@@ -191,7 +207,7 @@ MochiKit.Logging.Logger.prototype = {
         this._messages.push(msg);
         this.dispatchListeners(msg);
         if (this.useNativeConsole) {
-            this.logToConsole(msg.level + ": " + msg.info.join(" "));
+            this.logToConsole(msg.level, msg.info.join(" "));
         }
         this.counter += 1;
         while (this.maxSize >= 0 && this._messages.length > this.maxSize) {
