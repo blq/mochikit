@@ -122,6 +122,7 @@ MochiKit.Logging.Logger.prototype = {
      * @param {string} msg
      */
     logToConsole: function (level, msg) {
+		msg = level + ": " + msg;
         if (typeof(window) != "undefined" && window.console
                 && window.console.log) {
             // Safari and FireBug 0.4
@@ -137,7 +138,6 @@ MochiKit.Logging.Logger.prototype = {
 			// Percent replacement is a workaround for cute Safari crashing bug
             window.console[consoleLevel](msg.replace(/%/g, '\uFF05'));
         } else {
-			msg = level + ": " + msg;
 			if (typeof(opera) != "undefined" && opera.postError) {
 				// Opera
 				opera.postError(msg);
