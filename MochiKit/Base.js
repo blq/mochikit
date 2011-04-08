@@ -214,7 +214,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
     },
 
 
-    /** @id MochiKit.Base.updatetree */
+    /**
+     * @id MochiKit.Base.updatetree
+     * todo: perhaps create a mergetree() also?
+     * @return {!Object}
+     */
     updatetree: function (self, obj/*, ...*/) {
         if (self === null || self === undefined) {
             self = {};
