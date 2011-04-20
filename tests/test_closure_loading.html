@@ -13,7 +13,7 @@
 
 
 	<!-- compressed mode -->
-	<!-- (note base.js can be baked into the packed module also) -->
+	<!-- (note base.js can be baked into the packed module (or removed completely) also) -->
 <!--
 	<script type="text/javascript" src="../packed/MochiKit/Closure/base.js"></script>
     <script type="text/javascript" src="../packed/MochiKit/Closure/MochiKit.js"></script>
@@ -24,6 +24,7 @@
 
 <body>
 
+<!-- can be removed in compressed mode -->
 <script type="text/javascript">
 	// example of requiring couple of MochiKit modules
 	// note how we don't need to specify 'Base' and how 'DOM' is also loaded automatically
@@ -32,6 +33,7 @@
 	goog.require('MochiKit.Signal');
 	goog.require('MochiKit.Logging');
 </script>
+
 <!-- ! this separation of script blocks is necessary -->
 <script type="text/javascript">
 	// start your app here! - observe: this must be in a separate <script> block from the .require's

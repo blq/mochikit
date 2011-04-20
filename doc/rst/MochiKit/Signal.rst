@@ -72,7 +72,7 @@ to clean up IE's nasty memory leakage.
 
 This event system is largely based on Qt's signal/slot system. Read
 more on how that is handled and also how it is used in model/view
-programming at: http://doc.trolltech.com/
+programming at: http://doc.trolltech.com/, specifically http://doc.trolltech.com/4.7/signalsandslots.html
 
 
 Dependencies
@@ -122,8 +122,8 @@ you're looking for.
 .. _`Safari bug 6595`: http://bugs.webkit.org/show_bug.cgi?id=6595
 .. _`Safari bug 7790`: http://bugs.webkit.org/show_bug.cgi?id=7790
 .. _`Safari bug 8707`: http://bugs.webkit.org/show_bug.cgi?id=8707
-.. _`stopPropagation()`: http://developer.mozilla.org/en/docs/DOM:event.stopPropagation
-.. _`preventDefault()`: http://developer.mozilla.org/en/docs/DOM:event.preventDefault
+.. _`stopPropagation()`: http://developer.mozilla.org/en/docs/DOM/event.stopPropagation
+.. _`preventDefault()`: http://developer.mozilla.org/en/docs/DOM/event.preventDefault
 
 
 Memory Usage
@@ -304,7 +304,7 @@ Signal API Reference
     ``disconnectAllTo(dest)`` removes all signals connected to dest.
 
     ``disconnectAllTo(dest, func)`` will remove all
-    signals connected to dest using func. 
+    signals connected to dest using func.
 
     *Availability*:
         Available in MochiKit 1.4+
@@ -461,9 +461,9 @@ DOM Custom Event Object Reference
 
         -   Current versions of Safari won't signal ``'ondblclick'``
             when attached via ``connect()`` (`Safari Bug 7790`_).
-            
-        -   In Safari < 2.0.4, calling ``preventDefault()`` or ``stop()`` 
-            in ``'onclick'`` events signalled from ``<a>`` tags does not 
+
+        -   In Safari < 2.0.4, calling ``preventDefault()`` or ``stop()``
+            in ``'onclick'`` events signalled from ``<a>`` tags does not
             prevent the browser from following those links.
 
         -   Mac browsers don't report right-click consistently. Firefox
