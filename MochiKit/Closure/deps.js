@@ -22,6 +22,6 @@ goog.addDependency('Signal.js?v=1.5', ['MochiKit.Signal'], ['MochiKit.Base', 'Mo
 goog.addDependency('Sortable.js?v=1.5', ['MochiKit.Sortable'], ['MochiKit.Base', 'MochiKit.DOM', 'MochiKit.DragAndDrop', 'MochiKit.Iter', 'MochiKit.Position']);
 goog.addDependency('Style.js?v=1.5', ['MochiKit.Style'], ['MochiKit.Base', 'MochiKit.DOM']);
 goog.addDependency('Test.js?v=1.5', ['MochiKit.Test'], ['MochiKit.Base']);
-goog.addDependency('Text-ext.js?v=1.5', ['MochiKit.Text_ext'], ['MochiKit.Text']);
+goog.addDependency('Text-ext.js?v=1.5', ['MochiKit.Text_ext'], ['MochiKit.Base', 'MochiKit.Text']);
 goog.addDependency('Text.js?v=1.5', ['MochiKit.Text'], ['MochiKit.Base', 'MochiKit.Format']);
 goog.addDependency('Visual.js?v=1.5', ['MochiKit.Visual'], ['MochiKit.Base', 'MochiKit.Color', 'MochiKit.DOM', 'MochiKit.Position', 'MochiKit.Style']);
