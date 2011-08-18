@@ -1,6 +1,18 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Google Inc. All Rights Reserved.
+# Copyright 2006 The Closure Library Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS-IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 
 """Calculates Javascript dependencies without requiring Google3.
@@ -14,7 +26,12 @@ required for compilation.\n
 
 
 
-import distutils.version
+try:
+  import distutils.version
+except ImportError:
+  # distutils is not available in all environments
+  distutils = None
+
 import logging
 import optparse
 import os
@@ -63,7 +80,7 @@ def ExpandDirectories(refs):
 
   Returns:
     A list of references with directories removed and replaced by any
-    .js files that are found in them.
+    .js files that are found in them. Also, the paths will be normalized.
   """
   result = []
   for ref in refs:
@@ -76,7 +93,7 @@ def ExpandDirectories(refs):
             result.append(os.path.join(directory, filename))
     else:
       result.append(ref)
-  return result
+  return map(os.path.normpath, result)
 
 
 class DependencyInfo(object):
@@ -107,7 +124,11 @@ def BuildDependenciesFromFiles(files):
     A list of dependency objects, one for each file in the files argument.
   """
   result = []
+  filenames = set()
   for filename in files:
+    if filename in filenames:
+      continue
+
     # Python 3 requires the file encoding to be specified
     if (sys.version_info[0] < 3):
       file_handle = open(filename, 'r')
@@ -123,6 +144,8 @@ def BuildDependenciesFromFiles(files):
     finally:
       file_handle.close()
     result.append(dep)
+    filenames.add(filename)
+
   return result
 
 
@@ -180,7 +203,7 @@ def CalculateDependencies(paths, inputs):
     A list of all files, including inputs, that are needed to compile the given
     inputs.
   """
-  deps = BuildDependenciesFromFiles(paths)
+  deps = BuildDependenciesFromFiles(paths + inputs)
   search_hash = BuildDependencyHashFromDependencies(deps)
   result_list = []
   seen_list = []
@@ -220,7 +243,7 @@ def FindClosureBasePath(paths):
     paths: A list of paths.
 
   Returns:
-    The path to Closure's base.js file, if found.
+    The path to Closure's base.js file including filename, if found.
   """
 
   for path in paths:
@@ -272,10 +295,36 @@ def ResolveDependencies(require, search_hash, result_list, seen_list):
     result_list.append(dep.filename)
 
 
-def GetDepsLine(dep):
-  """Returns a JS string for a dependency statement in the deps.js file."""
-  return 'goog.addDependency(\'%s\', %s, %s);' % (
-      os.path.normpath(dep.filename).replace("\\", "/"), dep.provides, dep.requires) # patched. see issue: http://code.google.com/p/closure-library/issues/detail?id=99&can=1&q=calcdeps
+def GetDepsLine(dep, base_path):
+  """Returns a JS string for a dependency statement in the deps.js file.
+
+  Args:
+    dep: The dependency that we're printing.
+    base_path: The path to Closure's base.js including filename.
+  """
+  return 'goog.addDependency("%s", %s, %s);' % (
+      GetRelpath(dep.filename, base_path), dep.provides, dep.requires)
+
+
+def GetRelpath(path, start):
+  """Return a relative path to |path| from |start|."""
+  # NOTE: Python 2.6 provides os.path.relpath, which has almost the same
+  # functionality as this function. Since we want to support 2.4, we have
+  # to implement it manually. :(
+  path_list = os.path.abspath(os.path.normpath(path)).split(os.sep)
+  start_list = os.path.abspath(
+      os.path.normpath(os.path.dirname(start))).split(os.sep)
+
+  common_prefix_count = 0
+  for i in range(0, min(len(path_list), len(start_list))):
+    if path_list[i] != start_list[i]:
+      break
+    common_prefix_count += 1
+
+  # Always use forward slashes, because this will get expanded to a url,
+  # not a file path.
+  return '/'.join(['..'] * (len(start_list) - common_prefix_count) +
+                  path_list[common_prefix_count:])
 
 
 def PrintLine(msg, out):
@@ -283,11 +332,31 @@ def PrintLine(msg, out):
   out.write('\n')
 
 
-def PrintDeps(source_paths, out):
-  """Print out a deps.js file from a list of source paths."""
+def PrintDeps(source_paths, deps, out):
+  """Print out a deps.js file from a list of source paths.
+
+  Args:
+    source_paths: Paths that we should generate dependency info for.
+    deps: Paths that provide dependency info. Their dependency info should
+        not appear in the deps file.
+    out: The output file.
+
+  Returns:
+    True on success, false if it was unable to find the base path
+    to generate deps relative to.
+  """
+  base_path = FindClosureBasePath(source_paths + deps)
+  if not base_path:
+    return False
+
   PrintLine('// This file was autogenerated by calcdeps.py', out)
-  for dep in BuildDependenciesFromFiles(source_paths):
-    PrintLine(GetDepsLine(dep), out)
+  excludesSet = set(deps)
+
+  for dep in BuildDependenciesFromFiles(source_paths + deps):
+    if not dep.filename in excludesSet:
+      PrintLine(GetDepsLine(dep, base_path), out)
+
+  return True
 
 
 def PrintScript(source_paths, out):
@@ -304,6 +373,59 @@ def GetJavaVersion():
   proc.wait()
   version_line = proc.stderr.read().splitlines()[0]
   return version_regex.search(version_line).group()
+
+
+def FilterByExcludes(options, files):
+  """Filters the given files by the exlusions specified at the command line.
+
+  Args:
+    options: The flags to calcdeps.
+    files: The files to filter.
+  Returns:
+    A list of files.
+  """
+  excludes = []
+  if options.excludes:
+    excludes = ExpandDirectories(options.excludes)
+
+  excludesSet = set(excludes)
+  return [i for i in files if not i in excludesSet]
+
+
+def GetPathsFromOptions(options):
+  """Generates the path files from flag options.
+
+  Args:
+    options: The flags to calcdeps.
+  Returns:
+    A list of files in the specified paths. (strings).
+  """
+
+  search_paths = options.paths
+  if not search_paths:
+    search_paths = ['.']  # Add default folder if no path is specified.
+
+  search_paths = ExpandDirectories(search_paths)
+  return FilterByExcludes(options, search_paths)
+
+
+def GetInputsFromOptions(options):
+  """Generates the inputs from flag options.
+
+  Args:
+    options: The flags to calcdeps.
+  Returns:
+    A list of inputs (strings).
+  """
+  inputs = options.inputs
+  if not inputs:  # Parse stdin
+    logging.info('No inputs specified. Reading from stdin...')
+    inputs = filter(None, [line.strip('\n') for line in sys.stdin.readlines()])
+
+  logging.info('Scanning files...')
+  inputs = ExpandDirectories(inputs)
+
+  return FilterByExcludes(options, inputs)
 
 
 def Compile(compiler_jar_path, source_paths, out, flags=None):
@@ -352,6 +474,20 @@ def main():
                     action='append',
                     help='The paths that should be traversed to build the '
                     'dependencies.')
+  parser.add_option('-d',
+                    '--dep',
+                    dest='deps',
+                    action='append',
+                    help='Directories or files that should be traversed to '
+                    'find required dependencies for the deps file. '
+                    'Does not generate dependency information for names '
+                    'provided by these files. Only useful in "deps" mode.')
+  parser.add_option('-e',
+                    '--exclude',
+                    dest='excludes',
+                    action='append',
+                    help='Files or directories to exclude from the --path '
+                    'and --input flags')
   parser.add_option('-o',
                     '--output_mode',
                     dest='output_mode',
@@ -383,11 +519,7 @@ def main():
 
   (options, args) = parser.parse_args()
 
-  search_paths = options.paths
-  if not search_paths:
-    search_paths = ['.']  # Add default folder if no path is specified.
-
-  search_paths = ExpandDirectories(search_paths)
+  search_paths = GetPathsFromOptions(options)
 
   if options.output_file:
     out = open(options.output_file, 'w')
@@ -395,16 +527,14 @@ def main():
     out = sys.stdout
 
   if options.output_mode == 'deps':
-    PrintDeps(search_paths, out)
+    result = PrintDeps(search_paths, ExpandDirectories(options.deps or []), out)
+    if not result:
+      logging.error('Could not find Closure Library in the specified paths')
+      sys.exit(1)
+
     return
 
-  inputs = options.inputs
-  if not inputs:  # Parse stdin
-    logging.info('No inputs specified. Reading from stdin...')
-    inputs = filter(None, [line.strip('\n') for line in sys.stdin.readlines()])
-
-  logging.info('Scanning files...')
-  inputs = ExpandDirectories(inputs)
+  inputs = GetInputsFromOptions(options)
 
   logging.info('Finding Closure dependencies...')
   deps = CalculateDependencies(search_paths, inputs)
@@ -421,20 +551,20 @@ def main():
     if not options.compiler_jar:
       logging.error('--compiler_jar flag must be specified if --output is '
                     '"compiled"')
-      sys.exit(-1)
+      sys.exit(1)
 
     # User friendly version check.
-    if not (distutils.version.LooseVersion(GetJavaVersion()) >
-      distutils.version.LooseVersion('1.6')):
+    if distutils and not (distutils.version.LooseVersion(GetJavaVersion()) >
+        distutils.version.LooseVersion('1.6')):
       logging.error('Closure Compiler requires Java 1.6 or higher.')
       logging.error('Please visit http://www.java.com/getjava')
-      sys.exit(-1)
+      sys.exit(1)
 
     Compile(options.compiler_jar, deps, out, options.compiler_flags)
 
   else:
     logging.error('Invalid value for --output flag.')
-    sys.exit(-1)
+    sys.exit(1)
 
 if __name__ == '__main__':
   main()

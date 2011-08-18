@@ -33,23 +33,22 @@ class SourceTestCase(unittest.TestCase):
 
     self.assertEqual(set(['foo', 'foo.test']),
                      test_source.provides)
-    self.assertEqual(test_source.requires,
-                     set(['goog.dom', 'goog.events.EventType']))
+    self.assertEqual(set(['goog.dom', 'goog.events.EventType']),
+                     test_source.requires)
 
+  def testSourceScanBase(self):
+    test_source = source.Source(_TEST_BASE_SOURCE)
 
-  def testSingleLineCommentParse(self):
-    test_source = source.Source("//goog.provide('should.not.be.found');")
-    self.assertEqual(set([]), test_source.provides)
+    self.assertEqual(set(['goog']),
+                     test_source.provides)
+    self.assertEqual(test_source.requires, set())
 
+  def testSourceScanBadBase(self):
 
-  # currently this fails. see: #100, http://code.google.com/p/closure-library/issues/detail?id=100
-  def testMultilineCommentParse(self):
-    test_source = source.Source("""/*
-        goog.provide('should.not.be.found');
-        */
-    """)
-    self.assertEqual(set([]), test_source.provides)
+    def MakeSource():
+      source.Source(_TEST_BAD_BASE_SOURCE)
 
+    self.assertRaises(Exception, MakeSource)
 
 
 _TEST_SOURCE = """// Fake copyright notice
@@ -66,8 +65,18 @@ function foo() {
   // Set bar to seventeen to increase performance.
   this.bar = 17;
 }
-
 """
+
+_TEST_BASE_SOURCE = """
+var goog = goog || {}; // Identifies this file as the Closure base.
+"""
+
+_TEST_BAD_BASE_SOURCE = """
+goog.provide('goog');
+
+var goog = goog || {}; // Identifies this file as the Closure base.
+"""
+
 
 if __name__ == '__main__':
   unittest.main()
