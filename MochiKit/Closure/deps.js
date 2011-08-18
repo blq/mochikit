@@ -5,6 +5,7 @@ goog.addDependency('Async.js?v=1.5', ['MochiKit.Async'], ['MochiKit.Base']);
 goog.addDependency('Base-ext.js?v=1.5', ['MochiKit.Base_ext'], ['MochiKit.Base']);
 goog.addDependency('Base.js?v=1.5', ['MochiKit.Base'], []);
 goog.addDependency('Bisect.js?v=1.5', ['MochiKit.Bisect'], ['MochiKit.Base']);
+goog.addDependency('Closure/base.js?v=1.5', ['goog'], []);
 goog.addDependency('Color.js?v=1.5', ['MochiKit.Color'], ['MochiKit.Base', 'MochiKit.DOM', 'MochiKit.Style']);
 goog.addDependency('DateTime.js?v=1.5', ['MochiKit.DateTime'], ['MochiKit.Base']);
 goog.addDependency('DOM.js?v=1.5', ['MochiKit.DOM'], ['MochiKit.Base']);
