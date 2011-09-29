@@ -136,7 +136,11 @@ MochiKit.Async.Deferred.prototype.errback = function (res) {
 	this._resback(res);
 };
 
-/** @id MochiKit.Async.Deferred.prototype.addBoth */
+/**
+ * @id MochiKit.Async.Deferred.prototype.addBoth
+ * @param {?function(*)} fn
+ * @return {!MochiKit.Async.Deferred} (this, chain)
+ */
 MochiKit.Async.Deferred.prototype.addBoth = function (fn) {
 	if (arguments.length > 1) {
 		fn = MochiKit.Base.partial.apply(null, arguments);
@@ -270,21 +274,32 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return MochiKit.Base.evalJSON(req.responseText);
     },
 
-    /** @id MochiKit.Async.succeed */
+    /**
+     * @id MochiKit.Async.succeed
+     * @param {*=} [result]
+     * @return {!MochiKit.Async.Deferred} (this, chain)
+     */
     succeed: function (/* optional */result) {
         var d = new MochiKit.Async.Deferred();
         d.callback.apply(d, arguments);
         return d;
     },
 
-    /** @id MochiKit.Async.fail */
+    /**
+     * @id MochiKit.Async.fail
+     * @param {*=} [result]
+     * @return {!MochiKit.Async.Deferred} (this, chain)
+     */
     fail: function (/* optional */result) {
         var d = new MochiKit.Async.Deferred();
         d.errback.apply(d, arguments);
         return d;
     },
 
-    /** @id MochiKit.Async.getXMLHttpRequest */
+    /**
+     * @id MochiKit.Async.getXMLHttpRequest
+     * @return {XMLHttpRequest}
+     */
     getXMLHttpRequest: function () {
         var self = arguments.callee;
         if (!self.XMLHttpRequest) {
