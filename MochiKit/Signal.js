@@ -25,6 +25,9 @@ MochiKit.Signal._observers = [];
 
 /**
  * @id MochiKit.Signal.Event
+ * client code should rarely/never need to instantiate this themselves, only internal MochiKit.Signal
+ * @param {Object} src
+ * @param {Event=} e
  * @constructor
  */
 MochiKit.Signal.Event = function (src, e) {
@@ -88,17 +91,26 @@ MochiKit.Signal.Event.prototype.toString = function () {
 	return this.__repr__();
 };
 
-/** @id MochiKit.Signal.Event.prototype.src */
+/**
+ * @id MochiKit.Signal.Event.prototype.src
+ * @return {Element}
+ */
 MochiKit.Signal.Event.prototype.src = function () {
 	return this._src;
 };
 
-/** @id MochiKit.Signal.Event.prototype.event  */
+/**
+ * @id MochiKit.Signal.Event.prototype.event
+ * @return {Event}
+ */
 MochiKit.Signal.Event.prototype.event = function () {
 	return this._event;
 };
 
-/** @id MochiKit.Signal.Event.prototype.type */
+/**
+ * @id MochiKit.Signal.Event.prototype.type
+ * @return {string}
+ */
 MochiKit.Signal.Event.prototype.type = function () {
 	if (this._event.type === "DOMMouseScroll") {
 		return "mousewheel";
@@ -107,13 +119,19 @@ MochiKit.Signal.Event.prototype.type = function () {
 	}
 };
 
-/** @id MochiKit.Signal.Event.prototype.target */
+/**
+ * @id MochiKit.Signal.Event.prototype.target
+ * @return {Element}
+ */
 MochiKit.Signal.Event.prototype.target = function () {
 	return this._event.target || this._event.srcElement;
 };
 
 MochiKit.Signal.Event.prototype._relatedTarget = null;
-/** @id MochiKit.Signal.Event.prototype.relatedTarget */
+/**
+ * @id MochiKit.Signal.Event.prototype.relatedTarget
+ * @return {Element}
+ */
 MochiKit.Signal.Event.prototype.relatedTarget = function () {
 	if (this._relatedTarget !== null) {
 		return this._relatedTarget;
@@ -141,7 +159,10 @@ MochiKit.Signal.Event.prototype.relatedTarget = function () {
 };
 
 MochiKit.Signal.Event.prototype._modifier = null;
-/** @id MochiKit.Signal.Event.prototype.modifier */
+/**
+ * @id MochiKit.Signal.Event.prototype.modifier
+ * @return {{ shift: boolean, ctrl: boolean, meta: boolean, alt: boolean, any: boolean }}
+ */
 MochiKit.Signal.Event.prototype.modifier = function () {
 	if (this._modifier !== null) {
 		return this._modifier;
@@ -157,7 +178,10 @@ MochiKit.Signal.Event.prototype.modifier = function () {
 };
 
 MochiKit.Signal.Event.prototype._key = null;
-/** @id MochiKit.Signal.Event.prototype.key */
+/**
+ * @id MochiKit.Signal.Event.prototype.key
+ * @return {{ code: integer, string: string }}
+ */
 MochiKit.Signal.Event.prototype.key = function () {
 	if (this._key !== null) {
 		return this._key;
@@ -267,7 +291,10 @@ MochiKit.Signal.Event.prototype.key = function () {
 };
 
 MochiKit.Signal.Event.prototype._mouse = null;
-/** @id MochiKit.Signal.Event.prototype.mouse */
+/**
+ * @id MochiKit.Signal.Event.prototype.mouse
+ * @return {{ page: Pos, client: Pos, button: { left: boolean, right: boolean, middle: boolean }, wheel: Pos }}
+ */
 MochiKit.Signal.Event.prototype.mouse = function () {
 	if (this._mouse !== null) {
 		return this._mouse;
@@ -392,7 +419,10 @@ MochiKit.Signal.Event.prototype.preventDefault = function () {
 
 MochiKit.Signal.Event.prototype._confirmUnload = null;
 
-/** @id MochiKit.Signal.Event.prototype.confirmUnload */
+/**
+ * @id MochiKit.Signal.Event.prototype.confirmUnload
+ * @param {string} msg
+ */
 MochiKit.Signal.Event.prototype.confirmUnload = function (msg) {
 	if (this.type() == 'beforeunload') {
 		this._confirmUnload = msg;
@@ -634,7 +664,15 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
         return [obj, func];
     },
 
-    /** @id MochiKit.Signal.connect */
+    /**
+	 * @id MochiKit.Signal.connect
+	 * @param {!(Object|string|Element)} src
+	 * @param {string} signal
+	 * @param {!(Object|Function)} dest
+	 * @param {(Function|string)=} func
+	 * @param {...*} var_args
+	 * @return {!Object} event handler
+	 */
     connect: function (src, sig, objOrFunc/* optional */, funcOrStr) {
         if (typeof(src) == "string") {
             src = MochiKit.DOM.getElement(src);
@@ -705,6 +743,10 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
         return ident1;
     },
 
+	/**
+	 * @param {Object} ident event handler
+	 * @private
+	 */
     _disconnect: function (ident) {
         // already disconnected
         if (!ident.connected) {
@@ -730,7 +772,10 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
         }
     },
 
-     /** @id MochiKit.Signal.disconnect */
+     /**
+      * @id MochiKit.Signal.disconnect
+      * @param {Object} ident event handler
+      */
     disconnect: function (ident) {
         var self = MochiKit.Signal;
         var observers = self._observers;
@@ -771,7 +816,12 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
         return false;
     },
 
-    /** @id MochiKit.Signal.disconnectAllTo */
+    /**
+     * @id MochiKit.Signal.disconnectAllTo
+	 * @param {Object|string} dest
+	 * //param {function(...[*])=} func
+	 * @param {!Function=} func
+     */
     disconnectAllTo: function (objOrFunc, /* optional */funcOrStr) {
         var self = MochiKit.Signal;
         var observers = self._observers;
@@ -796,8 +846,12 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
         self._dirty = dirty;
     },
 
-    /** @id MochiKit.Signal.disconnectAll */
-    disconnectAll: function (src/* optional */, sig) {
+	/**
+	 * @id MochiKit.Signal.disconnectAll
+	 * @param {Object|string} src
+	 * @param {...string} signal
+	 */
+	disconnectAll: function (src/* optional */, sig) {
         if (typeof(src) == "string") {
             src = MochiKit.DOM.getElement(src);
         }
@@ -842,8 +896,13 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
         self._dirty = dirty;
     },
 
-    /** @id MochiKit.Signal.signal */
-    signal: function (src, sig) {
+	/**
+	 * @id MochiKit.Signal.signal
+	 * @param {!Object} src
+	 * @param {string} signal
+	 * @param {...*} var_args
+	 */
+	signal: function (src, sig) {
         var self = MochiKit.Signal;
         var observers = self._observers;
         if (typeof(src) == "string") {
