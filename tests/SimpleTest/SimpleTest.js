@@ -54,7 +54,9 @@ SimpleTest._scopeFilter = { 'window': true,
                             'clientInformation': true,
                             'sessionStorage': true,
                             'localStorage': true,
-                            'media': true };
+                            'media': true,
+                            '_1': true, '_2': true, '_3': true, '_4': true, '_5': true, '_6': true, '_7': true, '_8': true, '_9': true, '_10': true
+                            };
 
 /**
  * Initializes the testing engine for the specified global scope. This will
