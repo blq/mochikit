@@ -18,9 +18,10 @@
  * @fileoverview Definitions for the JSON specification.
  * @see http://www.json.org/json2.js.
  * @externs
-*
-*
  */
+
+// This cannot go into the COMMON externs because it conflicts with the pure
+// Javascript implementations of the API.
 
 var JSON = {};
 
