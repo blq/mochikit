@@ -350,6 +350,8 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         /** @id MochiKit.Base.mul */
         mul: function (a, b) { return a * b; },
 		pow: function (a, b) { return Math.pow(a, b); },
+		divmod: function (a, b) { return [a / b, a % b]; },
+		// todo: ? idiv, imod, idivmod, remainder
 
         // bitwise binary operators
         /** @id MochiKit.Base.and */

@@ -16,9 +16,6 @@
  --compilation_level [WHITESPACE_ONLY | : Specifies the compilation level to use
   SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIM : . Options: WHITESPACE_ONLY, SIMPLE_OPT
  IZATIONS]                              : IMIZATIONS, ADVANCED_OPTIMIZATIONS
- --compute_phase_ordering               : Runs the compile job many times, then
-                                          prints out the best phase ordering fro
-                                          m this run
  --create_name_map_files                : If true, variable renaming and propert
                                           y renaming map files will be produced
                                           as {binary name}_vars_map.out and {bin
@@ -61,33 +58,34 @@
                                           ror. Options:accessControls, ambiguous
                                           FunctionDecl, checkRegExp,checkTypes,
                                           checkVars, constantProperty, deprecate
-                                          d, externsValidation, fileoverviewTags
-                                          , globalThis, internetExplorerChecks,
-                                          nvalidCasts, missingProperties, nonSta
-                                          ndardJsDocs, strictModuleDepCheck, typ
-                                          eInvalidation, undefinedVars, unknownD
-                                          efines, uselessCode, visibility
+                                          d, es5Strict, externsValidation, fileo
+                                          verviewTags, globalThis, internetExplo
+                                          rerChecks, invalidCasts, missingProper
+                                          ties, nonStandardJsDocs, strictModuleD
+                                          epCheck, typeInvalidation, undefinedVa
+                                          rs, unknownDefines, uselessCode, visib
+                                          ility
  --jscomp_off VAL                       : Turn off the named class of warnings.
                                           Options:accessControls, ambiguousFunct
                                           ionDecl, checkRegExp,checkTypes, check
-                                          Vars, constantProperty, deprecated, ex
-                                          ternsValidation, fileoverviewTags, glo
-                                          balThis, internetExplorerChecks, nvali
-                                          dCasts, missingProperties, nonStandard
-                                          JsDocs, strictModuleDepCheck, typeInva
-                                          lidation, undefinedVars, unknownDefine
-                                          s, uselessCode, visibility
+                                          Vars, constantProperty, deprecated, es
+                                          5Strict, externsValidation, fileovervi
+                                          ewTags, globalThis, internetExplorerCh
+                                          ecks, invalidCasts, missingProperties,
+                                           nonStandardJsDocs, strictModuleDepChe
+                                          ck, typeInvalidation, undefinedVars, u
+                                          nknownDefines, uselessCode, visibility
  --jscomp_warning VAL                   : Make the named class of warnings a nor
                                           mal warning. Options:accessControls, a
                                           mbiguousFunctionDecl, checkRegExp,chec
                                           kTypes, checkVars, constantProperty, d
-                                          eprecated, externsValidation, fileover
-                                          viewTags, globalThis, internetExplorer
-                                          Checks, nvalidCasts, missingProperties
-                                          , nonStandardJsDocs, strictModuleDepCh
-                                          eck, typeInvalidation, undefinedVars,
-                                          unknownDefines, uselessCode, visibilit
-                                          y
+                                          eprecated, es5Strict, externsValidatio
+                                          n, fileoverviewTags, globalThis, inter
+                                          netExplorerChecks, invalidCasts, missi
+                                          ngProperties, nonStandardJsDocs, stric
+                                          tModuleDepCheck, typeInvalidation, und
+                                          efinedVars, unknownDefines, uselessCod
+                                          e, visibility
  --language_in VAL                      : Sets what language spec that input sou
                                           rces conform. Options: ECMASCRIPT3 (de
                                           fault), ECMASCRIPT5, ECMASCRIPT5_STRIC
@@ -123,7 +121,10 @@
                                           wrapper>. The module name must corresp
                                           ond with a module specified using --mo
                                           dule. The wrapper must contain %s as t
-                                          he code placeholder
+                                          he code placeholder. The %basename% pl
+                                          aceholder can also be used to substitu
+                                          te the base name of the module output
+                                          file.
  --output_manifest VAL                  : Prints out a list of all the files in
                                           the compilation. If --manage_closure_d
                                           ependencies is on, this will not inclu
@@ -150,6 +151,9 @@
  --property_map_output_file VAL         : File where the serialized version of t
                                           he property renaming map produced shou
                                           ld be saved
+ --source_map_format [V1 | DEFAULT | V2 : The source map format to produce. Opti
+  | V3]                                 : ons: V1, V2, V3, DEFAULT. DEFAULT prod
+                                          uces V2.
  --summary_detail_level N               : Controls how detailed the compilation
                                           summary is. Values: 0 (never print sum
                                           mary), 1 (print summary only if there
@@ -159,6 +163,13 @@
                                           e default level is 1
  --third_party                          : Check source validity but do not enfor
                                           ce Closure style rules and conventions
+ --translations_file VAL                : Source of translated messages. Current
+                                          ly only supports XTB.
+ --translations_project VAL             : Scopes all translations to the specifi
+                                          ed project.When specified, we will use
+                                           different message ids so that message
+                                          s in different projects can have diffe
+                                          rent translations.
  --use_only_custom_externs              : Specifies whether the default externs
                                           should be excluded
  --variable_map_input_file VAL          : File containing the serialized version
