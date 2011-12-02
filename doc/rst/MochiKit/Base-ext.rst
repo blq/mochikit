@@ -143,8 +143,8 @@ Functions
 See Also
 ========
 
-.. [1] C++ Boost bind: http://www.boost.org/doc/libs/1_46_0/libs/bind/bind.html
-.. [2] Nested bind: http://www.boost.org/doc/libs/1_46_0/libs/bind/bind.html#nested_binds
+.. [1] C++ Boost bind: http://www.boost.org/doc/libs/1_48_0/libs/bind/bind.html
+.. [2] Nested bind: http://www.boost.org/doc/libs/1_48_0/libs/bind/bind.html#nested_binds
 
 
 Authors

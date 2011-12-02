@@ -89,7 +89,7 @@ Iterator extensions
         ]
     };
 
-    forEach(treeLevelOrder(root, itemgetter('childnodes')), function(node) {
+    forEach(treeLevelOrder(root, itemgetter('children')), function(node) {
         ....
     });
 

@@ -15,7 +15,7 @@ Synopsis
 
 ::
 
-    todo: ...
+    TODO: ...
 
 
 Description
@@ -38,7 +38,7 @@ Text extensions
 
 Extends the existing MochiKit.Text namespace
 
-ASDF ASDF ASDF
+TODO: ...
 
 
 
