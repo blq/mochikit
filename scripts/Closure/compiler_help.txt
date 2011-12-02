@@ -121,7 +121,10 @@
                                           wrapper>. The module name must corresp
                                           ond with a module specified using --mo
                                           dule. The wrapper must contain %s as t
-                                          he code placeholder
+                                          he code placeholder. The %basename% pl
+                                          aceholder can also be used to substitu
+                                          te the base name of the module output
+                                          file.
  --output_manifest VAL                  : Prints out a list of all the files in
                                           the compilation. If --manage_closure_d
                                           ependencies is on, this will not inclu
@@ -160,6 +163,13 @@
                                           e default level is 1
  --third_party                          : Check source validity but do not enfor
                                           ce Closure style rules and conventions
+ --translations_file VAL                : Source of translated messages. Current
+                                          ly only supports XTB.
+ --translations_project VAL             : Scopes all translations to the specifi
+                                          ed project.When specified, we will use
+                                           different message ids so that message
+                                          s in different projects can have diffe
+                                          rent translations.
  --use_only_custom_externs              : Specifies whether the default externs
                                           should be excluded
  --variable_map_input_file VAL          : File containing the serialized version
