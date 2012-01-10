@@ -533,7 +533,6 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
      * @return {*}
      */
     reduce: function (fn, iterable, /* optional */initial) {
-        var i = 0;
         var x = initial;
         var self = MochiKit.Iter;
         iterable = self.iter(iterable);
@@ -546,7 +545,6 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
                 }
                 throw e;
             }
-            i++;
         }
         try {
             while (true) {
