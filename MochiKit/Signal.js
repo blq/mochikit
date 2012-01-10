@@ -36,6 +36,9 @@ MochiKit.Signal.Event = function (src, e) {
 };
 MochiKit.Signal.Event.__export__ = false;
 
+/**
+ * @return {string}
+ */
 MochiKit.Signal.Event.prototype.__repr__ = function () {
 	var repr = MochiKit.Base.repr;
 	var str = '{event(): ' + repr(this.event()) +
@@ -86,7 +89,10 @@ MochiKit.Signal.Event.prototype.__repr__ = function () {
 	return str;
 };
 
- /** @id MochiKit.Signal.Event.prototype.toString */
+ /** 
+  * @id MochiKit.Signal.Event.prototype.toString 
+  * @return {string}
+  */
 MochiKit.Signal.Event.prototype.toString = function () {
 	return this.__repr__();
 };
@@ -531,6 +537,7 @@ MochiKit.Signal._specialKeys = {
 
 /**
  * Internal object to keep track of created signals.
+ * @param {Object} ident
  * @constructor
  */
 MochiKit.Signal.Ident = function (ident) {
@@ -607,11 +614,11 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
             }
         }
     },
-
+	/** @return {boolean} */
     _browserAlreadyHasMouseEnterAndLeave: function () {
         return /MSIE/.test(navigator.userAgent);
     },
-
+	/** @return {boolean} */
     _browserLacksMouseWheelEvent: function () {
         return /Gecko\//.test(navigator.userAgent);
     },
@@ -643,6 +650,10 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
         };
     },
 
+	/** 
+	 * creates and validates a handler object
+	 * @throws {Error} if invalid input arguments
+	 */
     _getDestPair: function (objOrFunc, funcOrStr) {
         var obj = null;
         var func = null;
@@ -901,8 +912,9 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 	 * @param {!Object} src
 	 * @param {string} signal
 	 * @param {...*} var_args
+	 * @throws {Error} if a handler raised an exception
 	 */
-	signal: function (src, sig) {
+	signal: function (src, sig, var_args) {
         var self = MochiKit.Signal;
         var observers = self._observers;
         if (typeof(src) == "string") {
