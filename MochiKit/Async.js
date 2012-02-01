@@ -561,8 +561,14 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return d;
     },
 
-    /** @id MochiKit.Async.callLater */
-    callLater: function (seconds, func) {
+    /** 
+	 * @id MochiKit.Async.callLater 
+	 * @param {number} seconds
+	 * @param {Function} func
+	 * @param {...*} [var_args]
+	 * @return {!Deferred}
+	 */
+    callLater: function (seconds, func, var_args) {
         var m = MochiKit.Base;
         var pfunc = m.partial.apply(m, m.extend(null, arguments, 1));
         return MochiKit.Async.wait(seconds).addCallback(

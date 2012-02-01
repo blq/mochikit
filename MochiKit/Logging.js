@@ -31,7 +31,10 @@ MochiKit.Logging.LogMessage = function (num, level, info) {
 };
 
 MochiKit.Logging.LogMessage.prototype = {
-     /** @id MochiKit.Logging.LogMessage.prototype.repr */
+    /** 
+	 * @id MochiKit.Logging.LogMessage.prototype.repr 
+	 * @return {string}
+	 */
     repr: function () {
         var m = MochiKit.Base;
         return 'LogMessage(' +
@@ -40,7 +43,10 @@ MochiKit.Logging.LogMessage.prototype = {
                 [this.num, this.level, this.info]
             ).join(', ') + ')';
     },
-    /** @id MochiKit.Logging.LogMessage.prototype.toString */
+    /** 
+	 * @id MochiKit.Logging.LogMessage.prototype.toString 
+	 * @return {string}
+	 */
     toString: MochiKit.Base.forwardCall("repr")
 };
 

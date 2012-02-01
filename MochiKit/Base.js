@@ -11,6 +11,9 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.provide('MochiKit.Base');
+	
+	// .. queryString() has an implicit dependency on .DOM and .DateTime dependent
+	// on its arguments..
 }
 
 // MochiKit module (namespace)
@@ -1065,6 +1068,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return eval("(" + MochiKit.Base._filterJSON(jsonText) + ")");
     },
 
+	/**
+	 * @param {string} s
+	 * @return {string}
+	 * @private
+	 */
     _filterJSON: function (s) {
         var m = s.match(/^\s*\/\*(.*)\*\/\s*$/);
         return (m) ? m[1] : s;

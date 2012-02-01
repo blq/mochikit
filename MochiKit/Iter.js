@@ -178,10 +178,10 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
     /**
      * @id MochiKit.Iter.izip
      * @param {!Iterable} p
-     * ...
+     * @param {...!Iterable} [var_args]
      * @return {!Iterator}
      */
-    izip: function (p, q/*, ...*/) {
+    izip: function (p, var_args/*, ...*/) {
         var m = MochiKit.Base;
         var self = MochiKit.Iter;
         var next = self.next;
@@ -300,10 +300,10 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
      * @id MochiKit.Iter.imap
      * @param {!Function} fun
      * @param {!Iterable} p
-     * ...
+     * @param {...!Iterable} [var_args]
      * @return {!Iterator}
      */
-    imap: function (fun, p, q/*, ...*/) {
+    imap: function (fun, p, var_args/*, ...*/) {
         var m = MochiKit.Base;
         var self = MochiKit.Iter;
         var iterables = m.map(self.iter, m.extend(null, arguments, 1));
@@ -344,7 +344,7 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
      * @param {...!Iterable} [var_args]
      * @return {!Iterator}
      */
-    chain: function (p, q/*, ...*/) {
+    chain: function (p, var_args/*, ...*/) {
         // dumb fast path
         var self = MochiKit.Iter;
         var m = MochiKit.Base;
@@ -694,7 +694,7 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
     /**
      * @id MochiKit.Iter.sorted
      * @param {!Iterable} iterable
-     * @param {Comparator=} [cmp=compare]
+     * @param {BinaryComparator=} [cmp=compare]
      * @return {!Array}
      */
     sorted: function (iterable, /* optional */cmp) {
