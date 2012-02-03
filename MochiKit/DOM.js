@@ -20,7 +20,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 
     /**
      * @id MochiKit.DOM.currentWindow
-     * @return {Window}
+     * @return {!Window}
      */
     currentWindow: function () {
         return MochiKit.DOM._window;
@@ -28,7 +28,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 
     /**
      * @id MochiKit.DOM.currentDocument
-     * @return {Document}
+     * @return {!Document}
      */
     currentDocument: function () {
         return MochiKit.DOM._document;
@@ -238,6 +238,8 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 
     /**
      * @id MochiKit.DOM.isChildNode
+	 * @param {!Node|string} node
+	 * @param {!Node|string} maybeparent	 
      * @return {boolean}
      */
     isChildNode: function (node, maybeparent) {
@@ -260,7 +262,13 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return false;
     },
 
-    /** @id MochiKit.DOM.setNodeAttribute */
+	/**
+	 * @id MochiKit.DOM.setNodeAttribute
+	 * @param {!Node|string} node
+	 * @param {string} attr
+	 * @param {*} value
+	 * @return {Node} chained input node
+	 */	
     setNodeAttribute: function (node, attr, value) {
         var o = {};
         o[attr] = value;
@@ -271,8 +279,13 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         }
         return null;
     },
-
-    /** @id MochiKit.DOM.getNodeAttribute */
+    
+	/**
+	 * @id MochiKit.DOM.getNodeAttribute
+	 * @param {!Node|string} node
+	 * @param {string} attr
+	 * @return {*}
+	 */	
     getNodeAttribute: function (node, attr) {
         var self = MochiKit.DOM;
         var rename = self.attributeArray.renames[attr];
@@ -308,7 +321,12 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return null;
     },
 
-    /** @id MochiKit.DOM.updateNodeAttributes */
+	/**
+	 * @id MochiKit.DOM.updateNodeAttributes
+	 * @param {!Node|string} node
+	 * @param {Object} attrs
+	 * @return {Node} chained input node
+	 */	
     updateNodeAttributes: function (node, attrs) {
         var elem = node;
         var self = MochiKit.DOM;
@@ -375,8 +393,15 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return elem;
     },
 
-    /** @id MochiKit.DOM.appendChildNodes */
-    appendChildNodes: function (node/*, nodes...*/) {
+    /** 
+	 * @id MochiKit.DOM.appendChildNodes 
+	 * @see http://mochikit.com/doc/html/MochiKit/DOM.html#fn-appendchildnodes
+	 * @param {Node|string} node	 
+	 * @param {*} childNode
+	 * @param {...*} [var_args]
+	 * @return {Node} input node
+	 */
+    appendChildNodes: function (node, childNode, var_args/*, nodes...*/) {
         var elem = node;
         var self = MochiKit.DOM;
         if (typeof(node) == 'string') {
@@ -454,8 +479,15 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         }
     },
 
-    /** @id MochiKit.DOM.replaceChildNodes */
-    replaceChildNodes: function (node/*, nodes...*/) {
+	/**
+	 * @id MochiKit.DOM.replaceChildNodes
+	 * @see http://mochikit.com/doc/html/MochiKit/DOM.html#fn-replacechildnodes
+	 * if no childnodes are specified this will clear the child list
+	 * @param {Node|string} node
+	 * @param {...*} [var_args]
+	 * @return {Node} 
+	 */	
+    replaceChildNodes: function (node, var_args/*, nodes...*/) {
         var elem = node;
         var self = MochiKit.DOM;
         if (typeof(node) == 'string') {
@@ -528,7 +560,11 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         );
     },
 
-    /** @id MochiKit.DOM.removeElement */
+	/**
+	 * @id MochiKit.DOM.removeElement
+	 * @param {Element|string} elem
+	 * @return {Element}
+	 */	
     removeElement: function (elem) {
         var self = MochiKit.DOM;
         if (typeof(elem) == "string") {
@@ -539,7 +575,12 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return e;
     },
 
-    /** @id MochiKit.DOM.swapDOM */
+	/**
+	 * @id MochiKit.DOM.swapDOM
+	 * @param {Element|string} dest
+	 * @param {Element|string} src
+	 * @return {Element} (src)
+	 */	
     swapDOM: function (dest, src) {
         var self = MochiKit.DOM;
         dest = self.getElement(dest);
@@ -556,8 +597,17 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return src;
     },
 
-    /** @id MochiKit.DOM.getElement */
-    getElement: function (id) {
+	/**
+	 * @id MochiKit.DOM.getElement 
+	 * note: although this fn can return an array this
+	 * is currently not annotated since it is seldom(?)
+	 * used and would just complicate other annotation
+	 * @param {(string|Object|Element)} id
+	 * //param {...(string|Element)} var_args
+	 * //return {(Element|Array.<Element>)}
+	 * @return {Element}
+	 */	 
+    getElement: function (id/*, var_args*/) {
         var self = MochiKit.DOM;
         if (arguments.length == 1) {
             return ((typeof(id) == "string") ?
@@ -695,6 +745,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return elements;
     },
 
+	/** @private */
     _newCallStack: function (path, once) {
         var rval = function () {
             var callStack = arguments.callee.callStack;
@@ -736,7 +787,6 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
     addLoadEvent: function (func) {
         var self = MochiKit.DOM;
         self.addToCallStack(self._window, "onload", func, true);
-
     },
 
     /** @id MochiKit.DOM.focusOnLoad */
@@ -765,8 +815,14 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         }
     },
 
-    /** @id MochiKit.DOM.toggleElementClass */
-    toggleElementClass: function (className/*, element... */) {
+	/** 
+	 * @id MochiKit.DOM.toggleElementClass
+	 * @see http://mochikit.com/doc/html/MochiKit/DOM.html#fn-toggleelementclass
+	 * @param {string} className
+	 * @param {!Element|string} element
+	 * @param {...(!Element|string)} [var_args]
+	 */	
+    toggleElementClass: function (className, element, var_args/*, element... */) {
         var self = MochiKit.DOM;
         for (var i = 1; i < arguments.length; i++) {
             var obj = self.getElement(arguments[i]);
@@ -846,7 +902,13 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return false;
     },
 
-    /** @id MochiKit.DOM.swapElementClass */
+    /** 
+	 * @id MochiKit.DOM.swapElementClass 
+	 * @param {Element|string} element
+	 * @param {string} fromClass
+	 * @param {string} toClass
+	 * @return {boolean}
+	 */
     swapElementClass: function (element, fromClass, toClass) {
         var obj = MochiKit.DOM.getElement(element);
         var res = MochiKit.DOM.removeElementClass(obj, fromClass);
@@ -891,7 +953,11 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return true;
     },
 
-    /** @id MochiKit.DOM.escapeHTML */
+    /** 
+	 * @id MochiKit.DOM.escapeHTML 
+	 * @param {string} s
+	 * @return {string}
+	 */
     escapeHTML: function (s) {
         return s.replace(/&/g, "&amp;"
             ).replace(/"/g, "&quot;"
@@ -904,7 +970,12 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return MochiKit.DOM.emitHTML(dom).join("");
     },
 
-    /** @id MochiKit.DOM.emitHTML */
+    /** 
+	 * @id MochiKit.DOM.emitHTML 
+	 * @param {Node} dom
+	 * @param {Array=} [lst]
+	 * @return {!Array}
+	 */
     emitHTML: function (dom, /* optional */lst) {
         if (typeof(lst) == 'undefined' || lst === null) {
             lst = [];
@@ -985,7 +1056,11 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         }
     },
 
-    /** @id MochiKit.DOM.removeEmptyTextNodes */
+	/**
+	 * @id MochiKit.DOM.removeEmptyTextNodes
+	 * @see http://mochikit.com/doc/html/MochiKit/DOM.html#fn-removeemptytextnodes
+	 * @param {!Node|string} element
+	 */	
     removeEmptyTextNodes: function (element) {
         element = MochiKit.DOM.getElement(element);
         for (var i = 0; i < element.childNodes.length; i++) {
@@ -996,10 +1071,14 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         }
     },
 
-    /**
-     * @id MochiKit.DOM.getFirstElementByTagAndClassName
-     * todo: insert the byClassName optimization
-     */
+	/**
+	 * @id MochiKit.DOM.getFirstElementByTagAndClassName
+	 * todo: insert the byClassName optimization
+	 * @param {?string} tagName
+	 * @param {?string} className
+	 * @param {(Node|string)=} [parent=document]
+	 * @return {Element}
+	 */	 
     getFirstElementByTagAndClassName: function (tagName, className,
             /* optional */parent) {
         var self = MochiKit.DOM;
@@ -1039,7 +1118,13 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return null;
     },
 
-    /** @id MochiKit.DOM.getFirstParentByTagAndClassName */
+	/**
+	 * @id MochiKit.DOM.getFirstParentByTagAndClassName
+	 * @param {Element|string} elem
+	 * @param {?string} tagName
+	 * @param {?string} className
+	 * @return {Element}
+	 */	
     getFirstParentByTagAndClassName: function (elem, tagName, className) {
         var self = MochiKit.DOM;
         elem = self.getElement(elem);
@@ -1110,7 +1195,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
             };
             attributeArray.compliant = false;
             attributeArray.renames = {
-	    	// todo: verify if we might need to add: accesskey, maxlength, tabindex, valign
+				// todo: verify if we might need to add: accesskey, maxlength, tabindex, valign 
                 "class": "className",
                 "checked": "defaultChecked",
                 "usemap": "useMap",

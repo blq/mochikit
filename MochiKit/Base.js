@@ -11,6 +11,9 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.provide('MochiKit.Base');
+	
+	// .. queryString() has an implicit dependency on .DOM and .DateTime dependent
+	// on its arguments..
 }
 
 // MochiKit module (namespace)
@@ -122,7 +125,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         };
     },
 
-    /** @id MochiKit.Base.clone */
+	/** 
+	 * @id MochiKit.Base.clone
+	 * @param {Object} obj
+	 * @return {Object}
+	 */	
     clone: function (obj) {
         var me = arguments.callee;
         if (arguments.length == 1) { // why this check?
@@ -135,6 +142,7 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 	 * @param {!Array} res
 	 * @param {!Array} lst
 	 * @return {!Array} res extended with flattened lst
+	 * @private
 	 */
     _flattenArray: function (res, lst) {
         for (var i = 0; i < lst.length; i++) {
@@ -157,8 +165,13 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return MochiKit.Base._flattenArray([], lst);
     },
 
-    /** @id MochiKit.Base.flattenArguments */
-    flattenArguments: function (lst/* ...*/) {
+    /** 
+	 * @id MochiKit.Base.flattenArguments 
+	 * @param {*} lst
+	 * @param {*} [var_args]
+	 * @return {!Array}
+	 */
+    flattenArguments: function (lst, var_args/* ...*/) {
         var res = [];
         var m = MochiKit.Base;
         var args = m.extend(null, arguments);
@@ -312,7 +325,7 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return rval;
     },
 
-
+	/** @private */
     _newNamedError: function (module, name, func) {
         func.prototype = new MochiKit.Base.NamedError(module.NAME + "." + name);
         func.prototype.constructor = func;
@@ -730,7 +743,10 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return rval;
     },
 
-	/** @return {!Function} */
+	/** 
+	 * @return {!Function} 
+	 * @private
+	 */
     _wrapDumbFunction: function (func) {
         return function () {
             // fast path!
@@ -1065,6 +1081,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return eval("(" + MochiKit.Base._filterJSON(jsonText) + ")");
     },
 
+	/**
+	 * @param {string} s
+	 * @return {string}
+	 * @private
+	 */
     _filterJSON: function (s) {
         var m = s.match(/^\s*\/\*(.*)\*\/\s*$/);
         return (m) ? m[1] : s;
@@ -1262,13 +1283,22 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         };
     },
 
-    /** @id MochiKit.Base.partial */
-    partial: function (func) {
+	/**
+	 * @id MochiKit.Base.partial
+	 * //param {function(...[*])} func
+	 * @param {!Function} func
+	 * @param {...*} [var_args]
+	 * //return {function(...[*])}
+	 * @return {!Function}
+	 */	
+    partial: function (func, var_args) {
         var m = MochiKit.Base;
         return m.bind.apply(this, m.extend([func, undefined], arguments, 1));
     },
 
-    /** @id MochiKit.Base.listMinMax */
+    /**
+	 * @id MochiKit.Base.listMinMax 
+	 */
     listMinMax: function (which, lst) {
         if (lst.length === 0) {
             return null;
@@ -1284,7 +1314,9 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return cur;
     },
 
-    /** @id MochiKit.Base.objMax */
+    /** 
+	 * @id MochiKit.Base.objMax 
+	 */
     objMax: function (/* obj... */) {
         return MochiKit.Base.listMinMax(1, arguments);
     },
@@ -1320,10 +1352,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
     /**
      * @id MochiKit.Base.mean
      * @see http://www.nist.gov/dads/HTML/mean.html
-	 * ...
+	 * @param {number} val
+	 * @param {...number} [var_args]
 	 * @return {number}
      */
-    mean: function(/* lst... */) {
+    mean: function(val, var_args/* lst... */) {
         var sum = 0;
 
         var m = MochiKit.Base;
@@ -1352,10 +1385,11 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
     /**
      * @id MochiKit.Base.median
      * @see http://www.nist.gov/dads/HTML/median.html
-	 * ..
+	 * @param {number} val
+	 * @param {...number} [var_args]
 	 * @return {number}
      */
-    median: function(/* lst... */) {
+    median: function(val, var_args/* lst... */) {
         var data = MochiKit.Base.flattenArguments(arguments);
         if (data.length === 0) {
             throw new TypeError('median() requires at least one argument');

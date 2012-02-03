@@ -47,6 +47,9 @@ MochiKit.Async.Deferred.prototype.repr = function () {
  */
 MochiKit.Async.Deferred.prototype.toString = MochiKit.Base.forwardCall("repr");
 
+/** 
+ * @return {integer}
+ */
 MochiKit.Async.Deferred.prototype._nextId = MochiKit.Base.counter();
 
 /** @id MochiKit.Async.Deferred.prototype.state */
@@ -85,6 +88,7 @@ MochiKit.Async.Deferred.prototype.cancel = function (e) {
 	}
 };
 
+/** @private */
 MochiKit.Async.Deferred.prototype._resback = function (res) {
 	/***
 
@@ -98,6 +102,7 @@ MochiKit.Async.Deferred.prototype._resback = function (res) {
 	}
 };
 
+/** @private */
 MochiKit.Async.Deferred.prototype._check = function () {
 	if (this.fired != -1) {
 		if (!this.silentlyCancelled) {
@@ -212,6 +217,7 @@ MochiKit.Async.Deferred.prototype.setFinalizer = function (fn) {
 	return this;
 };
 
+/** @private */
 MochiKit.Async.Deferred.prototype._fire = function () {
 	/***
 
@@ -298,7 +304,8 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
 
     /**
      * @id MochiKit.Async.getXMLHttpRequest
-     * @return {XMLHttpRequest}
+     * @return {!XMLHttpRequest}
+	 * @throws {MochiKit.Async.BrowserComplianceError} if not supported
      */
     getXMLHttpRequest: function () {
         var self = arguments.callee;
@@ -325,7 +332,10 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return self.XMLHttpRequest();
     },
 
-	/** @this XMLHttpRequest */
+	/** 
+	 * @this XMLHttpRequest 
+	 * @private
+	 */
     _xhr_onreadystatechange: function (d) {
         // MochiKit.Logging.logDebug('this.readyState', this.readyState);
         var m = MochiKit.Base;
@@ -368,6 +378,7 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         }
     },
 
+	/** @private */
     _xhr_canceller: function (req) {
         // IE SUCKS
         try {
@@ -382,7 +393,12 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
     },
 
 
-    /** @id MochiKit.Async.sendXMLHttpRequest */
+    /** 
+	 * @id MochiKit.Async.sendXMLHttpRequest 
+	 * @param {!XMLHttpRequest} req
+	 * @param {string=} [sendContent]
+	 * @return {!MochiKit.Async.Deferred}
+	 */
     sendXMLHttpRequest: function (req, /* optional */ sendContent) {
         if (typeof(sendContent) == "undefined" || sendContent === null) {
             sendContent = "";
@@ -406,10 +422,14 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         }
 
         return d;
-
     },
 
-    /** @id MochiKit.Async.doXHR */
+    /** 
+	 * @id MochiKit.Async.doXHR 
+	 * @param {string} url
+	 * @param {Object=} [opts]
+	 * @return {!MochiKit.Async.Deferred}
+	 */
     doXHR: function (url, opts) {
         /*
             Work around a Firefox bug by dealing with XHR during
@@ -421,6 +441,12 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return self._doXHR(url, opts); // test disabling the above (might help stack-traces when debugging)
     },
 
+	/**
+	 * @return {!MochiKit.Async.Deferred}
+	 * @param {string} url
+	 * @param {Object=} [opts]
+	 * @private
+	 */
     _doXHR: function (url, opts) {
         var m = MochiKit.Base;
         opts = m.update({
@@ -469,7 +495,13 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return self.sendXMLHttpRequest(req, opts.sendContent);
     },
 
-    _buildURL: function (url/*, ...*/) {
+	/** 
+	 * @param {string} url
+	 * @param {...*} [var_args]
+	 * @return {string}
+	 * @private 
+	 */
+    _buildURL: function (url, var_args/*, ...*/) {
         if (arguments.length > 1) {
             var m = MochiKit.Base;
             var qs = m.queryString.apply(null, m.extend(null, arguments, 1));
@@ -480,7 +512,11 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return url;
     },
 
-    /** @id MochiKit.Async.doSimpleXMLHttpRequest */
+    /** 
+	 * @id MochiKit.Async.doSimpleXMLHttpRequest 
+	 * @param {string} url
+	 * @return {!MochiKit.Async.Deferred}
+	 */
     doSimpleXMLHttpRequest: function (url/*, ...*/) {
         var self = MochiKit.Async;
         url = self._buildURL.apply(self, arguments);
@@ -489,7 +525,8 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
 
     /**
      * @id MochiKit.Async.loadJSONDoc
-     * @return {!Deferred}
+	 * @param {string} url
+     * @return {!MochiKit.Async.Deferred}
      */
     loadJSONDoc: function (url/*, ...*/) {
         var self = MochiKit.Async;
@@ -507,7 +544,7 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
      * todo: though we don't have/want a dependency on DOM here I'd say
      * some way of specifying the context document elem might be useful? (typically in iframe cases)
      * @param {string} url
-     * @return {!Deferred}
+     * @return {!MochiKit.Async.Deferred}
      */
     loadScript: function (url) {
         var d = new MochiKit.Async.Deferred();
@@ -545,7 +582,7 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
      * @id MochiKit.Async.wait
      * @param {number} seconds
      * @param {*=} [value]
-     * @return {!Deferred}
+     * @return {!MochiKit.Async.Deferred}
      */
     wait: function (seconds, /* optional */value) {
         var d = new MochiKit.Async.Deferred();
@@ -561,8 +598,14 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return d;
     },
 
-    /** @id MochiKit.Async.callLater */
-    callLater: function (seconds, func) {
+    /** 
+	 * @id MochiKit.Async.callLater 
+	 * @param {number} seconds
+	 * @param {Function} func
+	 * @param {...*} [var_args]
+	 * @return {!MochiKit.Async.Deferred}
+	 */
+    callLater: function (seconds, func, var_args) {
         var m = MochiKit.Base;
         var pfunc = m.partial.apply(m, m.extend(null, arguments, 1));
         return MochiKit.Async.wait(seconds).addCallback(
@@ -605,7 +648,13 @@ MochiKit.Async.DeferredLock.prototype.release = function () {
 		this.waiting.shift().callback(this);
 	}
 };
+/** 
+ * @return {integer}
+ * @private 
+ */
 MochiKit.Async.DeferredLock.prototype._nextId = MochiKit.Base.counter();
+
+/** @return {string} */
 MochiKit.Async.DeferredLock.prototype.repr = function () {
 	var state;
 	if (this.locked) {
@@ -615,6 +664,7 @@ MochiKit.Async.DeferredLock.prototype.repr = function () {
 	}
 	return 'DeferredLock(' + this.id + ', ' + state + ')';
 };
+/** @return {string} */
 MochiKit.Async.DeferredLock.prototype.toString = MochiKit.Base.forwardCall("repr");
 
 
@@ -654,12 +704,14 @@ MochiKit.Async.DeferredList = function (list, /* optional */fireOnOneCallback, f
     if (list.length === 0 && !fireOnOneCallback) {
         this.callback(this.resultList);
     }
-
 };
 
 MochiKit.Async.DeferredList.prototype = new MochiKit.Async.Deferred();
 MochiKit.Async.DeferredList.prototype.constructor = MochiKit.Async.DeferredList;
 
+/** 
+ * @private
+ */
 MochiKit.Async.DeferredList.prototype._cbDeferred = function (index, succeeded, result) {
     this.resultList[index] = [succeeded, result];
     this.finishedCount += 1;
@@ -678,7 +730,11 @@ MochiKit.Async.DeferredList.prototype._cbDeferred = function (index, succeeded, 
     return result;
 };
 
-/** @id MochiKit.Async.gatherResults */
+/** 
+ * @id MochiKit.Async.gatherResults 
+ * @param {!Array.<!MochiKit.Async.Deferred>} deferredList
+ * @return {!MochiKit.Async.DeferredList}
+ */
 MochiKit.Async.gatherResults = function (deferredList) {
     var d = new MochiKit.Async.DeferredList(deferredList, false, true, false);
     d.addCallback(function (results) {
@@ -691,7 +747,11 @@ MochiKit.Async.gatherResults = function (deferredList) {
     return d;
 };
 
-/** @id MochiKit.Async.maybeDeferred */
+/** 
+ * @id MochiKit.Async.maybeDeferred 
+ * @param {Function} func
+ * @return {!MochiKit.Async.Deferred}
+ */
 MochiKit.Async.maybeDeferred = function (func) {
     var self = MochiKit.Async;
     var result;

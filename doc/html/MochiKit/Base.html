@@ -1215,7 +1215,7 @@ except it uses the arguments instead of a given <tt class="docutils literal">Arr
 <blockquote>
 <table border="1" class="docutils">
 <colgroup>
-<col width="28%" />
+<col width="27%" />
 <col width="28%" />
 <col width="45%" />
 </colgroup>
@@ -1253,6 +1253,10 @@ except it uses the arguments instead of a given <tt class="docutils literal">Arr
 <tr><td><tt class="docutils literal">pow(a, b)</tt></td>
 <td><tt class="docutils literal">pow(a, b)</tt></td>
 <td>Exponentiation</td>
+</tr>
+<tr><td><tt class="docutils literal">divmod(a, b)</tt></td>
+<td><tt class="docutils literal">[a / b, a % b]</tt></td>
+<td>Division and Modulus</td>
 </tr>
 <tr><td><tt class="docutils literal">and(a, b)</tt></td>
 <td><tt class="docutils literal">a &amp; b</tt></td>
@@ -1429,6 +1433,32 @@ except it uses the arguments instead of a given <tt class="docutils literal">Arr
 <tr><td><tt class="docutils literal">contains(a, b)</tt></td>
 <td><tt class="docutils literal">b in a</tt></td>
 <td>Has property (note order)</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>Sequence Operators</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="29%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Operator</th>
+<th class="head">Implementation</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal">concat(a, b)</tt></td>
+<td><tt class="docutils literal">concat(a, b)</tt></td>
+<td>Concatenate sequences</td>
+</tr>
+<tr><td><tt class="docutils literal">iconcat(a, b)</tt></td>
+<td><tt class="docutils literal">a.concat(b)</tt></td>
+<td>In-place concatenation</td>
 </tr>
 </tbody>
 </table>

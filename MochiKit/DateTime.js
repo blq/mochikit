@@ -30,10 +30,12 @@ MochiKit.DateTime.isoDate = function (str) {
     if (iso.length === 0) {
         return null;
     }
-    var date = new Date(parseInt(iso[0], 10), parseInt(iso[1], 10) - 1, parseInt(iso[2], 10));
-    date.setFullYear(iso[0]);
-    date.setMonth(iso[1] - 1);
-    date.setDate(iso[2]);
+	
+	var y = parseInt(iso[0], 10), m = parseInt(iso[1], 10) - 1, d = parseInt(iso[2], 10);	
+    var date = new Date(y, m, d);
+	date.setFullYear(y);
+	date.setMonth(m);
+	date.setDate(d);
     return date;
 };
 

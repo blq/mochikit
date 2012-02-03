@@ -31,7 +31,10 @@ MochiKit.Logging.LogMessage = function (num, level, info) {
 };
 
 MochiKit.Logging.LogMessage.prototype = {
-     /** @id MochiKit.Logging.LogMessage.prototype.repr */
+    /** 
+	 * @id MochiKit.Logging.LogMessage.prototype.repr 
+	 * @return {string}
+	 */
     repr: function () {
         var m = MochiKit.Base;
         return 'LogMessage(' +
@@ -40,7 +43,10 @@ MochiKit.Logging.LogMessage.prototype = {
                 [this.num, this.level, this.info]
             ).join(', ') + ')';
     },
-    /** @id MochiKit.Logging.LogMessage.prototype.toString */
+    /** 
+	 * @id MochiKit.Logging.LogMessage.prototype.toString 
+	 * @return {string}
+	 */
     toString: MochiKit.Base.forwardCall("repr")
 };
 
@@ -127,13 +133,14 @@ MochiKit.Logging.Logger.prototype = {
                 && window.console.log) {
             // Safari and FireBug 0.4
 
-			var consoleLevel = window.console['firebug'] ? ({ // todo: Chrome etc seems to support these also
-				'INFO': 'info', // or 'log'?
-				'DEBUG': 'debug',
-				'WARNING': 'warn',
-				'ERROR': 'error',
-				'FATAL': 'error'
-			}[level] || 'log') : 'log';
+			// todo: Chrome etc seems to support these also
+			var consoleLevel = {
+				'INFO': typeof window.console.info == 'function' ? 'info' : null,
+				'DEBUG': typeof window.console.debug == 'function' ? 'debug' : null,
+				'WARNING': typeof window.console.warn == 'function' ? 'warn' : null,
+				'ERROR': typeof window.console.error == 'function' ? 'error' : null,
+				'FATAL': typeof window.console.error == 'function' ? 'error' : null
+			}[level] || 'log';
 
 			// Percent replacement is a workaround for cute Safari crashing bug
             window.console[consoleLevel](msg.replace(/%/g, '\uFF05'));
