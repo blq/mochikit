@@ -8,6 +8,7 @@
  * implementation based on: http://svn.python.org/view/python/trunk/Lib/bisect.py?view=markup
  *
  * todo: add support for custom compare? (i.e ala STL, not Python)
+ * Discussion (which mostly argues against this..) here: http://mail.python.org/pipermail/python-bugs-list/2006-November/036192.html
  *
  * @author Fredrik Blomqvist
  *
