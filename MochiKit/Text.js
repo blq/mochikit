@@ -217,13 +217,13 @@ MochiKit.Text.formatter = function (pattern, locale) {
  * pattern syntax.
  *
  * @param {string} pattern the formatter pattern string
- * @param {Object} [...] the optional values to format
+ * @param {...*} [var_args] the optional values to format
  *
  * @return {string} the formatted output string
  *
- * @throws FormatPatternError if the format pattern was invalid
+ * @throws {FormatPatternError} if the format pattern was invalid
  */
-MochiKit.Text.format = function (pattern/*, ...*/) {
+MochiKit.Text.format = function (pattern, var_args/*, ...*/) {
     var func = MochiKit.Text.formatter(pattern);
     return func.apply(this, MochiKit.Base.extend([], arguments, 1));
 };

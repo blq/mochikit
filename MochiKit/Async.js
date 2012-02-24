@@ -143,10 +143,11 @@ MochiKit.Async.Deferred.prototype.errback = function (res) {
 
 /**
  * @id MochiKit.Async.Deferred.prototype.addBoth
- * @param {?function(*)} fn
+ * @param {?Function} fn
+ * @param {...*} [var_args] arguments that will be partially applied to fn
  * @return {!MochiKit.Async.Deferred} (this, chain)
  */
-MochiKit.Async.Deferred.prototype.addBoth = function (fn) {
+MochiKit.Async.Deferred.prototype.addBoth = function (fn, var_args) {
 	if (arguments.length > 1) {
 		fn = MochiKit.Base.partial.apply(null, arguments);
 	}
@@ -155,11 +156,11 @@ MochiKit.Async.Deferred.prototype.addBoth = function (fn) {
 
 /**
  * @id MochiKit.Async.Deferred.prototype.addCallback
- * @param {?function(*)} fn
- * // todo: specify extra args (partial)
+ * @param {?Function} fn
+ * @param {...*} [var_args] arguments that will be partially applied to fn
  * @return {!MochiKit.Async.Deferred} (this, chain)
  */
-MochiKit.Async.Deferred.prototype.addCallback = function (fn) {
+MochiKit.Async.Deferred.prototype.addCallback = function (fn, var_args) {
 	if (arguments.length > 1) {
 		fn = MochiKit.Base.partial.apply(null, arguments);
 	}
@@ -168,10 +169,11 @@ MochiKit.Async.Deferred.prototype.addCallback = function (fn) {
 
 /**
  * @id MochiKit.Async.Deferred.prototype.addErrback
- * @param {?function(*)} fn
+ * @param {?Function} fn
+ * @param {...*} [var_args] arguments that will be partially applied to fn
  * @return {!MochiKit.Async.Deferred} (this, chain)
  */
-MochiKit.Async.Deferred.prototype.addErrback = function (fn) {
+MochiKit.Async.Deferred.prototype.addErrback = function (fn, var_args) {
 	if (arguments.length > 1) {
 		fn = MochiKit.Base.partial.apply(null, arguments);
 	}
@@ -181,8 +183,8 @@ MochiKit.Async.Deferred.prototype.addErrback = function (fn) {
 /**
  * @id MochiKit.Async.Deferred.prototype.addCallbacks
  * pass null as cb/eb to set "don't care"
- * @param {?function(*)} cb
- * @param {?function(*)} eb
+ * @param {?Function} cb
+ * @param {?Function} eb
  * @return {!MochiKit.Async.Deferred} (this, chain)
  */
 MochiKit.Async.Deferred.prototype.addCallbacks = function (cb, eb) {
