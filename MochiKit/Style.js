@@ -79,7 +79,13 @@ MochiKit.Style.Coordinates.prototype.toString = function () {
 
 MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
 
-    /** @id MochiKit.Style.getStyle */
+	/**
+	 * @id MochiKit.Style.getStyle
+	 * @see http://mochikit.com/doc/html/MochiKit/Style.html#fn-getstyle
+	 * @param {Element|string} element
+	 * @param {string} cssSelector
+	 * @return {string}
+	 */	
     getStyle: function (elem, cssProperty) {
         var dom = MochiKit.DOM;
         var d = dom._document;
@@ -142,7 +148,12 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
         return value == 'auto' ? null : value;
     },
 
-    /** @id MochiKit.Style.setStyle */
+	/**
+	 * @id MochiKit.Style.setStyle
+	 * @see http://mochikit.com/doc/html/MochiKit/Style.html#fn-setstyle
+	 * @param {Element|string} element
+	 * @param {Object.<string, ?(boolean|string|number)>} styles
+	 */	
     setStyle: function (elem, style) {
         elem = MochiKit.DOM.getElement(elem);
         for (var name in style) { // todo: use o.hasOwnProperty(k) test?
@@ -202,7 +213,11 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
 
     */
 
-    /** @id MochiKit.Style.getElementPosition */
+    /** 
+	 * @id MochiKit.Style.getElementPosition 
+	 * @param {!Element|string} elem
+	 * @param {(Pos|Element|string)=} [relativeTo]
+	 */
     getElementPosition: function (elem, /* optional */relativeTo) {
         var self = MochiKit.Style;
         var dom = MochiKit.DOM;
@@ -321,12 +336,12 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
         return c;
     },
 
-    /**
-     * @id MochiKit.Style.setElementPosition
-     * @param {string|!Element} elem
-     * @param {{ x: number, y: number}|{ x: number}|{y: number}} newPos
-     * @param {string=} [units] default "px"
-     */
+	/**
+	 * @id MochiKit.Style.setElementPosition
+	 * @param {!Element|string} elem
+	 * @param {!(Pos|{ x: number }|{ y: number })} newPos
+	 * @param {string=} [units] default "px"
+	 */	 
     setElementPosition: function (elem, newPos/* optional */, units) {
         elem = MochiKit.DOM.getElement(elem);
         if (typeof(units) == 'undefined') {
@@ -394,7 +409,12 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
         }
     },
 
-    /** @id MochiKit.Style.getElementDimensions */
+	/**
+	 * @id MochiKit.Style.getElementDimensions
+	 * @param {!Element|string} elem
+	 * @param {boolean=} [contentSize=false]
+	 * @return {Size}
+	 */
     getElementDimensions: function (elem, contentSize/*optional*/) {
         var self = MochiKit.Style;
         var dom = MochiKit.DOM;
@@ -472,13 +492,13 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
         return new self.Dimensions(originalWidth, originalHeight);
     },
 
-    /**
-     * @id MochiKit.Style.setElementDimensions
-     * @param {string|!Element} elem
-     * @param {{w: number, h: number}|{w: number}|{h: number}} newSize
-     * @param {string=} [units] default "px"
-     */
-    setElementDimensions: function (elem, newSize/* optional */, units) {
+	/**
+	 * @id MochiKit.Style.setElementDimensions
+	 * @param {!Element|string} elem
+	 * @param {!(Size|{ w: number }|{ h: number })} newSize
+	 * @param {string=} [units=px]
+	 */	 
+    setElementDimensions: function (elem, newSize, /* optional */units) {
         elem = MochiKit.DOM.getElement(elem);
         if (typeof(units) == 'undefined') {
             units = 'px';
@@ -518,7 +538,11 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
         }
     },
 
-    /** @id MochiKit.Style.getViewportDimensions */
+	/**
+	 * @id MochiKit.Style.getViewportDimensions
+	 * @see http://mochikit.com/doc/html/MochiKit/Style.html#fn-getviewportdimensions
+	 * @return {!Size}
+	 */	
     getViewportDimensions: function () {
         var d = new MochiKit.Style.Dimensions();
         var w = MochiKit.DOM._window;
@@ -536,7 +560,11 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
         return d;
     },
 
-    /** @id MochiKit.Style.getViewportPosition */
+    /** 
+	 * @id MochiKit.Style.getViewportPosition 
+	 * @see http://mochikit.com/doc/html/MochiKit/Style.html#fn-getviewportposition
+	 * @return {!Pos}	 
+	 */
     getViewportPosition: function () {
         var c = new MochiKit.Style.Coordinates(0, 0);
         var d = MochiKit.DOM._document;
@@ -590,8 +618,16 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
         m._deprecated(this, 'elementPosition', 'MochiKit.Style.getElementPosition', '1.3', true);
         m._deprecated(this, 'elementDimensions', 'MochiKit.Style.getElementDimensions', '1.3', true);
 
+		/**
+		 * @param {Element|string} element
+		 * @param {...(Element|string)} var_args
+		 */
         this.hideElement = m.partial(this.setDisplayForElement, 'none');
-        // TODO: showElement could be improved by using getDefaultDisplay.
+        /** 
+		 * TODO: showElement could be improved by using getDefaultDisplay.
+		 * @param {Element|string} element
+		 * @param {...(Element|string)} var_args		 
+		 */
         this.showElement = m.partial(this.setDisplayForElement, 'block');
 
         m.nameFunctions(this);

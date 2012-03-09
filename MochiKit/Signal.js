@@ -829,9 +829,8 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 
     /**
      * @id MochiKit.Signal.disconnectAllTo
-	 * @param {Object|string} dest
-	 * //param {function(...[*])=} func
-	 * @param {!Function=} func
+	 * @param {Object|Function} objOrFunc
+	 * @param {!(Function|string)=} [funcOrStr]
      */
     disconnectAllTo: function (objOrFunc, /* optional */funcOrStr) {
         var self = MochiKit.Signal;
@@ -860,9 +859,9 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 	/**
 	 * @id MochiKit.Signal.disconnectAll
 	 * @param {Object|string} src
-	 * @param {...string} signal
+	 * @param {...string} var_args signal names
 	 */
-	disconnectAll: function (src/* optional */, sig) {
+	disconnectAll: function (src, /* optional */var_args) {
         if (typeof(src) == "string") {
             src = MochiKit.DOM.getElement(src);
         }
