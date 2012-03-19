@@ -398,7 +398,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 	 * @see http://mochikit.com/doc/html/MochiKit/DOM.html#fn-appendchildnodes
 	 * @param {Node|string} node	 
 	 * @param {*} childNode
-	 * @param {...*} [var_args]
+	 * @param {...*} [var_args] can be coerced
 	 * @return {Node} input node
 	 */
     appendChildNodes: function (node, childNode, var_args/*, nodes...*/) {
@@ -428,8 +428,14 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
     },
 
 
-    /** @id MochiKit.DOM.insertSiblingNodesBefore */
-    insertSiblingNodesBefore: function (node/*, nodes...*/) {
+    /** 
+	 * @id MochiKit.DOM.insertSiblingNodesBefore 
+	 * @param {Node|string} node
+	 * @param {*} sibling 
+	 * @param {...*} [var_args] args can be coerced
+	 * @return {Node}
+	 */
+    insertSiblingNodesBefore: function (node/*, nodes...*/, sibling, var_args) {
         var elem = node;
         var self = MochiKit.DOM;
         if (typeof(node) == 'string') {
@@ -456,8 +462,14 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return parentnode;
     },
 
-    /** @id MochiKit.DOM.insertSiblingNodesAfter */
-    insertSiblingNodesAfter: function (node/*, nodes...*/) {
+    /** 
+	 * @id MochiKit.DOM.insertSiblingNodesAfter 
+	 * @param {Node|string} node
+	 * @param {*} sibling
+	 * @param {...*} [var_args] args can be coerced
+	 * @return {Node}
+	 */
+    insertSiblingNodesAfter: function (node/*, nodes...*/, sibling, var_args) {
         var elem = node;
         var self = MochiKit.DOM;
 
