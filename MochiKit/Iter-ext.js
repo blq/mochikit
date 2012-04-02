@@ -869,7 +869,7 @@ MochiKit.Iter.javaLikeIterator = function(iterator)
 // perhaps always add this?
 MochiKit.Iter.registerJavaLikeIteratorSupport = function()
 {
-	MochiKit,Iter.registerIteratorFactory(
+	MochiKit.Iter.registerIteratorFactory(
         "javaStyleIterator",
         MochiKit.Iter.isJavaLikeIterator,
         MochiKit.Iter.javaLikeIterator
