@@ -258,7 +258,7 @@ MochiKit.Random.sample = function(population, k)
 /**
  * ! just for doc & Closure compiler. Should No be instantiated!
  * @private
- * @constructor
+ * @interface
  */
 MochiKit.Random._IRndGenerator = function() {};
 /**

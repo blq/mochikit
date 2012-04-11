@@ -52,7 +52,10 @@ MochiKit.Async.Deferred.prototype.toString = MochiKit.Base.forwardCall("repr");
  */
 MochiKit.Async.Deferred.prototype._nextId = MochiKit.Base.counter();
 
-/** @id MochiKit.Async.Deferred.prototype.state */
+/**
+ * @id MochiKit.Async.Deferred.prototype.state
+ * @return {string}
+ */
 MochiKit.Async.Deferred.prototype.state = function () {
 	if (this.fired == -1) {
 		return 'unfired';
@@ -109,7 +112,6 @@ MochiKit.Async.Deferred.prototype._check = function () {
 			throw new MochiKit.Async.AlreadyCalledError(this);
 		}
 		this.silentlyCancelled = false;
-		return;
 	}
 };
 
@@ -334,8 +336,8 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return self.XMLHttpRequest();
     },
 
-	/** 
-	 * @this XMLHttpRequest 
+	/**
+	 * @this {XMLHttpRequest}
 	 * @private
 	 */
     _xhr_onreadystatechange: function (d) {
@@ -444,9 +446,9 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
     },
 
 	/**
-	 * @return {!MochiKit.Async.Deferred}
 	 * @param {string} url
 	 * @param {Object=} [opts]
+	 * @return {!MochiKit.Async.Deferred}
 	 * @private
 	 */
     _doXHR: function (url, opts) {
