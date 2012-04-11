@@ -63,7 +63,7 @@ def _GetOptionsParser():
   parser.add_option('--module',
                     dest='modules',
                     action='append',
-                    help='module namespace specification. syntax: NAME:ns1,ns2,..,nsN. repeat for next module.'
+                    help='module namespace specification. syntax: NAME:ns1,ns2,..,nsN. repeat for next module. modules must be specified in dependency order'
                     )
   parser.add_option('--keep_dep_tags',
                     dest='keep_dep_tags',
