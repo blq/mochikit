@@ -16,12 +16,23 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	// on its arguments..
 }
 
-// MochiKit module (namespace)
+/**
+ * MochiKit module (namespace)
+ * @const
+ */
 var MochiKit = MochiKit || {};
 if (typeof(MochiKit.__export__) == "undefined") {
     MochiKit.__export__ = true;
 }
+/**
+ * @type {string}
+ * @const
+ */
 MochiKit.NAME = "MochiKit";
+/**
+ * @type {string}
+ * @const
+ */
 MochiKit.VERSION = "1.5";
 /** @return {string} */
 MochiKit.__repr__ = function () {
@@ -33,7 +44,10 @@ MochiKit.toString = function () {
 };
 
 
-// MochiKit.Base module
+/**
+ * MochiKit.Base module
+ * @const
+ */
 MochiKit.Base = MochiKit.Base || {};
 
 /**
@@ -72,8 +86,14 @@ MochiKit.Base.module = function (parent, name, version, deps) {
 
 MochiKit.Base.module(MochiKit, "Base", "1.5", []);
 
-/** @id MochiKit.Base.update */
-MochiKit.Base.update = function (self, obj/*, ... */) {
+/**
+ * @id MochiKit.Base.update
+ * @param {Object} self
+ * @param {Object} obj
+ * @param {...Object} [var_args]
+ * @return {!Object}
+ */
+MochiKit.Base.update = function (self, obj, var_args/*, ...*/) {
     if (self === null || self === undefined) {
         self = {};
     }
@@ -897,6 +917,7 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
                 self[k] = bind(func, self);
             }
         }
+    	return self;
     },
 
     /** @id MochiKit.Base.registerComparator */
