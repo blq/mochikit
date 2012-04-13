@@ -919,25 +919,25 @@ MochiKit.Base.update(MochiKit.Iter, /** @lends {MochiKit.Iter} */{
     }
 });
 
-/** @this MochiKit.Iter */
+/** @this {MochiKit.Iter} */
 MochiKit.Iter.__new__ = function () {
     var m = MochiKit.Base;
     // Re-use StopIteration if exists (e.g. SpiderMonkey)
     if (typeof(StopIteration) != "undefined") {
-        this.StopIteration = StopIteration;
+        MochiKit.Iter.StopIteration = StopIteration;
     } else {
         /** @id MochiKit.Iter.StopIteration */
-        this.StopIteration = new m.NamedError("StopIteration");
+        MochiKit.Iter.StopIteration = new m.NamedError("StopIteration");
     }
-    this.iteratorRegistry = new m.AdapterRegistry();
+    MochiKit.Iter.iteratorRegistry = new m.AdapterRegistry();
     // Register the iterator factory for arrays
-    this.registerIteratorFactory(
+    MochiKit.Iter.registerIteratorFactory(
         "arrayLike",
         m.isArrayLike,
         this.arrayLikeIter
     );
 
-    this.registerIteratorFactory(
+    MochiKit.Iter.registerIteratorFactory(
         "iterateNext",
         this.hasIterateNext,
         this.iterateNextIter

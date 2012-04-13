@@ -1162,7 +1162,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return null;
     },
 
-	/** @this MochiKit.DOM */
+	/** @this {MochiKit.DOM} */
     __new__: function (win) {
 
         var m = MochiKit.Base;

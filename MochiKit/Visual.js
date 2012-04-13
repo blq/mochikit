@@ -20,6 +20,7 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 
 MochiKit.Base.module(MochiKit, 'Visual', '1.5', ['Base', 'DOM', 'Style', 'Color', 'Position']);
 
+/** @constructor */
 MochiKit.Visual._RoundCorners = function (e, options) {
     e = MochiKit.DOM.getElement(e);
     this._setOptions(options);
@@ -500,6 +501,7 @@ Core effects
 
 ***/
 
+/** @constructor */
 MochiKit.Visual.ScopedQueue = function () {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -629,6 +631,7 @@ MochiKit.Visual.DefaultOptions = {
     queue: 'parallel'
 };
 
+/** @constructor */
 MochiKit.Visual.Base = function () {};
 
 MochiKit.Visual.Base.prototype = {
@@ -741,7 +744,10 @@ MochiKit.Visual.Base.prototype = {
     }
 };
 
-/** @id MochiKit.Visual.Parallel */
+/**
+ * @id MochiKit.Visual.Parallel
+ * @constructor
+ */
 MochiKit.Visual.Parallel = function (effects, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -782,7 +788,10 @@ MochiKit.Base.update(MochiKit.Visual.Parallel.prototype, {
     }
 });
 
-/** @id MochiKit.Visual.Sequence */
+/**
+ * @id MochiKit.Visual.Sequence
+ * @constructor
+ */
 MochiKit.Visual.Sequence = function (effects, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -830,7 +839,10 @@ MochiKit.Base.update(MochiKit.Visual.Sequence.prototype, {
     }
 });
 
-/** @id MochiKit.Visual.Opacity */
+/**
+ * @id MochiKit.Visual.Opacity
+ * @constructor
+ */
 MochiKit.Visual.Opacity = function (element, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -875,7 +887,10 @@ MochiKit.Base.update(MochiKit.Visual.Opacity.prototype, {
     }
 });
 
-/**  @id MochiKit.Visual.Move.prototype */
+/**
+ * @id MochiKit.Visual.Move.prototype
+ * @constructor
+ */
 MochiKit.Visual.Move = function (element, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -946,7 +961,10 @@ MochiKit.Base.update(MochiKit.Visual.Move.prototype, {
     }
 });
 
-/** @id MochiKit.Visual.Scale */
+/**
+ * @id MochiKit.Visual.Scale
+ * @constructor
+ */
 MochiKit.Visual.Scale = function (element, percent, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -1077,7 +1095,10 @@ MochiKit.Base.update(MochiKit.Visual.Scale.prototype, {
     }
 });
 
-/** @id MochiKit.Visual.Highlight */
+/**
+ * @id MochiKit.Visual.Highlight
+ * @constructor
+ */
 MochiKit.Visual.Highlight = function (element, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -1165,7 +1186,10 @@ MochiKit.Base.update(MochiKit.Visual.Highlight.prototype, {
     }
 });
 
-/** @id MochiKit.Visual.ScrollTo */
+/**
+ * @id MochiKit.Visual.ScrollTo
+ * @constructor
+ */
 MochiKit.Visual.ScrollTo = function (element, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
@@ -1222,6 +1246,7 @@ MochiKit.Base.update(MochiKit.Visual.ScrollTo.prototype, {
 
 MochiKit.Visual._CSS_LENGTH = /^(([\+\-]?[0-9\.]+)(em|ex|px|in|cm|mm|pt|pc|\%))|0$/;
 
+/** @constructor */
 MochiKit.Visual.Morph = function (element, options) {
     var cls = arguments.callee;
     if (!(this instanceof cls)) {
