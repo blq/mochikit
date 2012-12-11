@@ -310,6 +310,16 @@ Signal API Reference
         Available in MochiKit 1.4+
 
 
+:mochidef:`disconnectAllFromTo(src, dest)`:
+
+    Removes a set of signals from ``src``, connected to ``dest``.
+    Can be seen as AND logic of ``disconnectAll(src)`` and ``disconnectAllTo(dest)``,
+    i.e signals that are matched by both.
+
+    *Availability*:
+        Available in MochiKit 1.5+
+
+
 :mochidef:`signal(src, signal, ...)`:
 
     This will signal a signal, passing whatever additional parameters
