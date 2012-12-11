@@ -31,7 +31,7 @@ def build_modules(modules):
     # cmd line for actual compiler. must be a separate string
     ('--compiler_flags', ' '.join(list(reduce(lambda x,y: x+y, [
       ('--compilation_level', 'SIMPLE_OPTIMIZATIONS'), # todo: unless you compile MochiKit *toghether*  with your app scripts, ADVANCED_OPTIMIZATION can't (currently) be used, need to "export" the API functions.
-      ('--warning_level', 'VERBOSE'), # todo: enable VERBOSE mode once last issues in code have been fixed - this is where compiler really does its job!
+      ('--warning_level', 'VERBOSE'),
       ('--summary_detail_level', '3'),
 
       ('--define', 'goog.DEBUG=false'),
@@ -96,17 +96,23 @@ def main():
 
   build_modules(modules)
 
+  dst = 'packed/MochiKit/Closure/'
+
   # move output to packed folder
   for mod in modules:
-    shutil.move(mod[0] + '.js', 'packed/MochiKit/Closure')
+    f = mod[0] + '.js'
+    os.remove(dst + f) # can't assume move will handle overwrite case..
+    shutil.move(f, dst)
 
   # also build a complete pack (for comparison with "old" pack.py)
   build_modules([
     ('MochiKit', modules[0][1] + modules[1][1])
   ])
-  shutil.move('MochiKit.js', 'packed/MochiKit/Closure')
+  os.remove(dst + 'MochiKit.js')
+  shutil.move('MochiKit.js', dst)
 
-  shutil.move('goog.js', 'packed/MochiKit/Closure/base.js') # assumes 'keep_base_separate' param was used above
+  os.remove(dst + 'base.js')
+  shutil.move('goog.js', dst + 'base.js') # assumes 'keep_base_separate' param was used above
 
   # generate dependency file
   make_closure_deps.main()
