@@ -239,7 +239,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
     /**
      * @id MochiKit.DOM.isChildNode
 	 * @param {!Node|string} node
-	 * @param {!Node|string} maybeparent	 
+	 * @param {!Node|string} maybeparent
      * @return {boolean}
      */
     isChildNode: function (node, maybeparent) {
@@ -268,7 +268,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 	 * @param {string} attr
 	 * @param {*} value
 	 * @return {Node} chained input node
-	 */	
+	 */
     setNodeAttribute: function (node, attr, value) {
         var o = {};
         o[attr] = value;
@@ -279,13 +279,13 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         }
         return null;
     },
-    
+
 	/**
 	 * @id MochiKit.DOM.getNodeAttribute
 	 * @param {!Node|string} node
 	 * @param {string} attr
 	 * @return {*}
-	 */	
+	 */
     getNodeAttribute: function (node, attr) {
         var self = MochiKit.DOM;
         var rename = self.attributeArray.renames[attr];
@@ -326,7 +326,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 	 * @param {!Node|string} node
 	 * @param {Object} attrs
 	 * @return {Node} chained input node
-	 */	
+	 */
     updateNodeAttributes: function (node, attrs) {
         var elem = node;
         var self = MochiKit.DOM;
@@ -393,10 +393,10 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return elem;
     },
 
-    /** 
-	 * @id MochiKit.DOM.appendChildNodes 
+    /**
+	 * @id MochiKit.DOM.appendChildNodes
 	 * @see http://mochikit.com/doc/html/MochiKit/DOM.html#fn-appendchildnodes
-	 * @param {Node|string} node	 
+	 * @param {Node|string} node
 	 * @param {*} childNode
 	 * @param {...*} [var_args] can be coerced
 	 * @return {Node} input node
@@ -428,10 +428,10 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
     },
 
 
-    /** 
-	 * @id MochiKit.DOM.insertSiblingNodesBefore 
+    /**
+	 * @id MochiKit.DOM.insertSiblingNodesBefore
 	 * @param {Node|string} node
-	 * @param {*} sibling 
+	 * @param {*} sibling
 	 * @param {...*} [var_args] args can be coerced
 	 * @return {Node}
 	 */
@@ -462,8 +462,8 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return parentnode;
     },
 
-    /** 
-	 * @id MochiKit.DOM.insertSiblingNodesAfter 
+    /**
+	 * @id MochiKit.DOM.insertSiblingNodesAfter
 	 * @param {Node|string} node
 	 * @param {*} sibling
 	 * @param {...*} [var_args] args can be coerced
@@ -497,8 +497,8 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 	 * if no childnodes are specified this will clear the child list
 	 * @param {Node|string} node
 	 * @param {...*} [var_args]
-	 * @return {Node} 
-	 */	
+	 * @return {Node}
+	 */
     replaceChildNodes: function (node, var_args/*, nodes...*/) {
         var elem = node;
         var self = MochiKit.DOM;
@@ -576,7 +576,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 	 * @id MochiKit.DOM.removeElement
 	 * @param {Element|string} elem
 	 * @return {Element}
-	 */	
+	 */
     removeElement: function (elem) {
         var self = MochiKit.DOM;
         if (typeof(elem) == "string") {
@@ -592,7 +592,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 	 * @param {Element|string} dest
 	 * @param {Element|string} src
 	 * @return {Element} (src)
-	 */	
+	 */
     swapDOM: function (dest, src) {
         var self = MochiKit.DOM;
         dest = self.getElement(dest);
@@ -610,7 +610,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
     },
 
 	/**
-	 * @id MochiKit.DOM.getElement 
+	 * @id MochiKit.DOM.getElement
 	 * note: although this fn can return an array this
 	 * is currently not annotated since it is seldom(?)
 	 * used and would just complicate other annotation
@@ -618,7 +618,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 	 * //param {...(string|Element)} var_args
 	 * //return {(Element|Array.<Element>)}
 	 * @return {Element}
-	 */	 
+	 */
     getElement: function (id/*, var_args*/) {
         var self = MochiKit.DOM;
         if (arguments.length == 1) {
@@ -827,13 +827,13 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         }
     },
 
-	/** 
+	/**
 	 * @id MochiKit.DOM.toggleElementClass
 	 * @see http://mochikit.com/doc/html/MochiKit/DOM.html#fn-toggleelementclass
 	 * @param {string} className
 	 * @param {!Element|string} element
 	 * @param {...(!Element|string)} [var_args]
-	 */	
+	 */
     toggleElementClass: function (className, element, var_args/*, element... */) {
         var self = MochiKit.DOM;
         for (var i = 1; i < arguments.length; i++) {
@@ -914,8 +914,8 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return false;
     },
 
-    /** 
-	 * @id MochiKit.DOM.swapElementClass 
+    /**
+	 * @id MochiKit.DOM.swapElementClass
 	 * @param {Element|string} element
 	 * @param {string} fromClass
 	 * @param {string} toClass
@@ -965,8 +965,8 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return true;
     },
 
-    /** 
-	 * @id MochiKit.DOM.escapeHTML 
+    /**
+	 * @id MochiKit.DOM.escapeHTML
 	 * @param {string} s
 	 * @return {string}
 	 */
@@ -982,8 +982,8 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return MochiKit.DOM.emitHTML(dom).join("");
     },
 
-    /** 
-	 * @id MochiKit.DOM.emitHTML 
+    /**
+	 * @id MochiKit.DOM.emitHTML
 	 * @param {Node} dom
 	 * @param {Array=} [lst]
 	 * @return {!Array}
@@ -1072,7 +1072,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 	 * @id MochiKit.DOM.removeEmptyTextNodes
 	 * @see http://mochikit.com/doc/html/MochiKit/DOM.html#fn-removeemptytextnodes
 	 * @param {!Node|string} element
-	 */	
+	 */
     removeEmptyTextNodes: function (element) {
         element = MochiKit.DOM.getElement(element);
         for (var i = 0; i < element.childNodes.length; i++) {
@@ -1090,7 +1090,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 	 * @param {?string} className
 	 * @param {(Node|string)=} [parent=document]
 	 * @return {Element}
-	 */	 
+	 */
     getFirstElementByTagAndClassName: function (tagName, className,
             /* optional */parent) {
         var self = MochiKit.DOM;
@@ -1136,7 +1136,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
 	 * @param {?string} tagName
 	 * @param {?string} className
 	 * @return {Element}
-	 */	
+	 */
     getFirstParentByTagAndClassName: function (elem, tagName, className) {
         var self = MochiKit.DOM;
         elem = self.getElement(elem);
@@ -1162,7 +1162,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         return null;
     },
 
-	/** @this MochiKit.DOM */
+	/** @this {MochiKit.DOM} */
     __new__: function (win) {
 
         var m = MochiKit.Base;
@@ -1207,7 +1207,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
             };
             attributeArray.compliant = false;
             attributeArray.renames = {
-				// todo: verify if we might need to add: accesskey, maxlength, tabindex, valign 
+				// todo: verify if we might need to add: accesskey, maxlength, tabindex, valign
                 "class": "className",
                 "checked": "defaultChecked",
                 "usemap": "useMap",
@@ -1267,123 +1267,123 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         // shorthand for createDOM syntax
         var createDOMFunc = this.createDOMFunc;
         /** @id MochiKit.DOM.A */
-        this.A = createDOMFunc("a");
+        MochiKit.DOM.A = createDOMFunc("a");
         /** @id MochiKit.DOM.ARTICLE */
-        this.ARTICLE = createDOMFunc("article");
+        MochiKit.DOM.ARTICLE = createDOMFunc("article");
         /** @id MochiKit.DOM.ASIDE */
-        this.ASIDE = createDOMFunc("aside");
+        MochiKit.DOM.ASIDE = createDOMFunc("aside");
         /** @id MochiKit.DOM.BR */
-        this.BR = createDOMFunc("br");
+        MochiKit.DOM.BR = createDOMFunc("br");
         /** @id MochiKit.DOM.BUTTON */
-        this.BUTTON = createDOMFunc("button");
+        MochiKit.DOM.BUTTON = createDOMFunc("button");
         /** @id MochiKit.DOM.CANVAS */
-        this.CANVAS = createDOMFunc("canvas");
+        MochiKit.DOM.CANVAS = createDOMFunc("canvas");
         /** @id MochiKit.DOM.CAPTION */
-        this.CAPTION = createDOMFunc("caption");
+        MochiKit.DOM.CAPTION = createDOMFunc("caption");
         /** @id MochiKit.DOM.DD */
-        this.DD = createDOMFunc("dd");
+        MochiKit.DOM.DD = createDOMFunc("dd");
         /** @id MochiKit.DOM.DIV */
-        this.DIV = createDOMFunc("div");
+        MochiKit.DOM.DIV = createDOMFunc("div");
         /** @id MochiKit.DOM.DL */
-        this.DL = createDOMFunc("dl");
+        MochiKit.DOM.DL = createDOMFunc("dl");
         /** @id MochiKit.DOM.DT */
-        this.DT = createDOMFunc("dt");
+        MochiKit.DOM.DT = createDOMFunc("dt");
         /** @id MochiKit.DOM.FIELDSET */
-        this.FIELDSET = createDOMFunc("fieldset");
+        MochiKit.DOM.FIELDSET = createDOMFunc("fieldset");
         /** @id MochiKit.DOM.FIGURE */
-        this.FIGURE = createDOMFunc("figure");
+        MochiKit.DOM.FIGURE = createDOMFunc("figure");
         /** @id MochiKit.DOM.FIGCAPTION */
-        this.FIGCAPTION = createDOMFunc("figcaption");
+        MochiKit.DOM.FIGCAPTION = createDOMFunc("figcaption");
         /** @id MochiKit.DOM.FOOTER */
-        this.FOOTER = createDOMFunc("footer");
+        MochiKit.DOM.FOOTER = createDOMFunc("footer");
         /** @id MochiKit.DOM.FORM */
-        this.FORM = createDOMFunc("form");
+        MochiKit.DOM.FORM = createDOMFunc("form");
         /** @id MochiKit.DOM.H1 */
-        this.H1 = createDOMFunc("h1");
+        MochiKit.DOM.H1 = createDOMFunc("h1");
         /** @id MochiKit.DOM.H2 */
-        this.H2 = createDOMFunc("h2");
+        MochiKit.DOM.H2 = createDOMFunc("h2");
         /** @id MochiKit.DOM.H3 */
-        this.H3 = createDOMFunc("h3");
+        MochiKit.DOM.H3 = createDOMFunc("h3");
         /** @id MochiKit.DOM.H4 */
-        this.H4 = createDOMFunc("h4");
+        MochiKit.DOM.H4 = createDOMFunc("h4");
         /** @id MochiKit.DOM.H5 */
-        this.H5 = createDOMFunc("h5");
+        MochiKit.DOM.H5 = createDOMFunc("h5");
         /** @id MochiKit.DOM.H6 */
-        this.H6 = createDOMFunc("h6");
+        MochiKit.DOM.H6 = createDOMFunc("h6");
         /** @id MochiKit.DOM.HEADER */
-        this.HEADER = createDOMFunc("header");
+        MochiKit.DOM.HEADER = createDOMFunc("header");
         /** @id MochiKit.DOM.HGROUP */
-        this.HGROUP = createDOMFunc("hgroup");
+        MochiKit.DOM.HGROUP = createDOMFunc("hgroup");
         /** @id MochiKit.DOM.HR */
-        this.HR = createDOMFunc("hr");
+        MochiKit.DOM.HR = createDOMFunc("hr");
         /** @id MochiKit.DOM.IFRAME */
-        this.IFRAME = createDOMFunc("iframe");
+        MochiKit.DOM.IFRAME = createDOMFunc("iframe");
         /** @id MochiKit.DOM.IMG */
-        this.IMG = createDOMFunc("img");
+        MochiKit.DOM.IMG = createDOMFunc("img");
         /** @id MochiKit.DOM.INPUT */
-        this.INPUT = createDOMFunc("input");
+        MochiKit.DOM.INPUT = createDOMFunc("input");
         /** @id MochiKit.DOM.LABEL */
-        this.LABEL = createDOMFunc("label");
+        MochiKit.DOM.LABEL = createDOMFunc("label");
         /** @id MochiKit.DOM.LEGEND */
-        this.LEGEND = createDOMFunc("legend");
+        MochiKit.DOM.LEGEND = createDOMFunc("legend");
         /** @id MochiKit.DOM.LI */
-        this.LI = createDOMFunc("li");
+        MochiKit.DOM.LI = createDOMFunc("li");
         /** @id MochiKit.DOM.LINK */
-        this.LINK = createDOMFunc("link");
+        MochiKit.DOM.LINK = createDOMFunc("link");
         /** @id MochiKit.DOM.MARK */
-        this.MARK = createDOMFunc("mark");
+        MochiKit.DOM.MARK = createDOMFunc("mark");
         /** @id MochiKit.DOM.METER */
-        this.METER = createDOMFunc("meter");
+        MochiKit.DOM.METER = createDOMFunc("meter");
         /** @id MochiKit.DOM.NAV */
-        this.NAV = createDOMFunc("nav");
+        MochiKit.DOM.NAV = createDOMFunc("nav");
         /** @id MochiKit.DOM.OL */
-        this.OL = createDOMFunc("ol");
+        MochiKit.DOM.OL = createDOMFunc("ol");
         /** @id MochiKit.DOM.OPTGROUP */
-        this.OPTGROUP = createDOMFunc("optgroup");
+        MochiKit.DOM.OPTGROUP = createDOMFunc("optgroup");
         /** @id MochiKit.DOM.OPTION */
-        this.OPTION = createDOMFunc("option");
+        MochiKit.DOM.OPTION = createDOMFunc("option");
         /** @id MochiKit.DOM.P */
-        this.P = createDOMFunc("p");
+        MochiKit.DOM.P = createDOMFunc("p");
         /** @id MochiKit.DOM.PRE */
-        this.PRE = createDOMFunc("pre");
+        MochiKit.DOM.PRE = createDOMFunc("pre");
         /** @id MochiKit.DOM.PROGRESS */
-        this.PROGRESS = createDOMFunc("progress");
+        MochiKit.DOM.PROGRESS = createDOMFunc("progress");
         /** @id MochiKit.DOM.SCRIPT */
-        this.SCRIPT = createDOMFunc("script");
+        MochiKit.DOM.SCRIPT = createDOMFunc("script");
         /** @id MochiKit.DOM.SECTION */
-        this.SECTION = createDOMFunc("section");
+        MochiKit.DOM.SECTION = createDOMFunc("section");
         /** @id MochiKit.DOM.SELECT */
-        this.SELECT = createDOMFunc("select");
+        MochiKit.DOM.SELECT = createDOMFunc("select");
         /** @id MochiKit.DOM.SPAN */
-        this.SPAN = createDOMFunc("span");
+        MochiKit.DOM.SPAN = createDOMFunc("span");
         /** @id MochiKit.DOM.STRONG */
-        this.STRONG = createDOMFunc("strong");
+        MochiKit.DOM.STRONG = createDOMFunc("strong");
         /** @id MochiKit.DOM.STYLE */
-        this.STYLE = createDOMFunc("style");
+        MochiKit.DOM.STYLE = createDOMFunc("style");
         /** @id MochiKit.DOM.TABLE */
-        this.TABLE = createDOMFunc("table");
+        MochiKit.DOM.TABLE = createDOMFunc("table");
         /** @id MochiKit.DOM.TBODY */
-        this.TBODY = createDOMFunc("tbody");
+        MochiKit.DOM.TBODY = createDOMFunc("tbody");
         /** @id MochiKit.DOM.TD */
-        this.TD = createDOMFunc("td");
+        MochiKit.DOM.TD = createDOMFunc("td");
         /** @id MochiKit.DOM.TEXTAREA */
-        this.TEXTAREA = createDOMFunc("textarea");
+        MochiKit.DOM.TEXTAREA = createDOMFunc("textarea");
         /** @id MochiKit.DOM.TFOOT */
-        this.TFOOT = createDOMFunc("tfoot");
+        MochiKit.DOM.TFOOT = createDOMFunc("tfoot");
         /** @id MochiKit.DOM.TH */
-        this.TH = createDOMFunc("th");
+        MochiKit.DOM.TH = createDOMFunc("th");
         /** @id MochiKit.DOM.THEAD */
-        this.THEAD = createDOMFunc("thead");
+        MochiKit.DOM.THEAD = createDOMFunc("thead");
         /** @id MochiKit.DOM.TR */
-        this.TR = createDOMFunc("tr");
+        MochiKit.DOM.TR = createDOMFunc("tr");
         /** @id MochiKit.DOM.TT */
-        this.TT = createDOMFunc("tt");
+        MochiKit.DOM.TT = createDOMFunc("tt");
         /** @id MochiKit.DOM.UL */
-        this.UL = createDOMFunc("ul");
+        MochiKit.DOM.UL = createDOMFunc("ul");
         /** @id MochiKit.DOM.NBSP */
-        this.NBSP = "\u00a0";
+        MochiKit.DOM.NBSP = "\u00a0";
         /** @id MochiKit.DOM.$ */
-        this.$ = this.getElement;
+        MochiKit.DOM.$ = this.getElement;
 
         m.nameFunctions(this);
     }
@@ -1396,8 +1396,8 @@ MochiKit.DOM.__new__(((typeof(window) == "undefined") ? this : window));
 // XXX: Internet Explorer blows
 //
 if (MochiKit.__export__) {
-    withWindow = MochiKit.DOM.withWindow;
-    withDocument = MochiKit.DOM.withDocument;
+    window.withWindow = MochiKit.DOM.withWindow;
+    window.withDocument = MochiKit.DOM.withDocument;
 }
 
 MochiKit.Base._exportSymbols(this, MochiKit.DOM);
