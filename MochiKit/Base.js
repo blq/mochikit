@@ -11,17 +11,28 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 	goog.provide('MochiKit.Base');
-	
+
 	// .. queryString() has an implicit dependency on .DOM and .DateTime dependent
 	// on its arguments..
 }
 
-// MochiKit module (namespace)
-var MochiKit = MochiKit || {};
+//var MochiKit = MochiKit || {};
+if (typeof MochiKit == 'undefined') {
+	/** @const */
+	MochiKit = {};
+}
 if (typeof(MochiKit.__export__) == "undefined") {
     MochiKit.__export__ = true;
 }
+/**
+ * @type {string}
+ * @const
+ */
 MochiKit.NAME = "MochiKit";
+/**
+ * @type {string}
+ * @const
+ */
 MochiKit.VERSION = "1.5";
 /** @return {string} */
 MochiKit.__repr__ = function () {
@@ -33,7 +44,10 @@ MochiKit.toString = function () {
 };
 
 
-// MochiKit.Base module
+/**
+ * MochiKit.Base module
+ * @const
+ */
 MochiKit.Base = MochiKit.Base || {};
 
 /**
@@ -72,8 +86,14 @@ MochiKit.Base.module = function (parent, name, version, deps) {
 
 MochiKit.Base.module(MochiKit, "Base", "1.5", []);
 
-/** @id MochiKit.Base.update */
-MochiKit.Base.update = function (self, obj/*, ... */) {
+/**
+ * @id MochiKit.Base.update
+ * @param {Object} self
+ * @param {Object} obj
+ * @param {...Object} [var_args]
+ * @return {!Object}
+ */
+MochiKit.Base.update = function (self, obj, var_args/*, ...*/) {
     if (self === null || self === undefined) {
         self = {};
     }
@@ -125,14 +145,14 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         };
     },
 
-	/** 
+	/**
 	 * @id MochiKit.Base.clone
 	 * @param {Object} obj
 	 * @return {Object}
-	 */	
+	 */
     clone: function (obj) {
         var me = arguments.callee;
-        if (arguments.length == 1) { // why this check?
+        if (arguments.length == 1) { // ? why is this needed?
             me.prototype = obj;
             return new me();
         }
@@ -165,8 +185,8 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return MochiKit.Base._flattenArray([], lst);
     },
 
-    /** 
-	 * @id MochiKit.Base.flattenArguments 
+    /**
+	 * @id MochiKit.Base.flattenArguments
 	 * @param {*} lst
 	 * @param {*} [var_args]
 	 * @return {!Array}
@@ -228,6 +248,7 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 
 
     /**
+	 * todo: BUG! when multipe args and deeper tree not only first "self" is modified!
      * @id MochiKit.Base.updatetree
      * todo: perhaps create a mergetree() also?
      * @return {!Object}
@@ -364,6 +385,9 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         mul: function (a, b) { return a * b; },
 		pow: function (a, b) { return Math.pow(a, b); },
 		divmod: function (a, b) { return [a / b, a % b]; },
+		// max/min can actually take any nr of args
+		max: function (a, b) { return Math.max(a, b); },
+		min: function (a, b) { return Math.min(a, b); },
 		// todo: ? idiv, imod, idivmod, remainder
 
         // bitwise binary operators
@@ -743,8 +767,8 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return rval;
     },
 
-	/** 
-	 * @return {!Function} 
+	/**
+	 * @return {!Function}
 	 * @private
 	 */
     _wrapDumbFunction: function (func) {
@@ -897,6 +921,7 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
                 self[k] = bind(func, self);
             }
         }
+		return self;
     },
 
     /** @id MochiKit.Base.registerComparator */
@@ -1290,14 +1315,14 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 	 * @param {...*} [var_args]
 	 * //return {function(...[*])}
 	 * @return {!Function}
-	 */	
+	 */
     partial: function (func, var_args) {
         var m = MochiKit.Base;
         return m.bind.apply(this, m.extend([func, undefined], arguments, 1));
     },
 
     /**
-	 * @id MochiKit.Base.listMinMax 
+	 * @id MochiKit.Base.listMinMax
 	 */
     listMinMax: function (which, lst) {
         if (lst.length === 0) {
@@ -1314,8 +1339,8 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         return cur;
     },
 
-    /** 
-	 * @id MochiKit.Base.objMax 
+    /**
+	 * @id MochiKit.Base.objMax
 	 */
     objMax: function (/* obj... */) {
         return MochiKit.Base.listMinMax(1, arguments);
@@ -1787,11 +1812,12 @@ MochiKit.Base.__new__();
 // XXX: Internet Explorer blows
 //
 if (MochiKit.__export__) {
-    compare = MochiKit.Base.compare;
-    compose = MochiKit.Base.compose;
-    serializeJSON = MochiKit.Base.serializeJSON;
-    mean = MochiKit.Base.mean;
-    median = MochiKit.Base.median;
+	// todo: should investigate how goog.export* does this and mimic it
+    window.compare = MochiKit.Base.compare;
+    window.compose = MochiKit.Base.compose;
+    window.serializeJSON = MochiKit.Base.serializeJSON;
+    window.mean = MochiKit.Base.mean;
+	window.median = MochiKit.Base.median;
 }
 
 MochiKit.Base._exportSymbols(this, MochiKit.Base);
