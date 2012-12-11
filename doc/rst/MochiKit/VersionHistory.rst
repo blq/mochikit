@@ -114,6 +114,10 @@
 
 - Added a javaLikeIterator to support .hasNext/.next style iterators
 
+- Base.bindMethods now returns self to enable inline usage
+- Added Base.operator.max and Base.operator.min
+- Added Signal.disconnectAllFromTo
+
 
 2009-XX-YY      v1.4.3 (bug fix release)
 
