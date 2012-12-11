@@ -47,7 +47,7 @@ MochiKit.Async.Deferred.prototype.repr = function () {
  */
 MochiKit.Async.Deferred.prototype.toString = MochiKit.Base.forwardCall("repr");
 
-/** 
+/**
  * @return {integer}
  */
 MochiKit.Async.Deferred.prototype._nextId = MochiKit.Base.counter();
@@ -397,8 +397,8 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
     },
 
 
-    /** 
-	 * @id MochiKit.Async.sendXMLHttpRequest 
+    /**
+	 * @id MochiKit.Async.sendXMLHttpRequest
 	 * @param {!XMLHttpRequest} req
 	 * @param {string=} [sendContent]
 	 * @return {!MochiKit.Async.Deferred}
@@ -413,8 +413,7 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         var d = new self.Deferred(m.partial(self._xhr_canceller, req));
 
         try {
-            req.onreadystatechange = m.bind(self._xhr_onreadystatechange,
-                req, d);
+            req.onreadystatechange = m.bind(self._xhr_onreadystatechange, req, d);
             req.send(sendContent);
         } catch (e) {
             try {
@@ -428,30 +427,13 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return d;
     },
 
-    /** 
-	 * @id MochiKit.Async.doXHR 
+    /**
+	 * @id MochiKit.Async.doXHR
 	 * @param {string} url
 	 * @param {Object=} [opts]
 	 * @return {!MochiKit.Async.Deferred}
 	 */
     doXHR: function (url, opts) {
-        /*
-            Work around a Firefox bug by dealing with XHR during
-            the next event loop iteration. Maybe it's this one:
-            https://bugzilla.mozilla.org/show_bug.cgi?id=249843
-        */
-        var self = MochiKit.Async;
-        //return self.callLater(0, self._doXHR, url, opts);
-        return self._doXHR(url, opts); // test disabling the above (might help stack-traces when debugging)
-    },
-
-	/**
-	 * @param {string} url
-	 * @param {Object=} [opts]
-	 * @return {!MochiKit.Async.Deferred}
-	 * @private
-	 */
-    _doXHR: function (url, opts) {
         var m = MochiKit.Base;
         opts = m.update({
             method: 'GET',
@@ -499,11 +481,11 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return self.sendXMLHttpRequest(req, opts.sendContent);
     },
 
-	/** 
+	/**
 	 * @param {string} url
 	 * @param {...*} [var_args]
 	 * @return {string}
-	 * @private 
+	 * @private
 	 */
     _buildURL: function (url, var_args/*, ...*/) {
         if (arguments.length > 1) {
@@ -516,8 +498,8 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return url;
     },
 
-    /** 
-	 * @id MochiKit.Async.doSimpleXMLHttpRequest 
+    /**
+	 * @id MochiKit.Async.doSimpleXMLHttpRequest
 	 * @param {string} url
 	 * @return {!MochiKit.Async.Deferred}
 	 */
@@ -602,8 +584,8 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
         return d;
     },
 
-    /** 
-	 * @id MochiKit.Async.callLater 
+    /**
+	 * @id MochiKit.Async.callLater
 	 * @param {number} seconds
 	 * @param {Function} func
 	 * @param {...*} [var_args]
@@ -652,9 +634,9 @@ MochiKit.Async.DeferredLock.prototype.release = function () {
 		this.waiting.shift().callback(this);
 	}
 };
-/** 
+/**
  * @return {integer}
- * @private 
+ * @private
  */
 MochiKit.Async.DeferredLock.prototype._nextId = MochiKit.Base.counter();
 
@@ -713,7 +695,7 @@ MochiKit.Async.DeferredList = function (list, /* optional */fireOnOneCallback, f
 MochiKit.Async.DeferredList.prototype = new MochiKit.Async.Deferred();
 MochiKit.Async.DeferredList.prototype.constructor = MochiKit.Async.DeferredList;
 
-/** 
+/**
  * @private
  */
 MochiKit.Async.DeferredList.prototype._cbDeferred = function (index, succeeded, result) {
@@ -734,8 +716,8 @@ MochiKit.Async.DeferredList.prototype._cbDeferred = function (index, succeeded, 
     return result;
 };
 
-/** 
- * @id MochiKit.Async.gatherResults 
+/**
+ * @id MochiKit.Async.gatherResults
  * @param {!Array.<!MochiKit.Async.Deferred>} deferredList
  * @return {!MochiKit.Async.DeferredList}
  */
@@ -751,8 +733,8 @@ MochiKit.Async.gatherResults = function (deferredList) {
     return d;
 };
 
-/** 
- * @id MochiKit.Async.maybeDeferred 
+/**
+ * @id MochiKit.Async.maybeDeferred
  * @param {Function} func
  * @return {!MochiKit.Async.Deferred}
  */
