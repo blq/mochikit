@@ -82,8 +82,8 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
 	/**
 	 * @id MochiKit.Style.getStyle
 	 * @see http://mochikit.com/doc/html/MochiKit/Style.html#fn-getstyle
-	 * @param {Element|string} element
-	 * @param {string} cssSelector
+	 * @param {Element|string} elem
+	 * @param {string} cssProperty
 	 * @return {?(string|number)}
 	 */
     getStyle: function (elem, cssProperty) {
@@ -152,7 +152,7 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
 	 * @id MochiKit.Style.setStyle
 	 * @see http://mochikit.com/doc/html/MochiKit/Style.html#fn-setstyle
 	 * @param {Element|string} elem
-	 * @param {Object.<string, ?(boolean|string|number)>} styles
+	 * @param {Object.<string, ?(boolean|string|number)>} style
 	 */
     setStyle: function (elem, style) {
         elem = MochiKit.DOM.getElement(elem);
@@ -217,6 +217,7 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
 	 * @id MochiKit.Style.getElementPosition
 	 * @param {!Element|string} elem
 	 * @param {(Pos|Element|string)=} [relativeTo]
+	 * @return {Pos}
 	 */
     getElementPosition: function (elem, /* optional */relativeTo) {
         var self = MochiKit.Style;
@@ -411,7 +412,7 @@ MochiKit.Base.update(MochiKit.Style, /** @lends {MochiKit.Style} */{
 
 	/**
 	 * @id MochiKit.Style.getElementDimensions
-	 * @param {!Element|string} elem
+	 * @param {!Element|string|!Size} elem
 	 * @param {boolean=} [contentSize=false]
 	 * @return {Size}
 	 */

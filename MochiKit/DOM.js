@@ -1169,7 +1169,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         if (typeof(document) != "undefined") {
             this._document = document;
             var kXULNSURI = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
-            this._xhtml = (document.documentElement &&
+            MochiKit.DOM._xhtml = (document.documentElement &&
                 document.createElementNS &&
                 document.documentElement.namespaceURI === kXULNSURI);
         } else if (MochiKit.MockDOM) {
@@ -1177,7 +1177,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         }
         this._window = win;
 
-        this.domConverters = new m.AdapterRegistry();
+        MochiKit.DOM.domConverters = new m.AdapterRegistry();
 
         var __tmpElement = this._document.createElement("span");
         var attributeArray;
@@ -1228,7 +1228,7 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
             attributeArray.renames = {};
         }
         attributeArray.__export__ = false;
-        this.attributeArray = attributeArray;
+        MochiKit.DOM.attributeArray = attributeArray;
 
         // Backwards compatibility aliases
         /** @id MochiKit.DOM.computedStyle  */

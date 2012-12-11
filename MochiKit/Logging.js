@@ -129,19 +129,29 @@ MochiKit.Logging.Logger.prototype = {
      */
     logToConsole: function (level, msg) {
 		msg = level + ": " + msg;
-        if (typeof(window) != "undefined" && window.console
-                && window.console.log) {
-            // Safari and FireBug 0.4
-
-			// todo: Chrome etc seems to support these also
-			var consoleLevel = {
-				'INFO': typeof window.console.info == 'function' ? 'info' : null,
-				'DEBUG': typeof window.console.debug == 'function' ? 'debug' : null,
-				'WARNING': typeof window.console.warn == 'function' ? 'warn' : null,
-				'ERROR': typeof window.console.error == 'function' ? 'error' : null,
-				'FATAL': typeof window.console.error == 'function' ? 'error' : null
-			}[level] || 'log';
-
+        if (typeof(window) != "undefined" && window.console && window.console.log) {
+            // Safari and FireBug 0.4 (Chrome etc seems to support these also)
+			
+			var consoleLevel = null;
+			switch (level) {
+				case 'INFO': 
+					consoleLevel = typeof window.console.info == 'function' ? 'info' : null;
+					break;
+				case 'DEBUG': 
+					consoleLevel = typeof window.console.debug == 'function' ? 'debug' : null;
+					break;
+				case 'WARNING': 
+					consoleLevel = typeof window.console.warn == 'function' ? 'warn' : null;
+					break;
+				case 'ERROR': 
+					consoleLevel = typeof window.console.error == 'function' ? 'error' : null;
+					break;
+				case 'FATAL': 
+					consoleLevel = typeof window.console.error == 'function' ? 'error' : null;
+					break;
+			}
+			consoleLevel = consoleLevel || 'log';
+			
 			// Percent replacement is a workaround for cute Safari crashing bug
             window.console[consoleLevel](msg.replace(/%/g, '\uFF05'));
         } else {
@@ -261,9 +271,9 @@ MochiKit.Logging.Logger.prototype = {
     }
 };
 
-/** @this MochiKit.Logging */
+/** @this {MochiKit.Logging} */
 MochiKit.Logging.__new__ = function () {
-    this.LogLevel = {
+    MochiKit.Logging.LogLevel = {
         ERROR: 40,
         FATAL: 50,
         WARNING: 30,
@@ -305,15 +315,15 @@ MochiKit.Logging.__new__ = function () {
      * @id MochiKit.Logging.log
 	 * @param {...string} [var_args]
      */
-    this.log = connectLog('log');
+    MochiKit.Logging.log = connectLog('log');
     /** @id MochiKit.Logging.logError */
-    this.logError = connectLog('error');
+    MochiKit.Logging.logError = connectLog('error');
     /** @id MochiKit.Logging.logDebug */
-    this.logDebug = connectLog('debug');
+    MochiKit.Logging.logDebug = connectLog('debug');
     /** @id MochiKit.Logging.logFatal */
-    this.logFatal = connectLog('fatal');
+    MochiKit.Logging.logFatal = connectLog('fatal');
     /** @id MochiKit.Logging.logWarning */
-    this.logWarning = connectLog('warning');
+    MochiKit.Logging.logWarning = connectLog('warning');
     this.logger = new Logger();
     this.logger.useNativeConsole = true;
 
