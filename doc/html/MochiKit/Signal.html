@@ -290,6 +290,18 @@ signals connected to dest using func.</p>
 </dl>
 </blockquote>
 <p>
+<a name="fn-disconnectallfromto"></a>
+<a class="mochidef reference external" href="#fn-disconnectallfromto">disconnectAllFromTo(src, dest)</a>:</p>
+<blockquote>
+<p>Removes a set of signals from <tt class="docutils literal">src</tt>, connected to <tt class="docutils literal">dest</tt>.
+Can be seen as AND logic of <tt class="docutils literal">disconnectAll(src)</tt> and <tt class="docutils literal">disconnectAllTo(dest)</tt>,
+i.e signals that are matched by both.</p>
+<dl class="docutils">
+<dt><em>Availability</em>:</dt>
+<dd>Available in MochiKit 1.5+</dd>
+</dl>
+</blockquote>
+<p>
 <a name="fn-signal"></a>
 <a class="mochidef reference external" href="#fn-signal">signal(src, signal, ...)</a>:</p>
 <blockquote>

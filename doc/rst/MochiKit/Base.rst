@@ -467,6 +467,8 @@ Functions
     instance methods, where there is no need to worry about preserving
     ``this`` when the method is used as a callback.
 
+    Returns ``self``
+
     *Availability*:
         Available in MochiKit 1.3.1+
 
@@ -1118,6 +1120,10 @@ Functions
         | ``pow(a, b)``     | ``pow(a, b)``      | Exponentiation                 |
         +-------------------+--------------------+--------------------------------+
         | ``divmod(a, b)``  | ``[a / b, a % b]`` | Division and Modulus           |
+        +-------------------+--------------------+--------------------------------+
+        | ``max(a, b)``     | ``Math.max(a, b)`` | Max                            |
+        +-------------------+--------------------+--------------------------------+
+        | ``min(a, b)``     | ``Math.min(a, b)`` | Min                            |
         +-------------------+--------------------+--------------------------------+
         | ``and(a, b)``     | ``a & b``          | Bitwise and                    |
         +-------------------+--------------------+--------------------------------+
