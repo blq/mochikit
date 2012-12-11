@@ -145,7 +145,7 @@ MochiKit.Text.split = function (str, separator, max) {
     }
     separator = separator || '\n';
     var bits = str.split(separator);
-    if ((typeof(max) == "undefined") || max >= bits.length-1) {
+    if ((typeof(max) == "undefined") || max >= bits.length - 1) {
         return bits;
     }
     bits.splice(max, bits.length, bits.slice(max, bits.length).join(separator));
@@ -169,7 +169,7 @@ MochiKit.Text.rsplit = function (str, separator, max) {
     }
     separator = separator || '\n';
     var bits = str.split(separator);
-    if ((typeof(max) == "undefined") || max >= bits.length-1){
+    if ((typeof(max) == "undefined") || max >= bits.length - 1){
         return bits;
     }
     bits.splice(0, bits.length-max, bits.slice(0, bits.length-max).join(separator));
@@ -545,9 +545,9 @@ MochiKit.Text.FormatPatternError.constructor = MochiKit.Text.FormatPatternError;
 //XXX: Internet Explorer export fix
 //
 if (MochiKit.__export__) {
-    formatter = MochiKit.Text.formatter;
-    format = MochiKit.Text.format;
-    formatValue = MochiKit.Text.formatValue;
+    window.formatter = MochiKit.Text.formatter;
+    window.format = MochiKit.Text.format;
+    window.formatValue = MochiKit.Text.formatValue;
 }
 
 
