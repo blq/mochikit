@@ -49,6 +49,15 @@ var Iterable;
  */
 var DateLike;
 
+/**
+ * @enum {integer}
+ */
+var TriState = {
+	TRUE: 1,
+	FALSE: -1,
+	MAYBE: 0
+};
+
 
 // todo: ? these doesn't seem to be visible to compiler?
 /**
@@ -71,6 +80,22 @@ var Predicate;
  * @typedef {Predicate}
  */
 var UnaryPredicate;
+
+/**
+ * @typedef {function(?): !TriState}
+ */
+var TriStatePredicate;
+
+/**
+ * @typedef {function(?, ?): !TriState}
+ */
+var BinaryTriStatePredicate;
+
+/**
+ * @typedef {TriStatePredicate}
+ */
+var UnaryTriStatePredicate;
+
 
 
 /**
