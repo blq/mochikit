@@ -1,4 +1,4 @@
-2009-XX-YY      v1.5
+20XX-YY-ZZ      v1.5
 
 - Changed MochiKit.Signal.signal to support DOM source objects with custom
   arguments, instead of always wrapping into Event object.
@@ -13,6 +13,7 @@
 - Fixed MochiKit.Style.getElementPosition when using a 0,0 relative
   position (#332).
 - Fixed bug with empty iterators in MochiKit.Iter.chain (#2).
+- Fixed inverted width and height in MochiKit.Visual.squish().
 - Modified MochiKit.DateTime.toISOTime() to handle the previously
   undocumented ``realISO`` argument correctly.
 - Added new MochiKit.Text module to eventually replace MochiKit.Format.
@@ -35,11 +36,17 @@
   Note that this affects Date object serialization is some browsers.
 - Added state() method for MochiKit.Async.Deferred. Also clarified docs on
   available properties.
-- Added MochiKit.DOM.IFRAME, LINK and SCRIPT functions.
 - Removed MochiKit.Style dependency from MochiKit.Signal. This also subtly
   changes the mouse event coordinate values, but should be compatible.
 - Added new MochiKit.Base.module() and moduleExport() functions.
-
+- Added new MochiKit.DOM creator functions; ARTICLE, ASIDE, CAPTION, FIGURE,
+  FIGCAPTION, FOOTER, HEADER, HGROUP, IFRAME, LINK, MARK, METER, NAV,
+  PROGRESS, SCRIPT and STYLE.
+- Fixed MochiKit.Async.XHR issue in Firefox and Chrome for local resources
+  (issue #11).
+- Added new "responseType" option to MochiKit.Async.doXHR().
+- Added new "withCredentials" option to MochiKit.Async.doXHR().
+  
 - *https://github.com/blq/mochikit fork changes start here*
 
 - Made all modules have Google Closure module dependency specifications
@@ -119,7 +126,7 @@
 - Added Signal.disconnectAllFromTo
 
 
-2009-XX-YY      v1.4.3 (bug fix release)
+20XX-YY-ZZ      v1.4.3 (bug fix release)
 
 - Fixed MochiKit.Logging usage of map without a namespace (#338).
 - Fixed MochiKit.Color.Color.prototype.isLight() and isDark() to not

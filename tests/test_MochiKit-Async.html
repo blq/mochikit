@@ -462,6 +462,25 @@ tests.test_Async = function () {
         });
         return d;
     });
+    withLock("XHR2", function () {
+        var d;
+        if ("responseType" in getXMLHttpRequest()) {
+            d = doXHR("test_MochiKit-Async.json", { responseType: "arraybuffer" });
+            d.addCallback(function (xhr) {
+                is(xhr.response.byteLength, 17, "XHR2 passed");
+            });
+            d.addErrback(function (e) {
+                ok(false, "XHR2 failed: " + e);
+            });
+        } else {
+            d = new Deferred();
+            d.addCallback(function () {
+                ok(true, "XHR2 skipped");
+            });
+            d.callback();
+        }
+        return d;
+    });
     lock.acquire().addCallback(function () {
         SimpleTest.finish();
     });
