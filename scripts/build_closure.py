@@ -31,10 +31,16 @@ def build_modules(modules):
     # cmd line for actual compiler. must be a separate string
     ('--compiler_flags', ' '.join(list(reduce(lambda x,y: x+y, [
       ('--compilation_level', 'SIMPLE_OPTIMIZATIONS'), # todo: unless you compile MochiKit *toghether*  with your app scripts, ADVANCED_OPTIMIZATION can't (currently) be used, need to "export" the API functions.
-      ('--warning_level', 'DEFAULT'), # todo: enable VERBOSE mode once last issues in code have been fixed - this is where compiler really does its job!
+      ('--warning_level', 'VERBOSE'), # todo: enable VERBOSE mode once last issues in code have been fixed - this is where compiler really does its job!
       ('--summary_detail_level', '3'),
-      ('--jscomp_off', 'nonStandardJsDocs'),
-      ('--process_closure_primitives', 'true'),
+
+      ('--define', 'goog.DEBUG=false'),
+
+      #('--process_closure_primitives', 'true'), # hmm
+      ('--process_closure_primitives', ''), # hmm
+
+      ('--jscomp_off', 'nonStandardJsDocs'), # no effect anymore?
+      ('--jscomp_off', 'globalThis'), # quite common false positive, non-critical here
 
       ('--jscomp_warning', 'deprecated'),
       ('--jscomp_warning', 'visibility'),
@@ -49,7 +55,8 @@ def build_modules(modules):
     ))
 
   # our own tool, similar to Google's closurebuilder.py but let's you work with *module(s)*, not files.
-  subprocess.check_call(['python', 'scripts/Closure/bin/build/modulebuilder.py'] + args) # throws if build fails
+  logfile = open('logfile.txt', 'wb');
+  subprocess.check_call(['python', 'scripts/Closure/bin/build/modulebuilder.py'] + args, stderr=subprocess.STDOUT, stdout=logfile) # throws if build fails
 
 
 def main():
