@@ -356,7 +356,7 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
             var status = null;
             try {
                 status = this.status;
-                if (!status && m.isNotEmpty(this.responseText)) {
+                if (!status && (this.response || m.isNotEmpty(this.responseText))) {
                     // 0 or undefined seems to mean cached or local
                     status = 304;
                 }
@@ -443,7 +443,9 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
             username: undefined,
             password: undefined,
             headers: undefined,
-            mimeType: undefined
+            mimeType: undefined,
+            responseType: undefined,
+            withCredentials: undefined
             */
 			, async: true // test to enable synchronous requests (for window.onunload state-saving)
         }, opts);
@@ -477,6 +479,12 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
                 var value = header[1];
                 req.setRequestHeader(name, value);
             }
+        }
+        if ("responseType" in opts && "responseType" in req) {
+            req.responseType = opts.responseType;
+        }
+        if (opts.withCredentials) {
+            req.withCredentials = 'true';
         }
         return self.sendXMLHttpRequest(req, opts.sendContent);
     },
@@ -535,8 +543,7 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
     loadScript: function (url) {
         var d = new MochiKit.Async.Deferred();
         var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = url;
+        script.type = "text/javascript";        
         script.onload = function () {
             script.onload = null;
             script.onerror = null;
@@ -561,6 +568,7 @@ MochiKit.Base.update(MochiKit.Async, /** @lends {MochiKit.Async} */{
             }
         };
         document.getElementsByTagName("head")[0].appendChild(script);
+		script.src = url;
         return d;
     },
 

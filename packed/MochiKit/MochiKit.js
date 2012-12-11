@@ -2946,7 +2946,7 @@ catch(e2){
 var _353=null;
 try{
 _353=this.status;
-if(!_353&&m.isNotEmpty(this.responseText)){
+if(!_353&&(this.response||m.isNotEmpty(this.responseText))){
 _353=304;
 }
 }
@@ -3027,6 +3027,12 @@ var _365=_363[1];
 req.setRequestHeader(name,_365);
 }
 }
+if("responseType" in opts&&"responseType" in req){
+req.responseType=opts.responseType;
+}
+if(opts.withCredentials){
+req.withCredentials="true";
+}
 return self.sendXMLHttpRequest(req,opts.sendContent);
 },_buildURL:function(url,_367){
 if(arguments.length>1){
@@ -3051,7 +3057,6 @@ return d;
 var d=new MochiKit.Async.Deferred();
 var _371=document.createElement("script");
 _371.type="text/javascript";
-_371.src=url;
 _371.onload=function(){
 _371.onload=null;
 _371.onerror=null;
@@ -3075,6 +3080,7 @@ MochiKit.Async.callLater(10,_371.onerror,"Script loading timed out");
 }
 };
 document.getElementsByTagName("head")[0].appendChild(_371);
+_371.src=url;
 return d;
 },wait:function(_373,_374){
 var d=new MochiKit.Async.Deferred();
@@ -4671,7 +4677,7 @@ var _504=null;
 var d=MochiKit.DOM._document;
 var de=d.documentElement;
 var b=d.body;
-if(!elem.parentNode&&elem.x&&elem.y){
+if(_500(elem)){
 c.x+=elem.x||0;
 c.y+=elem.y||0;
 }else{
@@ -7409,7 +7415,7 @@ var b=MochiKit.Base;
 var s=MochiKit.Style;
 var _804=s.getElementDimensions(_7ff,true);
 var _805;
-_800=b.update({restoreAfterFinish:true,scaleMode:{originalHeight:_804.w,originalWidth:_804.h},beforeSetupInternal:function(_806){
+_800=b.update({restoreAfterFinish:true,scaleMode:{originalHeight:_804.h,originalWidth:_804.w},beforeSetupInternal:function(_806){
 _805=s.makeClipping(_806.element);
 },afterFinishInternal:function(_807){
 s.hideElement(_807.element);
@@ -9539,5 +9545,5 @@ MochiKit.Bisect.__new__=function(){
 };
 MochiKit.Bisect.__new__();
 MochiKit.Base._exportSymbols(this,MochiKit.Bisect);
-
+
 

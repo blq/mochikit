@@ -586,6 +586,19 @@ Functions
         'text/xml' to force XMLHttpRequest to attempt to parse responseXML.
         Default is no override.
 
+    ``responseType``:
+        An override response type for the request. This can be used to force
+        different parsing of the response in the browser, e.g. using
+        'arraybuffer' to load binary data efficiently. Accepted values are
+        ``'arraybuffer'``, ``'blob'``, ``'document'``, ``'json'``, and
+        ``'text'``. Default is no override.
+
+    ``withCredentials``:
+        Set the boolean withCredentials property of the XMLHttpRequest
+        object, to indicate to the browser that cookies will be sent
+        with the request, and to look for the
+        Access-Control-Allow-Credentials header.
+
     *returns*:
         :mochiref:`Deferred` that will callback with the
         ``XMLHttpRequest`` instance on success

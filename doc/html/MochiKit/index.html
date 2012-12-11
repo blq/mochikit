@@ -75,7 +75,7 @@ related to development of and with MochiKit</li>
 </div>
 <div class="section" id="version-history">
 <h1>Version History</h1>
-<p>2009-XX-YY      v1.5</p>
+<p>20XX-YY-ZZ      v1.5</p>
 <ul class="simple">
 <li>Changed MochiKit.Signal.signal to support DOM source objects with custom
 arguments, instead of always wrapping into Event object.</li>
@@ -90,6 +90,7 @@ rounding errors and other issues (#333).</li>
 <li>Fixed MochiKit.Style.getElementPosition when using a 0,0 relative
 position (#332).</li>
 <li>Fixed bug with empty iterators in MochiKit.Iter.chain (#2).</li>
+<li>Fixed inverted width and height in MochiKit.Visual.squish().</li>
 <li>Modified MochiKit.DateTime.toISOTime() to handle the previously
 undocumented <tt class="docutils literal">realISO</tt> argument correctly.</li>
 <li>Added new MochiKit.Text module to eventually replace MochiKit.Format.</li>
@@ -112,10 +113,16 @@ aliases (obsolete since version 1.1, see #337).</li>
 Note that this affects Date object serialization is some browsers.</li>
 <li>Added state() method for MochiKit.Async.Deferred. Also clarified docs on
 available properties.</li>
-<li>Added MochiKit.DOM.IFRAME, LINK and SCRIPT functions.</li>
 <li>Removed MochiKit.Style dependency from MochiKit.Signal. This also subtly
 changes the mouse event coordinate values, but should be compatible.</li>
 <li>Added new MochiKit.Base.module() and moduleExport() functions.</li>
+<li>Added new MochiKit.DOM creator functions; ARTICLE, ASIDE, CAPTION, FIGURE,
+FIGCAPTION, FOOTER, HEADER, HGROUP, IFRAME, LINK, MARK, METER, NAV,
+PROGRESS, SCRIPT and STYLE.</li>
+<li>Fixed MochiKit.Async.XHR issue in Firefox and Chrome for local resources
+(issue #11).</li>
+<li>Added new &quot;responseType&quot; option to MochiKit.Async.doXHR().</li>
+<li>Added new &quot;withCredentials&quot; option to MochiKit.Async.doXHR().</li>
 <li><em>https://github.com/blq/mochikit fork changes start here</em></li>
 <li>Made all modules have Google Closure module dependency specifications</li>
 <li>Added Base-ext module</li>
@@ -183,7 +190,7 @@ changes the mouse event coordinate values, but should be compatible.</li>
 <li>Added Base.operator.max and Base.operator.min</li>
 <li>Added Signal.disconnectAllFromTo</li>
 </ul>
-<p>2009-XX-YY      v1.4.3 (bug fix release)</p>
+<p>20XX-YY-ZZ      v1.4.3 (bug fix release)</p>
 <ul class="simple">
 <li>Fixed MochiKit.Logging usage of map without a namespace (#338).</li>
 <li>Fixed MochiKit.Color.Color.prototype.isLight() and isDark() to not
