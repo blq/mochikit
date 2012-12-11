@@ -89,8 +89,8 @@ MochiKit.Signal.Event.prototype.__repr__ = function () {
 	return str;
 };
 
- /** 
-  * @id MochiKit.Signal.Event.prototype.toString 
+ /**
+  * @id MochiKit.Signal.Event.prototype.toString
   * @return {string}
   */
 MochiKit.Signal.Event.prototype.toString = function () {
@@ -650,7 +650,7 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
         };
     },
 
-	/** 
+	/**
 	 * creates and validates a handler object
 	 * @throws {Error} if invalid input arguments
 	 */
@@ -678,10 +678,9 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
     /**
 	 * @id MochiKit.Signal.connect
 	 * @param {!(Object|string|Element)} src
-	 * @param {string} signal
-	 * @param {!(Object|Function)} dest
-	 * @param {(Function|string)=} func
-	 * @param {...*} var_args
+	 * @param {string} sig signal
+	 * @param {!(Object|Function)} objOrFunc dest
+	 * @param {(Function|string)=} funcOrStr
 	 * @return {!Object} event handler
 	 */
     connect: function (src, sig, objOrFunc/* optional */, funcOrStr) {
@@ -829,9 +828,8 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 
     /**
      * @id MochiKit.Signal.disconnectAllTo
-	 * @param {Object|string} dest
-	 * //param {function(...[*])=} func
-	 * @param {!Function=} func
+	 * @param {Object|Function} objOrFunc
+	 * @param {!(Function|string)=} [funcOrStr]
      */
     disconnectAllTo: function (objOrFunc, /* optional */funcOrStr) {
         var self = MochiKit.Signal;
@@ -860,9 +858,9 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 	/**
 	 * @id MochiKit.Signal.disconnectAll
 	 * @param {Object|string} src
-	 * @param {...string} signal
+	 * @param {...string} var_args signal names
 	 */
-	disconnectAll: function (src/* optional */, sig) {
+	disconnectAll: function (src, /* optional */var_args) {
         if (typeof(src) == "string") {
             src = MochiKit.DOM.getElement(src);
         }
@@ -910,8 +908,8 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 	/**
 	 * @id MochiKit.Signal.signal
 	 * @param {!Object} src
-	 * @param {string} signal
-	 * @param {...*} var_args
+	 * @param {string} sig signal
+	 * @param {...*} [var_args]
 	 * @throws {Error} if a handler raised an exception
 	 */
 	signal: function (src, sig, var_args) {
@@ -974,12 +972,42 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 
 });
 
-/** @this MochiKit.Signal */
+/**
+ * Combination of disconnectAll(src) and disconnectAllTo(objOrFunc).
+ * Disconnects all signals to src that are also are bound to objOrFunc.
+ * todo: ok name?
+ * @param {Object} src
+ * @param {Object|Function} objOrFunc
+ */
+MochiKit.Signal.disconnectAllFromTo = function(src, objOrFunc)
+{
+	var self = MochiKit.Signal;
+	var observers = self._observers;
+	var disconnect = self._disconnect;
+	var lock = self._lock;
+	var dirty = self._dirty;
+
+	for (var i = observers.length - 1; i >= 0; i--) {
+		var ident = observers[i];
+		if (ident.objOrFunc === objOrFunc && ident.source == src) {
+			disconnect(ident);
+			if (lock === 0) {
+				observers.splice(i, 1);
+			} else {
+				dirty = true;
+			}
+		}
+	}
+	self._dirty = dirty;
+};
+
+
+/** @this {MochiKit.Signal} */
 MochiKit.Signal.__new__ = function (win) {
     var m = MochiKit.Base;
     this._document = document;
     this._window = win;
-    this._lock = 0;
+    MochiKit.Signal._lock = 0;
     this._dirty = false;
 
     try {
@@ -997,10 +1025,10 @@ MochiKit.Signal.__new__(this);
 // XXX: Internet Explorer blows
 //
 if (MochiKit.__export__) {
-    connect = MochiKit.Signal.connect;
-    disconnect = MochiKit.Signal.disconnect;
-    disconnectAll = MochiKit.Signal.disconnectAll;
-    signal = MochiKit.Signal.signal;
+	window.connect = MochiKit.Signal.connect;
+	window.disconnect = MochiKit.Signal.disconnect;
+	window.disconnectAll = MochiKit.Signal.disconnectAll;
+	window.signal = MochiKit.Signal.signal;
 }
 
 MochiKit.Base._exportSymbols(this, MochiKit.Signal);

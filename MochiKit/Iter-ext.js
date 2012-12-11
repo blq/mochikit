@@ -4,6 +4,11 @@
  *
  * @author Fredrik Blomqvist
  *
+ * @fileoverview
+ * Extends MochiKit.Iter with many other iterator helpers. Mostly inspired from Pyton's itertools and C++'s STL.
+ *
+ * todo: rewrite many iterators to not use closures for better debugging and inspection? (might need to explicitly bind .next to still allow aliasing .next?)
+ *
  */
 
 if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
@@ -21,7 +26,7 @@ MochiKit.Base.module(MochiKit, 'Iter_ext', '1.5', ['Base', 'Iter']);
  * ref <a href="http://en.wikipedia.org/wiki/Tree_traversal">tree traversal</a>
  *
  * @param {*} rootNode
- * @param {function(*): !Iterable} getChildNodes should return an empty array if no children (ex: for dom traversal use <code>treePreOrderIter(dom, methodcaller('childNodes'));</code>)
+ * @param {function(*): !Iterable} getChildNodes should return an empty array if no children (ex: for DOM traversal use <code>treePreOrderIter(dom, methodcaller('childNodes'));</code>)
  * @return {!Iterable}
  */
 MochiKit.Iter.treePreOrder = function(rootNode, getChildNodes)
@@ -113,7 +118,7 @@ MochiKit.Iter.treePostOrder = function(rootNode, getChildNodes)
 
 				MochiKit.Iter.iextend(stack, MochiKit.Iter.imap(
 					function(node) { return [node, false]; },
-					getChildNodes(n[0])
+					getChildNodes(n[0]) // add '|| []' here to allow null?
 				));
 			}
 		}
@@ -172,7 +177,7 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
 
 /**
  * sliding-window iterator, generalized pairView
- * todo: decide on howto handle ending, need logic caese to handle clamping, wraparound etc (see pairView and wrapLast for example)
+ * todo: decide on howto handle ending, need logic case to handle clamping, wraparound etc (see pairView and wrapLast for example)
  * todo: more configurable start and end logic (offset, clamp, wraparound etc)
  * @param {!Iterable} iterable
  * @param {integer=} [windowSize=2] defaults to pair-size
@@ -234,7 +239,7 @@ MochiKit.Iter.filterMap = function(mapFn, iterable, isTrue)
  * extract only the leaves
  * iterator vesion of MochiKit.Base.flattenArray
  * @param {!ArrayLike} root
- * @return {!Itrable}
+ * @return {!Iterable}
  */
 MochiKit.Iter.iflattenArray = function(root)
 {
@@ -412,7 +417,7 @@ MochiKit.Iter.breakIt = function()
 };
 
 /**
- * @type {Iterable}
+ * @type {!Iterable}
  * @const
  */
 MochiKit.Iter.EmptyIter = {
@@ -869,7 +874,7 @@ MochiKit.Iter.javaLikeIterator = function(iterator)
 // perhaps always add this?
 MochiKit.Iter.registerJavaLikeIteratorSupport = function()
 {
-	MochiKit,Iter.registerIteratorFactory(
+	MochiKit.Iter.registerIteratorFactory(
         "javaStyleIterator",
         MochiKit.Iter.isJavaLikeIterator,
         MochiKit.Iter.javaLikeIterator

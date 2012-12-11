@@ -48,8 +48,7 @@ def MakeDepsFile(source_map, postFix=''):
   """
 
   # Write in path alphabetical order
-  paths = source_map.keys()
-  paths.sort(key=str.lower)
+  paths = sorted(source_map.keys(), key=str.lower)
 
   lines = []
 
@@ -66,11 +65,8 @@ def MakeDepsFile(source_map, postFix=''):
 def _GetDepsLine(path, js_source):
   """Get a deps.js file string for a source."""
 
-  provides = list(js_source.provides)
-  provides.sort()
-
-  requires = list(js_source.requires)
-  requires.sort()
+  provides = sorted(js_source.provides)
+  requires = sorted(js_source.requires)
 
   return 'goog.addDependency(\'%s\', %s, %s);\n' % (path, provides, requires)
 

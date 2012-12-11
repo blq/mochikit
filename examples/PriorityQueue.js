@@ -6,6 +6,7 @@
  * todo: parametrice on heap algorithm (now uses HeapQ)
  * todo: elevate this to an official component?
  * todo: should rather store a pair: [elem, insert_count] to act as a tie-breaker for equal elems (to avoid starvation)
+ * todo: hmm? http://docs.python.org/library/queue.html#Queue.PriorityQueue
  *
  * @author Fredrik Blomqvist
  *
