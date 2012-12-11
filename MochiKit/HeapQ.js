@@ -7,14 +7,17 @@
  * more specifically this resembles a min-heap.
  *
  * the impl. is almost a line-by-line(!) port of http://docs.python.org/library/heapq.html
+ * more intricate implementations can be found here: http://www.boost.org/doc/libs/1_49_0/doc/html/heap.html
  *
  * note: supports custom comparator.
  * note: hopefully self evident, but, when using custom comparators, you must use same comparator in all calls.
  * see also: https://github.com/blq/mochikit/blob/master/examples/PriorityQueue.js
  *
+ *
  * todo: separate imergeSorted? could drop dep on Iter
  * todo: explicit prio queue class (see /examples/PrioQueue.js)
- *
+ * todo: revert custom comparators? Rather do exactly as Python does and suggest using a pair/tuple in those cases.
+ * see http://stackoverflow.com/questions/8875706/python-heapq-with-custom-compare-predicate
  *
  * @author Fredrik Blomqvist
  *
@@ -230,7 +233,7 @@ MochiKit.HeapQ.heapPushPop = function(heap, item, cmp)
 MochiKit.HeapQ.imergeSorted = function(iterables, cmp)
 {
 	var m = MochiKit, mi = m.Iter;
-	cmp = cmp || m.Base.operator.clt;;
+	cmp = cmp || m.Base.operator.clt;
 
 	// wrap user supplied cmp so it only needs to compare the value-part
 	var _cmp = function(a, b) {
