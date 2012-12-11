@@ -35,9 +35,7 @@ def build_modules(modules):
       ('--summary_detail_level', '3'),
 
       ('--define', 'goog.DEBUG=false'),
-
-      #('--process_closure_primitives', 'true'), # hmm
-      ('--process_closure_primitives', ''), # hmm
+      ('--process_closure_primitives', 'true'), # hmm
 
       ('--jscomp_off', 'nonStandardJsDocs'), # no effect anymore?
       ('--jscomp_off', 'globalThis'), # quite common false positive, non-critical here
@@ -46,6 +44,10 @@ def build_modules(modules):
       ('--jscomp_warning', 'visibility'),
       ('--jscomp_warning', 'accessControls'),
       ('--jscomp_warning', 'strictModuleDepCheck'),
+      ('--jscomp_warning', 'checkRegExp'),
+      ('--jscomp_warning', 'const'),
+      ('--jscomp_warning', 'constantProperty'),
+      ('--jscomp_warning', 'checkDebuggerStatement'),
 
       ('--externs', 'scripts/closure_externs/mochikit_extern.js'),
       ('--externs', 'scripts/closure_externs/generic_types.js'),
