@@ -77,7 +77,7 @@ def _GetOptionsParser():
                     dest='output_mode',
                     type='choice',
                     action='store',
-                    choices=['list', 'script', 'compiled', 'deps', 'dot'],
+                    choices=['list', 'script', 'compiled', 'deps'],
                     default='list',
                     help='The type of output to generate from this script. '
                     'Options are "list" for a list of filenames, "script" '
@@ -257,34 +257,6 @@ def main():
       # todo: provide optional prefix And postfix
       path = js_source.GetPath().replace('\\', '/') # fix for windows paths
       out.writelines('goog.addDependency(\'%s%s, %s, %s);\n' % (path, postFix, list(js_source.provides), list(js_source.requires)))
-  elif output_mode == 'dot':
-    # todo: extract stuff like this to a separate "graphgenerator.py"
-    out.writelines('digraph G {\n')
-
-    for js_source in deps:
-      jsFile = os.path.basename(js_source.GetPath())
-      subName = 'cluster_' + jsFile.replace('.js', '')
-
-      # file->module provides
-      out.writelines('\tsubgraph ' + subName + ' {\n')
-      out.writelines('\t\tlabel="%s";\n' % jsFile)
-      for prov in js_source.provides:
-        out.writelines('\t\t%s;\n' % prov.replace('.', '_')) # dot doesn't like '.' (?)
-      out.writelines('\t}\n\n')
-
-      # todo: ? only when using the "fdp" layout engine in graphivz this displays correctly?
-      # file->module requires
-      for req in js_source.requires:
-        out.writelines('\t%s -> %s;\n' % (subName, req.replace('.', '_')))
-
-      # only in case of a single module can we be sure the module reqs are same as file (assuming "everything" is tagged..)
-      #if len(js_source.provides) == 1:
-      #  for prov in js_source.provides:
-      #    for req in js_source.requires:
-      #      out.writelines('\t%s -> %s;\n' % (prov.replace('.', '_'), req.replace('.', '_')))
-
-
-      #todo: file->file deps!
 
     out.writelines('}\n')
 

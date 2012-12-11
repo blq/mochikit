@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010 Franson Technology. All Rights Reserved.
+# Copyright 2012 GpsGate AB. All Rights Reserved.
 
 
 """Utility for Closure Library module dependency calculation and compilation.
@@ -40,7 +40,7 @@ def _GetOptionsParser():
                     dest='output_mode',
                     type='choice',
                     action='store',
-                    choices=['compiled', 'dot', 'cmdline'],
+                    choices=['compiled', 'cmdline'],
                     default='cmdline',
                     help='The type of output to generate from this script. '
                     'Options are "compiled" to produce compiled output with '
@@ -116,6 +116,7 @@ out = None
 # return list of tuples (module-name, module dependecy files, module deps)
 def _generateModules(sources, modules, keepBaseSeparate=True):
   tree = depstree.DepsTree(sources)
+
 
   # list of tuples, (module_name, file_deps, module_deps_names)
   # + we force all modules to be dependent on the base goog module (could inject as a file deps also but this should work and is easier)
@@ -241,20 +242,6 @@ def _getModuleFlags(modules, keepDeps=True): #? flag incorrect?
   return flags
 
 
-# test. for use with graphviz
-# todo: extract to separate "graphgenerator.py"
-def _generateDotGraph(modules):
-  out.write('// dotgraph output not ready!')
-  dot = 'digraph G {\n'
-  for name, deps, moddeps in modules:
-    dot += '\tsubgraph cluster_' + name + ' {\n'
-    for src in deps:
-      dot += '\t\t"' + os.path.basename(src.GetPath()) + '";\n'
-    dot += '\t}\n\n'
-  dot += '}\n'
-  return dot
-
-
 # strNamespaces is a comma separated list of namespaces
 # sources is the
 def _ExtractNamespaces(strNamespaces, sources, allowWildCards=False):
@@ -322,8 +309,6 @@ def main():
   output_mode = options.output_mode
   if output_mode == 'cmdline':
     out.writelines(_generateCommandLine(modules, keepDeps=options.keep_dep_tags))
-  elif output_mode == 'dot':
-    out.writelines(_generateDotGraph(modules))
   elif output_mode == 'compiled':
 
     # Make sure a .jar is specified.
