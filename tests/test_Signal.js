@@ -580,5 +580,27 @@ tests.test_Signal = function (t) {
     disconnect(ident);
     signal(src, 'signal', 'first');
     t.is(sink.ev, 'dummy', 'connectOnce was disconnected properly');
+	
+	function test_disconnectAllFromTo() {
+		var src = {};
+		var sink = { f: function(ev) { this.ev = ev; }, ev: 'dummy' };
+		connect(src, 'signal', sink, sink.f);
+		
+		signal(src, 'signal', 123);		
+		t.is(sink.ev, 123); // standard case
+		
+		disconnectAllFromTo(src, { x: 'dummy' });
+		signal(src, 'signal', 'abc');
+		t.is(sink.ev, 'abc', 'disconnectAllFromTo: only src should not disconnect');
+		
+		disconnectAllFromTo({ x: 'dummy' }, sink);
+		signal(src, 'signal', 123);
+		t.is(sink.ev, 123, 'disconnectAllFromTo: only sink should not disconnect');
+						
+		disconnectAllFromTo(src, sink);		
+		signal(src, 'signal', 666);
+		t.is(sink.ev, 123, 'disconnectAllFromTo released event'); // should be no change
+	}
+	test_disconnectAllFromTo();
 
 };
