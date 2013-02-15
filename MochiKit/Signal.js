@@ -1058,6 +1058,7 @@ MochiKit.Signal.__new__ = function (win) {
     MochiKit.Signal._lock = 0;
     this._dirty = false;
 
+	// todo: deprecate this? only IE<8 really ever needed this(?)
     try {
         this.connect(window, 'onunload', this._unloadCache);
     } catch (e) {
