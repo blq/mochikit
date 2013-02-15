@@ -333,11 +333,24 @@ Functions
 
 :mochidef:`javaLikeIterator(iterator)`:
 
-	converts the "Java style" ``iterator`` to the JS 1.7 interface.
+    converts the "Java style" ``iterator`` to the JS 1.7 interface.
 
-	see http://download.oracle.com/javase/1.5.0/docs/api/java/util/Iterator.html
+    see http://download.oracle.com/javase/1.5.0/docs/api/java/util/Iterator.html
 
 
+:mochidef:`limit(iterable, n)`:	
+
+    wraps ``iterable`` in a count guard that only allows
+    at most ``n`` number of iterations.
+	
+	
+:mochidef:`accumulate(iterable[, fn])`:
+
+    An iterator returning the running reduce/fold values.
+    ``fn`` defaults to ``operator.add``
+
+    see :mochiref:`MochiKit.Iter.reduce()` and http://docs.python.org/3.3/library/itertools.html#itertools.accumulate
+	
 
 Objects
 -------

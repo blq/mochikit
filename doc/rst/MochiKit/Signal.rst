@@ -319,6 +319,17 @@ Signal API Reference
     *Availability*:
         Available in MochiKit 1.5+
 
+		
+:mochidef:`disconnectNS(sigNs)`:
+
+    Disconnects a signal namespace, either just namespace or combination of signal and namespace.
+    Example: ``disconnectNS('onclick.myNamespace')`` or ``disconnectNS('.myNamespace')``. Note that namespace must start with a dot.
+	
+	Returns the number of signals disconnected.
+
+    *Availability*:
+        Available in MochiKit 1.5+
+		
 
 :mochidef:`signal(src, signal, ...)`:
 

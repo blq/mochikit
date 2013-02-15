@@ -823,8 +823,25 @@ Functions
 
     *Availability*:
         Available in MochiKit 1.3.1+
+	
+	
+:mochidef:`timeout(deferred, ms)`:
+    
+    Return a :mochiref:`Deferred` that will automatically
+    be cancelled after ``ms`` milliseconds.
 
+    *Availability*:
+        Available in MochiKit 1.5+
+		
+:mochidef:`when(valueOrDeferred)`:
+    
+    Similar to :mochiref:`maybeDeferred` but looks at a
+    value instead of a function call.
+	
+    *Availability*:
+        Available in MochiKit 1.5+	
 
+		
 See Also
 ========
 
