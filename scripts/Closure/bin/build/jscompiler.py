@@ -53,7 +53,10 @@ def Compile(compiler_jar_path, source_paths, flags=None):
                   'Please visit http://www.java.com/getjava')
     return
 
-  args = ['java', '-jar', compiler_jar_path]
+  # see http://code.google.com/p/closure-compiler/wiki/FAQ#What_are_the_recommended_Java_VM_command-line_options?    
+  # args = ['java', '-jar', compiler_jar_path] # original setting
+  # args = ['java', '-client', '-d32', '-jar', compiler_jar_path] # needs enabled 32-bit on 64 bit machine
+  args = ['java', '-server', '-XX:+TieredCompilation', '-jar', compiler_jar_path]
   for path in source_paths:
     args += ['--js', path]
 

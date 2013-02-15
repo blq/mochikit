@@ -323,9 +323,9 @@ MochiKit.Base.negateComparator = function(cmp)
 
 
 /**
- * checks if the fn is possibly bound, 
+ * checks if the fn is possibly bound,
  * and if so traverses (recursively) until the real root fn is found
- * (only handles functions bound with MochiKit.Base.bind, can't unwrap plain closures) 
+ * (only handles functions bound with MochiKit.Base.bind, can't unwrap plain closures)
  * @see isBoundFunction
  *
  * @param {Function} fn
@@ -333,7 +333,7 @@ MochiKit.Base.negateComparator = function(cmp)
  */
 MochiKit.Base._getBaseFn = function(fn) { // todo: name? getRootFn? get(Un)boundFunction?
 	if (typeof fn.im_func == 'function') {
-		return Franson.Event._getBaseFn(fn.im_func);
+		return MochiKit.Base._getBaseFn(fn.im_func);
 	}
 	return fn;
 };
