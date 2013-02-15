@@ -5,7 +5,7 @@
  * @author Fredrik Blomqvist
  *
  * @fileoverview
- * Extends MochiKit.Iter with many other iterator helpers. Mostly inspired from Pyton's itertools and C++'s STL.
+ * Extends MochiKit.Iter with many other iterator helpers. Mostly inspired from Python's itertools and C++'s STL.
  *
  * todo: rewrite many iterators to not use closures for better debugging and inspection? (might need to explicitly bind .next to still allow aliasing .next?)
  *
@@ -148,7 +148,8 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
 	var it = MochiKit.Iter.iter(iterable);
 
 	// grab first element and handle case of empty input (mustn't throw StopIter until in the actual iter object)
-	// (we do this stuff up-front to reduce amount of logic in the main iter .next below. hmm, or change this? not quite sure if one might expect any iter err to only show up on first .next?)
+	// (we do this stuff up-front to reduce amount of logic in the main iter .next below)
+	// todo: hmm, change/remove this? one might correctly expect any iter err to only show up on first .next I'd say!
 	try {
 		var elem0 = it.next();
 	} catch (e) {
@@ -222,7 +223,6 @@ MochiKit.Iter.windowView = function(iterable, windowSize, stepSize)
  * todo: perhaps support an optional param that specifies which value should be considered "false"? (to allow -1 etc for example)
  * todo: ok name? (ifilterMap?) ! not to confuse with a filter operation on a map(dictionary) object..
  *
- * @method filterMap
  * @param {!function(*): *} mapFn
  * @param {!Iterable} iterable
  * @param {Function=} [isTrue=undefined|null]
@@ -523,8 +523,6 @@ MochiKit.Iter.advance = function(iter, n)
 		iter.next();
 	return iter;
 };
-
-// todo: combinations, permutations, compress(?), sorted?
 
 
 /**
@@ -854,6 +852,7 @@ MochiKit.Iter.isJavaLikeIterator = function(iterator)
 /**
  * converts "Java style" iterators to the JS 1.7 interface.
  * @see http://download.oracle.com/javase/1.5.0/docs/api/java/util/Iterator.html
+ * todo: take optional functions to provide next() & hasNext() configuration? (hmm, would make the registering symmetry cumbersome.. i.e require manual/static registering)
  * @param {!{hasNext: function(): boolean, next: !Function}} iterator
  * @return {!Iterable}
  */
@@ -875,10 +874,79 @@ MochiKit.Iter.javaLikeIterator = function(iterator)
 MochiKit.Iter.registerJavaLikeIteratorSupport = function()
 {
 	MochiKit.Iter.registerIteratorFactory(
-        "javaStyleIterator",
+        "javaLikeIterator",
         MochiKit.Iter.isJavaLikeIterator,
         MochiKit.Iter.javaLikeIterator
     );
+};
+
+
+/**
+ * Counts number of occurences of elem in iterable
+ * similar to MochiKit.Base.findValue but can take an iterable
+ * @param {!Iterable} iterable
+ * @param {*} elem
+ * @param {Function=} [cmp=ceq]
+ * todo: ? or take optional indices as findValue? (in that case assume iterable is ArrayLike)
+ * @return {integer}
+ */
+MochiKit.Iter.countValue = function(iterable, elem, cmp) {
+	cmp = cmp || MochiKit.Base.operator.ceq;
+	var n = 0;
+	MochiKit.Iter.forEach(iterable, function(e) { if (cmp(e, elem)) ++n; });
+	return n;
+};
+
+
+/**
+ * wraps an iterator in a count guard that will only allow
+ * at most N number of iterations.
+ * (doesn't affect the original iterator)
+ * todo: name? atMost? (see if similar fn already has an established name)
+ *
+ * @param {!Iterator} iter
+ * @param {integer} n max number of iterations allowed
+ * @return {!Iterable} new
+ */
+MochiKit.Iter.limit = function(iter, n) {
+	return MochiKit.Iter.takewhile(function() { return n-- > 0; }, iter);
+	/*
+	// todo: fwd other possible properties from iter? (clone style?)
+	return {
+		next: function() {
+			if (n-- <= 0)
+				throw MochiKit.Iter.StopIteration;
+			return iter.next();
+		}
+	};
+	*/
+};
+
+/**
+ * basically the running reduce/fold values
+ * @see http://docs.python.org/3.3/library/itertools.html#itertools.accumulate
+ * @see MochiKit.Iter.reduce()
+ *
+ * @param {!Iterable} iterable
+ * @param {Function=} [func=operator.add]
+ */
+MochiKit.Iter.accumulate = function(iterable, func) {
+	var iter = MochiKit.Iter.iter(iterable);
+	func = func || MochiKit.Base.operator.add;
+
+	var total; // delay fetching first item until first .next call
+	var first = true;
+	return {
+		next: function() {
+			if (first) {
+				first = false;
+				total = iter.next();
+				return total;
+			}
+			total = func(total, iter.next());
+			return total;
+		}
+	};
 };
 
 
