@@ -548,6 +548,7 @@ MochiKit.Signal.Ident = function (ident) {
     this.objOrFunc = ident.objOrFunc;
     this.funcOrStr = ident.funcOrStr;
     this.connected = ident.connected;
+	this.namespace = ident.namespace;
 };
 MochiKit.Signal.Ident.__export__ = false;
 MochiKit.Signal.Ident.prototype = {};
@@ -692,6 +693,10 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
         if (typeof(sig) != 'string') {
             throw new Error("'sig' must be a string");
         }
+		var sig_ns = sig.split('.');
+		if (sig_ns.length >= 2) {
+			sig = sig_ns[0];
+		}
 
         var destPair = self._getDestPair(objOrFunc, funcOrStr);
         var obj = destPair[0];
@@ -729,7 +734,8 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
             isDOM: isDOM,
             objOrFunc: objOrFunc,
             funcOrStr: funcOrStr,
-            connected: true
+            connected: true,
+			namespace: sig_ns[1] || ''
         });
         self._observers.push(ident);
 
@@ -906,6 +912,48 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
     },
 
 	/**
+	 * todo: support multiple args (flattening)?
+	 * @id MochiKit.Signal.disconnectNS
+	 * @param {string} sigAndOrNS  example: 'onclick.myNamespace' or '.myNamespace'. Note that namespace must start with a dot.
+	 * @return {integer} number of signals disconnected
+	 */
+	disconnectNS: function(sigAndOrNS) // ok name?
+	{
+        var self = MochiKit.Signal;
+
+		var sig_ns = sigAndOrNS.split('.');
+		if (sig_ns.length != 2) {
+			throw new Error("No namespace found in 'sigAndOrNS'");
+		}
+
+		var signal = sig_ns[0];
+		var namespace = sig_ns[1];
+		// assert(namespace.length > 0);
+
+		var n = 0;
+		var observers = self._observers;
+		for (var i = observers.length - 1; i >= 0; i--) {
+			var ident = observers[i];
+
+			if (
+				(ident.namespace == namespace) && (
+					(signal != '' && ident.signal == signal) ||
+					(signal == '')
+				)
+			) {
+				self._disconnect(ident);
+				if (self._lock === 0) {
+					observers.splice(i, 1);
+				} else {
+					self._dirty = true;
+				}
+				n += 1;
+			}
+		}
+		return n;
+	},
+
+	/**
 	 * @id MochiKit.Signal.signal
 	 * @param {!Object} src
 	 * @param {string} sig signal
@@ -1010,6 +1058,7 @@ MochiKit.Signal.__new__ = function (win) {
     MochiKit.Signal._lock = 0;
     this._dirty = false;
 
+	// todo: deprecate this? only IE<8 really ever needed this(?)
     try {
         this.connect(window, 'onunload', this._unloadCache);
     } catch (e) {

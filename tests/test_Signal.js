@@ -580,27 +580,55 @@ tests.test_Signal = function (t) {
     disconnect(ident);
     signal(src, 'signal', 'first');
     t.is(sink.ev, 'dummy', 'connectOnce was disconnected properly');
-	
+
 	function test_disconnectAllFromTo() {
 		var src = {};
 		var sink = { f: function(ev) { this.ev = ev; }, ev: 'dummy' };
 		connect(src, 'signal', sink, sink.f);
-		
-		signal(src, 'signal', 123);		
+
+		signal(src, 'signal', 123);
 		t.is(sink.ev, 123); // standard case
-		
+
 		disconnectAllFromTo(src, { x: 'dummy' });
 		signal(src, 'signal', 'abc');
 		t.is(sink.ev, 'abc', 'disconnectAllFromTo: only src should not disconnect');
-		
+
 		disconnectAllFromTo({ x: 'dummy' }, sink);
 		signal(src, 'signal', 123);
 		t.is(sink.ev, 123, 'disconnectAllFromTo: only sink should not disconnect');
-						
-		disconnectAllFromTo(src, sink);		
+
+		disconnectAllFromTo(src, sink);
 		signal(src, 'signal', 666);
 		t.is(sink.ev, 123, 'disconnectAllFromTo released event'); // should be no change
 	}
 	test_disconnectAllFromTo();
+
+
+    // test signal namespaces
+    var src = {};
+    var ns_fired = 0;
+    connect(src, 'signal.test_namespace', function(a) {
+        ns_fired += 1;
+        t.is(a, 123, 'signal attached with namespace got correct arg');
+    });
+    signal(src, 'signal', 123);
+    t.is(ns_fired, 1, 'signal attached with namespace fired ok');
+
+    var n = disconnectNS('.test_namespace');
+    t.is(n, 1, 'disconnectNS disconnected 1 signal');
+    signal(src, 'signal', 666);
+    t.is(ns_fired, 1, 'signal disconnected with namespace ok');
+    n = disconnectNS('.test_namespace');
+    t.is(n, 0, 'no more namespaced signals found ok');
+
+    var ns_sig_threw = false;
+    try {
+        disconnectNS('namespace_must_start_with_dot');
+        t.fail('disconnectNS should have thrown if invalid syntax');
+    } catch (e) {
+        ns_sig_threw = true;
+    }
+    t.is(ns_sig_threw, true, 'disconnectNS with invalid syntax threw ok');
+
 
 };
