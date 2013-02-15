@@ -284,11 +284,11 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 	right = right || array.length - 1;
 	pivotIndex = pivotIndex || (left + Math.floor((right - left) / 2)); // middle elem, could use median of three, random etc
 
-	function swap(i, j) {
+	var swap = function(i, j) {
 		var tmp = array[i];
 		array[i] = array[j];
 		array[j] = tmp;
-	}
+	};
 
 	var pivotValue = array[pivotIndex];
 	swap(pivotIndex, right); // move pivot to end
@@ -309,23 +309,6 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 
 // todo: stablePartition, binarySearch, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
 
-/**
- * Counts number of occurences of elem in iterable
- * similar to findValue but can take an iterable
- * @param {!Iterable} iterable
- * @param {*} elem
- * @param {Function=} [cmp=ceq]
- * todo: ? or take optional indices as findValue? (and in that case assume iterable is ArrayLike)
- * @return {integer}
- */
-MochiKit.Base.countValue = function(iterable, elem, cmp)
-{
-	cmp = cmp || MochiKit.Base.operator.ceq;
-	var n = 0;
-	MochiKit.Iter.forEach(iterable, function(e) { if (cmp(e, elem)) ++n; });
-	return n;
-};
-
 
 /**
  * @param {!Function} cmp
@@ -338,6 +321,22 @@ MochiKit.Base.negateComparator = function(cmp)
 	};
 };
 
+
+/**
+ * checks if the fn is possibly bound, 
+ * and if so traverses (recursively) until the real root fn is found
+ * (only handles functions bound with MochiKit.Base.bind, can't unwrap plain closures) 
+ * @see isBoundFunction
+ *
+ * @param {Function} fn
+ * @return {Function}
+ */
+MochiKit.Base._getBaseFn = function(fn) { // todo: name? getRootFn? get(Un)boundFunction?
+	if (typeof fn.im_func == 'function') {
+		return Franson.Event._getBaseFn(fn.im_func);
+	}
+	return fn;
+};
 
 //------------------
 
