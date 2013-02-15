@@ -125,6 +125,10 @@
 - Added Base.operator.max and Base.operator.min
 - Added Signal.disconnectAllFromTo
 
+- Support for namespaced signals (similar to jQuery)
+- Added Async.timeout and Async.when
+- Added Iter.accumulate and Iter.limit
+
 
 20XX-YY-ZZ      v1.4.3 (bug fix release)
 
