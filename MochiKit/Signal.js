@@ -1050,6 +1050,63 @@ MochiKit.Signal.disconnectAllFromTo = function(src, objOrFunc)
 };
 
 
+/**
+ * shorthand for a call to disconnectAll() + disconnectAllTo()
+ * typically to be run during teardown in an obj's destructor
+ *
+ * @param {Object} obj
+ */
+MochiKit.Signal.close = function(obj) {
+	// todo: write a custom low-level method optimized to do both of these in one iteration?
+	// ok order? guess theoretically there can be cases both ways if complex assumptions are made..
+	MochiKit.Signal.disconnectAll(obj);
+	MochiKit.Signal.disconnectAllTo(obj);
+};
+
+
+//------ PubSub ---------
+
+/**
+ * hidden dummy object to create a broadcast system
+ * @see publish, subscribe
+ * @private
+ * @type {!Object}
+ * @const
+ */
+MochiKit.Signal._topics = {};
+
+/**
+ * same syntax as <a href="http://mochikit.com/doc/html/MochiKit/Signal.html#fn-connect">MochiKit.Signal.connect()</a> but with source (first param) already bound.<br />
+ * see also <a href="#method_publish">publish()</a><br />
+ * ref <a href="http://docs.dojocampus.org/dojo/subscribe">dojo.subscribe()</a>
+ * note: this will also be disconnected if calling disconnectAllTo() on the context object (should we block this?)
+ *
+ * @param {string} topic
+ * @param {!(Object|function())} objOrFunc
+ * @param {(!Function|string)=} [funcOrStr]
+ * @return {!EventHandler}
+ */
+MochiKit.Signal.subscribe = function(topic, objOrFunc, funcOrStr) // == partial(connect, MochiKit.Signal._topics)
+{
+	// todo: or should we wrap the function in a setTimeout(fn, 0)?
+	return MochiKit.Signal.connect(MochiKit.Signal._topics, topic, objOrFunc, funcOrStr);
+};
+
+/**
+ * disconnects a signal attached with <a href="#method_subscribe">subscribe()</a> <br />
+ * same as disconnect (alias), mostly for symmetry (same as dojo) (or skip?)
+ * ref <a href="http://docs.dojocampus.org/dojo/unsubscribe">dojo.unsubscribe()</a>
+ * todo: unsubscribeAll etc?
+ *
+ * @param {EventHandler} handle
+ */
+MochiKit.Signal.unsubscribe = function(handle)
+{
+	MochiKit.Signal.disconnect(handle);
+};
+
+
+
 /** @this {MochiKit.Signal} */
 MochiKit.Signal.__new__ = function (win) {
     var m = MochiKit.Base;
