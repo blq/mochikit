@@ -903,6 +903,7 @@ MochiKit.Iter.countValue = function(iterable, elem, cmp) {
  * at most N number of iterations.
  * (doesn't affect the original iterator)
  * todo: name? atMost? (see if similar fn already has an established name)
+ * found a reference here: http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/collect/Iterators.html#limit(java.util.Iterator, int)
  *
  * @param {!Iterator} iter
  * @param {integer} n max number of iterations allowed

@@ -126,7 +126,7 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 	// todo: remaining more or less subtle issues to be decided on and tested:
 	// 1. shouldn't we decrement indices for remaining slots? keep track of min/max?
 	// 2. what about gaps between slots? store counter to nr of args bound? (even if they won't be used due to gaps)
-	// 3. what should calling a function with less args than the slots indicate mean? throw? undefined?
+	// 3. what should calling a function with less args than the slots indicate mean? throw? undefined? real currying??
 	// todo: dig deeper into how Boost bind handles these cases.
 	m.extend(im_preargs, args);
 
