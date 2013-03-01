@@ -1280,14 +1280,24 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         MochiKit.DOM.CANVAS = createDOMFunc("canvas");
         /** @id MochiKit.DOM.CAPTION */
         MochiKit.DOM.CAPTION = createDOMFunc("caption");
+        /** @id MochiKit.DOM.CITE */
+        MochiKit.DOM.CITE = createDOMFunc("cite");
+        /** @id MochiKit.DOM.CODE */
+        MochiKit.DOM.CODE = createDOMFunc("code");
         /** @id MochiKit.DOM.DD */
         MochiKit.DOM.DD = createDOMFunc("dd");
+        /** @id MochiKit.DOM.DEL */
+        MochiKit.DOM.DEL = createDOMFunc("del");
+        /** @id MochiKit.DOM.DFN */
+        MochiKit.DOM.DFN = createDOMFunc("dfn");
         /** @id MochiKit.DOM.DIV */
         MochiKit.DOM.DIV = createDOMFunc("div");
         /** @id MochiKit.DOM.DL */
         MochiKit.DOM.DL = createDOMFunc("dl");
         /** @id MochiKit.DOM.DT */
         MochiKit.DOM.DT = createDOMFunc("dt");
+        /** @id MochiKit.DOM.EM */
+        MochiKit.DOM.EM = createDOMFunc("em");
         /** @id MochiKit.DOM.FIELDSET */
         MochiKit.DOM.FIELDSET = createDOMFunc("fieldset");
         /** @id MochiKit.DOM.FIGURE */
@@ -1322,6 +1332,8 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         MochiKit.DOM.IMG = createDOMFunc("img");
         /** @id MochiKit.DOM.INPUT */
         MochiKit.DOM.INPUT = createDOMFunc("input");
+        /** @id MochiKit.DOM.KBD */
+        MochiKit.DOM.KBD = createDOMFunc("kbd");
         /** @id MochiKit.DOM.LABEL */
         MochiKit.DOM.LABEL = createDOMFunc("label");
         /** @id MochiKit.DOM.LEGEND */
@@ -1348,6 +1360,8 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         MochiKit.DOM.PRE = createDOMFunc("pre");
         /** @id MochiKit.DOM.PROGRESS */
         MochiKit.DOM.PROGRESS = createDOMFunc("progress");
+        /** @id MochiKit.DOM.SAMP */
+        MochiKit.DOM.SAMP = createDOMFunc("samp");
         /** @id MochiKit.DOM.SCRIPT */
         MochiKit.DOM.SCRIPT = createDOMFunc("script");
         /** @id MochiKit.DOM.SECTION */
@@ -1360,6 +1374,10 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         MochiKit.DOM.STRONG = createDOMFunc("strong");
         /** @id MochiKit.DOM.STYLE */
         MochiKit.DOM.STYLE = createDOMFunc("style");
+        /** @id MochiKit.DOM.SUB */
+        MochiKit.DOM.SUB = createDOMFunc("sub");
+        /** @id MochiKit.DOM.SUP */
+        MochiKit.DOM.SUP = createDOMFunc("sup");
         /** @id MochiKit.DOM.TABLE */
         MochiKit.DOM.TABLE = createDOMFunc("table");
         /** @id MochiKit.DOM.TBODY */
@@ -1380,8 +1398,12 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         MochiKit.DOM.TT = createDOMFunc("tt");
         /** @id MochiKit.DOM.UL */
         MochiKit.DOM.UL = createDOMFunc("ul");
+        /** @id MochiKit.DOM.VAR */
+        MochiKit.DOM.VAR = createDOMFunc("var");
+
         /** @id MochiKit.DOM.NBSP */
         MochiKit.DOM.NBSP = "\u00a0";
+
         /** @id MochiKit.DOM.$ */
         MochiKit.DOM.$ = this.getElement;
 
