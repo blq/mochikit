@@ -682,9 +682,10 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 	 * @param {string} sig signal
 	 * @param {!(Object|Function)} objOrFunc dest
 	 * @param {(Function|string)=} funcOrStr
+	 * @param {...*} var_args
 	 * @return {!Object} event handler
 	 */
-    connect: function (src, sig, objOrFunc/* optional */, funcOrStr) {
+    connect: function (src, sig, objOrFunc/* optional */, funcOrStr, var_args) {
         if (typeof(src) == "string") {
             src = MochiKit.DOM.getElement(src);
         }
@@ -913,6 +914,7 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 
 	/**
 	 * todo: support multiple args (flattening)?
+	 * todo: should support passing in a src object also!
 	 * @id MochiKit.Signal.disconnectNS
 	 * @param {string} sigAndOrNS  example: 'onclick.myNamespace' or '.myNamespace'. Note that namespace must start with a dot.
 	 * @return {integer} number of signals disconnected
@@ -1073,7 +1075,24 @@ MochiKit.Signal.close = function(obj) {
  * @type {!Object}
  * @const
  */
-MochiKit.Signal._topics = {};
+MochiKit.Signal._pubsub_topics = {};
+
+
+/**
+ * broadcasts a signal to all listeners to the topic attached via <a href="#method_subscribe">subscribe()</a>
+ * ref <a href="http://docs.dojocampus.org/dojo/publish">dojo.publish()</a> (difference is that this allows multiple arguments)
+ *
+ * @param {string} topic
+ * @param {...*} [var_args] optional multiple arguments passed to the listeners
+ */
+MochiKit.Signal.publish = function(topic, var_args) {
+	// use a timeout to "sneak out" of the current context to
+	// let publishers not have to worry about exceptions.
+	// ok? (code that assumes publish signals fire synchronously should be considered "bad") => umm.. some of our current code does that apparently.. :(
+//	setTimeout(function() {
+		MochiKit.Signal.signal.apply(MochiKit.Signal/*or null?*/, MochiKit.Base.extend([MochiKit.Signal._pubsub_topics, topic], arguments, 1));
+//	}, 0);
+};
 
 /**
  * same syntax as <a href="http://mochikit.com/doc/html/MochiKit/Signal.html#fn-connect">MochiKit.Signal.connect()</a> but with source (first param) already bound.<br />
@@ -1089,7 +1108,7 @@ MochiKit.Signal._topics = {};
 MochiKit.Signal.subscribe = function(topic, objOrFunc, funcOrStr) // == partial(connect, MochiKit.Signal._topics)
 {
 	// todo: or should we wrap the function in a setTimeout(fn, 0)?
-	return MochiKit.Signal.connect(MochiKit.Signal._topics, topic, objOrFunc, funcOrStr);
+	return MochiKit.Signal.connect(MochiKit.Signal._pubsub_topics, topic, objOrFunc, funcOrStr);
 };
 
 /**
