@@ -188,7 +188,7 @@ MochiKit.Random.deal = function(numItems, func)
  * Choose a random element from a non-empty sequence.
  * @see http://docs.python.org/library/random.html#random.choice
  *
- * @param {!Array.<*>} seq
+ * @param {!ArrayLike} seq
  * @return {*}
  */
 MochiKit.Random.choice = function(seq)
