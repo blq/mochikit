@@ -788,10 +788,11 @@ MochiKit.Async.when = function(valueOrDeferred) {
 /**
  * wraps a deferred in a timeout block
  * todo: support passing in a custom timeout-error value?
+ * Don't confuse with MochiKit.Async.wait()
  *
  * @id MochiKit.Async.timeout
  * @param {!MochiKit.Async.Deferred} d
- * @param {integer} ms timeout
+ * @param {integer} ms timeout (todo: hmm, or change to seconds? same as wait())
  * @return {!MochiKit.Async.Deferred}
  */
 MochiKit.Async.timeout = function(d, ms) {

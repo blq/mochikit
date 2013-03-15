@@ -626,6 +626,7 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 
     _mouseEnterListener: function (src, sig, func, obj) {
         var E = MochiKit.Signal.Event;
+		// todo: add im_func to this? could be regarded as "bound"?
         return function (nativeEvent) {
             var e = new E(src, nativeEvent);
             try {
