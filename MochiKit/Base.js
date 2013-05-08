@@ -1718,6 +1718,24 @@ MochiKit.Base._deprecated = function (module, name, target, version, exportable)
     module[name] = func;
 };
 
+/**
+ * checks if the fn is possibly bound,
+ * and if so traverses (recursively) until the real root fn is found
+ * (only handles functions bound with MochiKit.Base.bind, can't unwrap plain closures. i.e Not jQuery.proxy..)
+ * @see isBoundFunction
+ *
+ * @param {Function} fn
+ * @return {Function}
+ */
+MochiKit.Base._getBaseFn = function(fn) { // todo: name? getRootFn? get(Un)boundFunction?
+	// assume the chain is short enough so it doesn't warrant a non-recursive loop
+	if (typeof fn.im_func == 'function') {
+		return MochiKit.Base._getBaseFn(fn.im_func);
+	}
+	return fn;
+};
+
+
 /** @this MochiKit.Base */
 MochiKit.Base.__new__ = function () {
     var m = this;
