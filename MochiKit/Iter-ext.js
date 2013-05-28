@@ -930,6 +930,7 @@ MochiKit.Iter.limit = function(iter, n) {
  *
  * @param {!Iterable} iterable
  * @param {Function=} [func=operator.add]
+ * @return {!Iterable}
  */
 MochiKit.Iter.accumulate = function(iterable, func) {
 	var iter = MochiKit.Iter.iter(iterable);
@@ -948,6 +949,20 @@ MochiKit.Iter.accumulate = function(iterable, func) {
 			return total;
 		}
 	};
+};
+
+
+/** 
+ * Maps a property name
+ * useful? 
+ * (mostly since it seems like this name might have caught on(?) (see Underscore etc) )
+ *
+ * @param {!terable} iterable
+ * @param {string} property 
+ * @return {!Iterable}
+ */
+MochiKit.Iter.pluck = function(iterable, property) {
+	return MochiKit.Iter.imap(MochiKit.Base.itemgetter(property), iterable);
 };
 
 
