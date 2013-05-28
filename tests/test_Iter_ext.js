@@ -309,4 +309,36 @@ tests.test_Iter_ext = function (t) {
 	}
 	test_javaLikeIter();
 
+
+	function test_countValue() {
+		var lst = [1, 0, 0, 1, 1, 0, 0, 1];
+
+		t.eq(countValue(lst, 1), 4, "countValue ok");
+	}
+	test_countValue();
+
+
+	function test_limit() {
+		var lst = [1, 2, 3, 4, 5, 6, 7, 8];
+
+		t.eq(list(limit(lst, 5)), [1, 2, 3, 4, 5], "limit iterator ok");
+	}
+	test_limit();
+
+
+	function test_accumulate() {
+		var lst = [1, 2, 3, 4, 5];
+
+		t.eq(list(accumulate(lst)), [1, 3, 6, 10, 15], "accumulate iterator ok");
+	}
+	test_accumulate();
+
+
+	function test_pluck() {
+		var items = [{ p: 1 }, { p: 2 }, { p: 3 }, { p: 4 }];
+
+		t.eq(list(pluck(items, 'p')), [1, 2, 3, 4], "pluck iterator ok");
+	}
+	test_pluck();
+
 };
