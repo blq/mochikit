@@ -341,4 +341,12 @@ tests.test_Iter_ext = function (t) {
 	}
 	test_pluck();
 
+
+	function test_zipWith() {
+		var sum = MochiKit.Iter.zipWith(MochiKit.Base.operator.add, [1, 2, 3], [3, 2, 1, 0]);
+		t.eq(list(sum), [4, 4, 4], 'zipWith iterator ok');
+	}
+	test_zipWith();
+
+
 };
