@@ -353,7 +353,8 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
         module[name] = func;
     },
 
-
+    // @see http://docs.python.org/3/library/operator.html
+    // todo: in-place versions also?
     /** @id MochiKit.Base.operator */
     operator: {
 		NAME: 'operator', // ok?
@@ -448,10 +449,14 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 		// a + b for sequences
 		concat: function(a, b) { return MochiKit.Base.concat(a, b); }, // hmm, confusing for strings? (expands them..)
 		// in-place concatenation for sequences (in practice only for string and Array)
+        // todo: supply the full range of in-place operators (from Python 3), http://docs.python.org/3/library/operator.html#inplace-operators
 		iconcat: function(a, b) { return a.concat(b); },
 
 		setitem: function(a, b, c) { return a[b] = c; },
-		delitem: function(a, b) { delete a[b]; }
+		delitem: function(a, b) { delete a[b]; },
+
+        // non-standard, but Guido himself acknowledges the usefuleness of this operator: http://mail.python.org/pipermail/python-dev/2009-February/085876.html
+        call: function(fn, var_args) { return fn.apply(this, MochiKit.Base.extend([], arguments, 1)); }
     },
 
     /**
@@ -1717,6 +1722,24 @@ MochiKit.Base._deprecated = function (module, name, target, version, exportable)
     func.__export__ = (exportable === true);
     module[name] = func;
 };
+
+/**
+ * checks if the fn is possibly bound,
+ * and if so traverses (recursively) until the real root fn is found
+ * (only handles functions bound with MochiKit.Base.bind, can't unwrap plain closures. i.e Not jQuery.proxy..)
+ * @see isBoundFunction
+ *
+ * @param {Function} fn
+ * @return {Function}
+ */
+MochiKit.Base._getBaseFn = function(fn) { // todo: name? getRootFn? get(Un)boundFunction?
+	// assume the chain is short enough so it doesn't warrant a non-recursive loop
+	if (typeof fn.im_func == 'function') {
+		return MochiKit.Base._getBaseFn(fn.im_func);
+	}
+	return fn;
+};
+
 
 /** @this MochiKit.Base */
 MochiKit.Base.__new__ = function () {

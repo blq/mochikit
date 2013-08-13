@@ -128,7 +128,7 @@ MochiKit.Random.uniform = function(a, b)
  * Shuffles an array using the Fisher-Yates algorithm (Knuth). O(N)
  * in-place algorithm.
  *
- * @see http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ * @see http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#Modern_method
  * @see http://docs.python.org/library/random.html#random.shuffle
  * @see http://www.sgi.com/tech/stl/random_shuffle.html
  *
@@ -146,7 +146,7 @@ MochiKit.Random.uniform = function(a, b)
  */
 MochiKit.Random.shuffle = function(values) // or just shuffle?
 {
-	// Durstenfeld's algorithm
+	// Durstenfeld's algorithm ("modern Fisher-Yates")
 	for (var i = values.length - 1; i > 0; --i) {
 		var j = Math.floor(MochiKit.Random.random() * (i + 1));
 		// swap elems at i and j
@@ -188,7 +188,7 @@ MochiKit.Random.deal = function(numItems, func)
  * Choose a random element from a non-empty sequence.
  * @see http://docs.python.org/library/random.html#random.choice
  *
- * @param {!Array.<*>} seq
+ * @param {!ArrayLike} seq
  * @return {*}
  */
 MochiKit.Random.choice = function(seq)

@@ -126,7 +126,7 @@ MochiKit.Base.bind2 = function (func, self, var_args)
 	// todo: remaining more or less subtle issues to be decided on and tested:
 	// 1. shouldn't we decrement indices for remaining slots? keep track of min/max?
 	// 2. what about gaps between slots? store counter to nr of args bound? (even if they won't be used due to gaps)
-	// 3. what should calling a function with less args than the slots indicate mean? throw? undefined?
+	// 3. what should calling a function with less args than the slots indicate mean? throw? undefined? real currying??
 	// todo: dig deeper into how Boost bind handles these cases.
 	m.extend(im_preargs, args);
 
@@ -306,7 +306,6 @@ MochiKit.Base.partition = function(array, cmp, left, right, pivotIndex)
 	return storeIndex;
 };
 
-
 // todo: stablePartition, binarySearch, stableSort, unique, partialSort, setUnion, setIntersection, setSymmetricDifference etc
 
 
@@ -319,23 +318,6 @@ MochiKit.Base.negateComparator = function(cmp)
 	return function() {
 		return -1 * cmp.apply(this, arguments);
 	};
-};
-
-
-/**
- * checks if the fn is possibly bound,
- * and if so traverses (recursively) until the real root fn is found
- * (only handles functions bound with MochiKit.Base.bind, can't unwrap plain closures)
- * @see isBoundFunction
- *
- * @param {Function} fn
- * @return {Function}
- */
-MochiKit.Base._getBaseFn = function(fn) { // todo: name? getRootFn? get(Un)boundFunction?
-	if (typeof fn.im_func == 'function') {
-		return MochiKit.Base._getBaseFn(fn.im_func);
-	}
-	return fn;
 };
 
 //------------------

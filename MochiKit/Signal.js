@@ -626,6 +626,7 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 
     _mouseEnterListener: function (src, sig, func, obj) {
         var E = MochiKit.Signal.Event;
+		// todo: add im_func to this? could be regarded as "bound"?
         return function (nativeEvent) {
             var e = new E(src, nativeEvent);
             try {
@@ -682,9 +683,10 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 	 * @param {string} sig signal
 	 * @param {!(Object|Function)} objOrFunc dest
 	 * @param {(Function|string)=} funcOrStr
+	 * @param {...*} var_args
 	 * @return {!Object} event handler
 	 */
-    connect: function (src, sig, objOrFunc/* optional */, funcOrStr) {
+    connect: function (src, sig, objOrFunc/* optional */, funcOrStr, var_args) {
         if (typeof(src) == "string") {
             src = MochiKit.DOM.getElement(src);
         }
@@ -913,6 +915,7 @@ MochiKit.Base.update(MochiKit.Signal, /** @lends {MochiKit.Signal} */{
 
 	/**
 	 * todo: support multiple args (flattening)?
+	 * todo: should support passing in a src object also!
 	 * @id MochiKit.Signal.disconnectNS
 	 * @param {string} sigAndOrNS  example: 'onclick.myNamespace' or '.myNamespace'. Note that namespace must start with a dot.
 	 * @return {integer} number of signals disconnected
@@ -1048,6 +1051,80 @@ MochiKit.Signal.disconnectAllFromTo = function(src, objOrFunc)
 	}
 	self._dirty = dirty;
 };
+
+
+/**
+ * shorthand for a call to disconnectAll() + disconnectAllTo()
+ * typically to be run during teardown in an obj's destructor
+ *
+ * @param {Object} obj
+ */
+MochiKit.Signal.close = function(obj) {
+	// todo: write a custom low-level method optimized to do both of these in one iteration?
+	// ok order? guess theoretically there can be cases both ways if complex assumptions are made..
+	MochiKit.Signal.disconnectAll(obj);
+	MochiKit.Signal.disconnectAllTo(obj);
+};
+
+
+//------ PubSub ---------
+
+/**
+ * hidden dummy object to create a broadcast system
+ * @see publish, subscribe
+ * @private
+ * @type {!Object}
+ * @const
+ */
+MochiKit.Signal._pubsub_topics = {};
+
+
+/**
+ * broadcasts a signal to all listeners to the topic attached via <a href="#method_subscribe">subscribe()</a>
+ * ref <a href="http://docs.dojocampus.org/dojo/publish">dojo.publish()</a> (difference is that this allows multiple arguments)
+ *
+ * @param {string} topic
+ * @param {...*} [var_args] optional multiple arguments passed to the listeners
+ */
+MochiKit.Signal.publish = function(topic, var_args) {
+	// use a timeout to "sneak out" of the current context to
+	// let publishers not have to worry about exceptions.
+	// ok? (code that assumes publish signals fire synchronously should be considered "bad") => umm.. some of our current code does that apparently.. :(
+//	setTimeout(function() {
+		MochiKit.Signal.signal.apply(MochiKit.Signal/*or null?*/, MochiKit.Base.extend([MochiKit.Signal._pubsub_topics, topic], arguments, 1));
+//	}, 0);
+};
+
+/**
+ * same syntax as <a href="http://mochikit.com/doc/html/MochiKit/Signal.html#fn-connect">MochiKit.Signal.connect()</a> but with source (first param) already bound.<br />
+ * see also <a href="#method_publish">publish()</a><br />
+ * ref <a href="http://docs.dojocampus.org/dojo/subscribe">dojo.subscribe()</a>
+ * note: this will also be disconnected if calling disconnectAllTo() on the context object (should we block this?)
+ *
+ * @param {string} topic
+ * @param {!(Object|function())} objOrFunc
+ * @param {(!Function|string)=} [funcOrStr]
+ * @return {!EventHandler}
+ */
+MochiKit.Signal.subscribe = function(topic, objOrFunc, funcOrStr) // == partial(connect, MochiKit.Signal._topics)
+{
+	// todo: or should we wrap the function in a setTimeout(fn, 0)?
+	return MochiKit.Signal.connect(MochiKit.Signal._pubsub_topics, topic, objOrFunc, funcOrStr);
+};
+
+/**
+ * disconnects a signal attached with <a href="#method_subscribe">subscribe()</a> <br />
+ * same as disconnect (alias), mostly for symmetry (same as dojo) (or skip?)
+ * ref <a href="http://docs.dojocampus.org/dojo/unsubscribe">dojo.unsubscribe()</a>
+ * todo: unsubscribeAll etc?
+ *
+ * @param {EventHandler} handle
+ */
+MochiKit.Signal.unsubscribe = function(handle)
+{
+	MochiKit.Signal.disconnect(handle);
+};
+
 
 
 /** @this {MochiKit.Signal} */

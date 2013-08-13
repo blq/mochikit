@@ -7,8 +7,12 @@
  * @fileoverview
  * Extends MochiKit.Iter with many other iterator helpers. Mostly inspired from Python's itertools and C++'s STL.
  *
- * todo: rewrite many iterators to not use closures for better debugging and inspection? (might need to explicitly bind .next to still allow aliasing .next?)
+ * for JavaScript's own take on this:
+ * @see https://developer.mozilla.org/en/New_in_JavaScript_1.7#Iterators
+ * i.e exactly same pattern (but with possibly the 'yield' keyword). (Also might problematic with the type of the StopIter object also..)
  *
+ * todo: rewrite many iterators to not use closures for better debugging and inspection? (might need to explicitly bind .next to still allow aliasing .next?)
+ * todo: see if possible to be compatible with hypotetical JS 1.7 iterator code?
  */
 
 if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
@@ -903,6 +907,7 @@ MochiKit.Iter.countValue = function(iterable, elem, cmp) {
  * at most N number of iterations.
  * (doesn't affect the original iterator)
  * todo: name? atMost? (see if similar fn already has an established name)
+ * found a reference here: http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/collect/Iterators.html#limit(java.util.Iterator, int)
  *
  * @param {!Iterator} iter
  * @param {integer} n max number of iterations allowed
@@ -929,6 +934,7 @@ MochiKit.Iter.limit = function(iter, n) {
  *
  * @param {!Iterable} iterable
  * @param {Function=} [func=operator.add]
+ * @return {!Iterable}
  */
 MochiKit.Iter.accumulate = function(iterable, func) {
 	var iter = MochiKit.Iter.iter(iterable);
@@ -950,6 +956,56 @@ MochiKit.Iter.accumulate = function(iterable, func) {
 };
 
 
+/**
+ * Maps a property name
+ * useful?
+ * (mostly since it seems like this name might have caught on(?) (see Underscore etc) )
+ * todo: similar but for methods? pluckFn?
+ *
+ * @see https://pypi.python.org/pypi/pluck
+ * @see http://underscorejs.org/#pluck
+ *
+ * @param {!terable} iterable
+ * @param {string} property
+ * todo: support a default value also?
+ * @return {!Iterable}
+ */
+MochiKit.Iter.pluck = function(iterable, property) {
+	return MochiKit.Iter.imap(MochiKit.Base.itemgetter(property), iterable);
+};
+
+
+/**
+ * shorthand for window-view with same step as window size.
+ * todo: this case is possible to be slightly more efficient though.
+ * @param {!Iterable} iterable
+ * @param {integer} n size of chunk
+ * @return {!Iterable}
+ */
+MochiKit.Iter.chunked = function(iterable, n) {
+	return MochiKit.Iter.windowView(iterable, n, n);
+};
+
+
+/**
+ * Combined map and zip.
+ *
+ * @see MochiKit.Iter.izip
+ * @see MochiKit.Base.map
+ * @see http://hackage.haskell.org/packages/archive/base/latest/doc/html/Prelude.html#v:zipWith
+ *
+ * @param {!Function} fn
+ * @param {!Iterable} p
+ * @param {...!Iterable} [var_args]
+ * @return {!Iterable} [fn(a0, b0, ..), fn(a1, b1, ...), fn(a2, b2, ...)]
+ */
+MochiKit.Iter.zipWith = function(fn, p, var_args) {
+	return MochiKit.Iter.imap(function(item) {
+		return fn.apply(this, item);
+	}, MochiKit.Iter.izip.apply(null, MochiKit.Base.extend(null, arguments, 1)));
+};
+
+
 //--------------------------------
 
 MochiKit.Iter_ext.__new__ = function() {
@@ -960,3 +1016,4 @@ MochiKit.Iter_ext.__new__ = function() {
 MochiKit.Iter_ext.__new__();
 
 MochiKit.Base._exportSymbols(this, MochiKit.Iter); // ! since we add to the existing namespace we export it again here (ok?)
+ 
