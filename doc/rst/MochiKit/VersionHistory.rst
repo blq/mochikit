@@ -46,7 +46,7 @@
   (issue #11).
 - Added new "responseType" option to MochiKit.Async.doXHR().
 - Added new "withCredentials" option to MochiKit.Async.doXHR().
-  
+
 - *https://github.com/blq/mochikit fork changes start here*
 
 - Made all modules have Google Closure module dependency specifications
@@ -128,6 +128,13 @@
 - Support for namespaced signals (similar to jQuery)
 - Added Async.timeout and Async.when
 - Added Iter.accumulate and Iter.limit
+- Added Iter.pluck
+- Added Iter.chunked
+- Added Iter.zipWith
+
+- Added DOM shorthand alias for <audio>, <video>, <source> etc
+
+- Added Base.operator.call
 
 
 20XX-YY-ZZ      v1.4.3 (bug fix release)
