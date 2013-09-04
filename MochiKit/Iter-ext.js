@@ -1006,6 +1006,17 @@ MochiKit.Iter.zipWith = function(fn, p, var_args) {
 };
 
 
+/**
+ * "cute" version of indexed for-each that is possible with zipWith.
+ * similar to the enumerate() method but flattens the arguments to the for-body-fn for easier use.
+ * todo: name? for_each? forIdx?
+ */
+MochiKit.Iter.forEachIdx = function(iterable, fn) {
+	var self = MochiKit.Iter;
+	self.exhaust(self.zipWith(fn, self.count(), iterable));
+};
+
+
 //--------------------------------
 
 MochiKit.Iter_ext.__new__ = function() {
