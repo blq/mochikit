@@ -168,7 +168,7 @@ MochiKit.Iter.repeat = function (elem, /* optional */n) {
 /**
  * @id MochiKit.Iter.next
  * @param {!Iterator} iterator
- * @param {*=} [opt_default]
+ * @param {*=} [opt_default] if given, it will be returned if the iterator is exhausted, instead of throwing StopIteration.
  * @return {*}
  */
 MochiKit.Iter.next = function (iterator, opt_default) {
@@ -658,6 +658,7 @@ MochiKit.Iter.exhaust = function (iterable) {
  * @param {!Iterable} iterable
  * @param {!Function} func
  * @param {Object=} [obj] context
+ * @return {!Function} input func.
  */
 MochiKit.Iter.forEach = function (iterable, func, /* optional */obj) {
     var m = MochiKit.Base;
@@ -679,6 +680,7 @@ MochiKit.Iter.forEach = function (iterable, func, /* optional */obj) {
     } else {
         self.exhaust(self.imap(func, iterable));
     }
+    return func; // .. useful? this way you could use the fn as an accumulator (example in EoP suggest this also, but we break ES standard)
 };
 
 /**
