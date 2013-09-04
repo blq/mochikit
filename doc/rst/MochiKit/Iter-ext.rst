@@ -338,6 +338,42 @@ Functions
 	see http://download.oracle.com/javase/1.5.0/docs/api/java/util/Iterator.html
 
 
+:mochidef:`limit(iterable, n)`:
+
+    wraps ``iterable`` in a count guard that only allows
+    at most ``n`` number of iterations.
+
+
+:mochidef:`accumulate(iterable[, fn])`:
+
+    An iterator returning the running reduce/fold values.
+    ``fn`` defaults to ``operator.add``
+
+    see :mochiref:`MochiKit.Iter.reduce()` and http://docs.python.org/3.3/library/itertools.html#itertools.accumulate
+
+
+:mochidef:`chunked(iterable, n)`:
+
+    Shorthand for a window-view iterator with same step as the window size.
+
+
+:mochidef:`pluck(iterable, property)`:
+
+    Convenience that creates a map of property name from each iterator element.
+    (Mostly since the name seems to have caught on from libraries such as Underscore for example).
+
+
+:mochidef:`zipWith(fn, p[, ...])`:
+
+    Combined map and zip operation.
+
+    ::
+
+        zipWith(fn, a, b[, ...]) --> [fn(a0, b0, ..), fn(a1, b1, ...), fn(a2, b2, ...)]
+
+    (based on the Haskell function).
+
+
 
 Objects
 -------
