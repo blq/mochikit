@@ -455,7 +455,7 @@ MochiKit.Base.update(MochiKit.Base, /** @lends {MochiKit.Base} */{
 		setitem: function(a, b, c) { return a[b] = c; },
 		delitem: function(a, b) { delete a[b]; },
 
-        // non-standard, but Guido himself acknowledges the usefuleness of this operator: http://mail.python.org/pipermail/python-dev/2009-February/085876.html
+        // non-standard, but Guido himself acknowledges the usefulness of this operator: http://mail.python.org/pipermail/python-dev/2009-February/085876.html
         call: function(fn, var_args) { return fn.apply(this, MochiKit.Base.extend([], arguments, 1)); }
     },
 

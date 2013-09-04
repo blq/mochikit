@@ -345,6 +345,27 @@ at most <tt class="docutils literal">n</tt> number of iterations.</blockquote>
 <tt class="docutils literal">fn</tt> defaults to <tt class="docutils literal">operator.add</tt></p>
 <p>see <a class="mochiref reference external" href="Iter.html#fn-reduce">MochiKit.Iter.reduce()</a> and <a class="reference external" href="http://docs.python.org/3.3/library/itertools.html#itertools.accumulate">http://docs.python.org/3.3/library/itertools.html#itertools.accumulate</a></p>
 </blockquote>
+<p>
+<a name="fn-chunked"></a>
+<a class="mochidef reference external" href="#fn-chunked">chunked(iterable, n)</a>:</p>
+<blockquote>
+Shorthand for a window-view iterator with same step as the window size.</blockquote>
+<p>
+<a name="fn-pluck"></a>
+<a class="mochidef reference external" href="#fn-pluck">pluck(iterable, property)</a>:</p>
+<blockquote>
+Convenience that creates a map of property name from each iterator element.
+(Mostly since the name seems to have caught on from libraries such as Underscore for example).</blockquote>
+<p>
+<a name="fn-zipwith"></a>
+<a class="mochidef reference external" href="#fn-zipwith">zipWith(fn, p[, ...])</a>:</p>
+<blockquote>
+<p>Combined map and zip operation.</p>
+<pre class="literal-block">
+zipWith(fn, a, b[, ...]) --&gt; [fn(a0, b0, ..), fn(a1, b1, ...), fn(a2, b2, ...)]
+</pre>
+<p>(based on the Haskell function).</p>
+</blockquote>
 </div>
 <div class="section" id="objects">
 <h2>Objects</h2>

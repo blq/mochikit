@@ -298,9 +298,11 @@ Functions
         Available in MochiKit 1.3.1+
 
 
-:mochidef:`next(iterator)`:
+:mochidef:`next(iterator[, default])`:
 
     Return ``iterator.next()``
+
+    If ``default`` is given, it is returned if the iterator is exhausted, otherwise ``StopIteration`` is raised.
 
     *Availability*:
         Available in MochiKit 1.3.1+

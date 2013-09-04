@@ -168,9 +168,20 @@ MochiKit.Iter.repeat = function (elem, /* optional */n) {
 /**
  * @id MochiKit.Iter.next
  * @param {!Iterator} iterator
+ * @param {*=} [opt_default]
  * @return {*}
  */
-MochiKit.Iter.next = function (iterator) {
+MochiKit.Iter.next = function (iterator, opt_default) {
+    if (arguments.length == 2) {
+        try {
+            return iterator.next();
+        } catch (e) {
+            if (e != MochiKit.Iter.StopIteration) {
+                throw e;
+            }
+            return opt_default;
+        }
+    }
     return iterator.next();
 };
 
