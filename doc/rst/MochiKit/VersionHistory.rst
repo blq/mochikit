@@ -136,6 +136,8 @@
 
 - Added Base.operator.call
 
+- Iter.next can now take an optional default value to be returned if iterable is exhausted. Similar to Python.
+
 
 20XX-YY-ZZ      v1.4.3 (bug fix release)
 
