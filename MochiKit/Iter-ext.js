@@ -13,6 +13,10 @@
  *
  * todo: rewrite many iterators to not use closures for better debugging and inspection? (might need to explicitly bind .next to still allow aliasing .next?)
  * todo: see if possible to be compatible with hypotetical JS 1.7 iterator code?
+ *
+ * good article that systematically describees the recursion -> loop transform needed for terators.
+ * @see http://www.codeproject.com/Articles/418776/How-to-replace-recursive-functions-using-stack-and
+ *
  */
 
 if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
@@ -994,6 +998,8 @@ MochiKit.Iter.chunked = function(iterable, n) {
  * @see MochiKit.Base.map
  * @see http://hackage.haskell.org/packages/archive/base/latest/doc/html/Prelude.html#v:zipWith
  *
+ * todo: umm, this is kindof exactly what the existing imap/map does if fed multiple iterables.. ;) -> drop or just alias?
+ *
  * @param {!Function} fn
  * @param {!Iterable} p
  * @param {...!Iterable} [var_args]
@@ -1013,7 +1019,8 @@ MochiKit.Iter.zipWith = function(fn, p, var_args) {
  */
 MochiKit.Iter.forEachIdx = function(iterable, fn) {
 	var self = MochiKit.Iter;
-	self.exhaust(self.zipWith(fn, self.count(), iterable));
+//	self.exhaust(self.zipWith(fn, self.count(), iterable));
+	self.exhaust(self.imap(fn, self.count(), iterable));
 };
 
 

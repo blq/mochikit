@@ -369,6 +369,7 @@ MochiKit.Random._setGenerator = function(generator)
 
 MochiKit.Random.__new__ = function() {
 	// todo: make the Mersenne generator optional, with default/fallback to plain Math.random (with do-nothing seed & get/setState methods)
+	// todo: or make each generator inject itself if/when loaded?
 	MochiKit.Random._setGenerator(new MochiKit.Random.MersenneTwister());
 //	MochiKit.Random._setGenerator(new MochiKit.Random.SystemRandom());
 };
