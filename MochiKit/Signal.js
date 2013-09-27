@@ -558,7 +558,7 @@ MochiKit.Signal.Ident.prototype.__repr__ = function() {
 	return 'src:' + repr(this.source) + ', sig: ' + repr(this.signal) + ', isDOM: ' + repr(this.isDOM) + ', connected: ' + repr(this.connected);
 };
 
-MochiKit.Signal.MochiKit.Signal._unloadCache = function () {
+MochiKit.Signal._unloadCache = function () {
     var self = MochiKit.Signal;
     var observers = self._observers;
 
