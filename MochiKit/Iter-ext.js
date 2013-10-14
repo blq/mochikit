@@ -37,8 +37,7 @@ MochiKit.Base.module(MochiKit, 'Iter_ext', '1.5', ['Base', 'Iter']);
  * @param {function(*): !Iterable} getChildNodes should return an empty array if no children (ex: for DOM traversal use <code>treePreOrderIter(dom, methodcaller('childNodes'));</code>)
  * @return {!Iterable}
  */
-MochiKit.Iter.treePreOrder = function(rootNode, getChildNodes)
-{
+MochiKit.Iter.treePreOrder = function(rootNode, getChildNodes) {
 	var stack = [ rootNode ];
 
 	return {
@@ -72,8 +71,7 @@ MochiKit.Iter.treePreOrder = function(rootNode, getChildNodes)
  * @param {function(*): !Iterable} getChildNodes should return an empty array if no children (ok? could add fallback ourselves also)
  * @return {!Iterable}
  */
-MochiKit.Iter.treeLevelOrder = function(rootNode, getChildNodes)
-{
+MochiKit.Iter.treeLevelOrder = function(rootNode, getChildNodes) {
 	var queue = [ rootNode ];
 
 	return {
@@ -104,8 +102,7 @@ MochiKit.Iter.treeLevelOrder = function(rootNode, getChildNodes)
  * @param {function(*): !Iterable} getChildNodes should return an empty array if no children (ok? could add fallback ourselves also)
  * @return {!Iterable}
  */
-MochiKit.Iter.treePostOrder = function(rootNode, getChildNodes)
-{
+MochiKit.Iter.treePostOrder = function(rootNode, getChildNodes) {
 	var stack = [ [rootNode, false] ]; // [node, visited] (could use a queue also, only affects the order of nodes on each individual level)
 
 	return {
@@ -149,8 +146,7 @@ MochiKit.Iter.treePostOrder = function(rootNode, getChildNodes)
  * @param {boolean=} [wrapLast=false] optional, default false. if true, last pair will be: [last, first] elems
  * @return {!Iterable} sequence of two-elem Arrays
  */
-MochiKit.Iter.pairView = function(iterable, wrapLast)
-{
+MochiKit.Iter.pairView = function(iterable, wrapLast) {
 	wrapLast = wrapLast || false;
 
 	var it = MochiKit.Iter.iter(iterable);
@@ -193,8 +189,7 @@ MochiKit.Iter.pairView = function(iterable, wrapLast)
  * @param {integer=} [stepSize=1]
  * @return {!Iterable.<!Array>}
  */
-MochiKit.Iter.windowView = function(iterable, windowSize, stepSize)
-{
+MochiKit.Iter.windowView = function(iterable, windowSize, stepSize) {
 	windowSize = windowSize || 2;
 	stepSize = stepSize || 1;
 
@@ -236,8 +231,7 @@ MochiKit.Iter.windowView = function(iterable, windowSize, stepSize)
  * @param {Function=} [isTrue=undefined|null]
  * @return {!Iterable}
  */
-MochiKit.Iter.filterMap = function(mapFn, iterable, isTrue)
-{
+MochiKit.Iter.filterMap = function(mapFn, iterable, isTrue) {
 	isTrue = isTrue || function(item) { return typeof item !== 'undefined' && item !== null; };
 	return MochiKit.Iter.ifilter(isTrue, MochiKit.Iter.imap(mapFn, iterable));
 };
@@ -249,8 +243,7 @@ MochiKit.Iter.filterMap = function(mapFn, iterable, isTrue)
  * @param {!ArrayLike} root
  * @return {!Iterable}
  */
-MochiKit.Iter.iflattenArray = function(root)
-{
+MochiKit.Iter.iflattenArray = function(root) {
 	var queue = [ root ];
 
 	return {
@@ -285,8 +278,7 @@ MochiKit.Iter.iflattenArray = function(root)
  * @param {(function(*): !Iterable)=} [getIter] get second level iterator. optional, default iter. // todo: hmm, could skip this? could obtain using imap also
  * @return {!Iterable}
  */
-MochiKit.Iter.chainFromIter = function(seq, getIter)
-{
+MochiKit.Iter.chainFromIter = function(seq, getIter) {
 	getIter = getIter || MochiKit.Iter.iter;
 
 	var it = MochiKit.Iter.iter(seq);
@@ -323,8 +315,7 @@ MochiKit.Iter.chainFromIter = function(seq, getIter)
  * @param {(function(*, *): boolean)=} [pred=ceq]
  * @return {!Iterable}
  */
-MochiKit.Iter.uniqueView = function(iterable, pred)
-{
+MochiKit.Iter.uniqueView = function(iterable, pred) {
 	pred = pred || MochiKit.Base.operator.ceq;
 
 	var it = MochiKit.Iter.iter(iterable);
@@ -363,8 +354,7 @@ MochiKit.Iter.uniqueView = function(iterable, pred)
  * @return {!Iterable.<!Array>}
  * .. will Apple sue us for this name? ;)
  */
-MochiKit.Iter.iproduct = function(iterable, var_args)
-{
+MochiKit.Iter.iproduct = function(iterable, var_args) {
 	// first impl. only supports two args
 	var sa = arguments[0], sb = arguments[1];
 
@@ -403,13 +393,13 @@ MochiKit.Iter.iproduct = function(iterable, var_args)
  * usage: forEach(enumerate(seq), function(i_val) { var i = i_val[0], val = i_val[1]; ... });
  * this is a very common request, FAQ I'd say
  * (a pity JS doesn't (yet?) have tuple unfolds in assignments)
+ *
  * @see http://docs.python.org/library/functions.html#enumerate
  * @param {!Iterable.<*>} iterable
  * @param {integer=} [start=0]
  * @return {!Iterable.<[integer, *]>}  iterator over [index, itervalue] pairs
  */
-MochiKit.Iter.enumerate = function(iterable, start)
-{
+MochiKit.Iter.enumerate = function(iterable, start) {
 	return MochiKit.Iter.izip(MochiKit.Iter.count(start), iterable);
 };
 
@@ -419,8 +409,7 @@ MochiKit.Iter.enumerate = function(iterable, start)
  * ... or will it just confuse? in a deeper iterator hierachy (nested) this might
  * not do what the user believes, i.e the exception is caught earlier and interpreted wrongly..
  */
-MochiKit.Iter.breakIt = function()
-{
+MochiKit.Iter.breakIt = function() {
 	throw MochiKit.Iter.StopIteration;
 };
 
@@ -442,8 +431,7 @@ MochiKit.Iter.EmptyIter = {
  * @param {integer} n
  * @return {!Iterable} genFn applied n times
  */
-MochiKit.Iter.generateN = function(genFn, n)
-{
+MochiKit.Iter.generateN = function(genFn, n) {
 	return MochiKit.Iter.imap(function() { return genFn(); }, MochiKit.Iter.range(n)); // we wrap genFn to make sure the arity of the call isn't disturbed by imap+range
 };
 
@@ -456,11 +444,11 @@ MochiKit.Iter.generateN = function(genFn, n)
  * izipLongest([[]]) -> []
  * izipLongest([[1]]) -> [1], Not [1,fillValue]
  * i.e similar to MK.izip Not Python
+ *
  * @param {!Iterable.<!Iterable>} iterables
  * @param {*=} [fillValue=null]
  */
-MochiKit.Iter.izipLongest = function(iterables, fillValue)
-{
+MochiKit.Iter.izipLongest = function(iterables, fillValue) {
 	fillValue = fillValue || null;
 	iterables = MochiKit.Base.map(MochiKit.Iter.iter, iterables);
 	var numActive = iterables.length;
@@ -525,8 +513,7 @@ MochiKit.Iter.starmap = function(/*fun, seq, self*/) {
  * @param {integer} n  >= 0  (todo: default to 1? == next)
  * @return {!{ next: !Function }} iter advanced n steps
  */
-MochiKit.Iter.advance = function(iter, n)
-{
+MochiKit.Iter.advance = function(iter, n) {
 	while (n-- > 0)
 		iter.next();
 	return iter;
@@ -539,8 +526,7 @@ MochiKit.Iter.advance = function(iter, n)
  * @param {Function=} [cmp=cle]
  * @return {boolean}
  */
-MochiKit.Iter.isSorted = function(iterable, cmp)
-{
+MochiKit.Iter.isSorted = function(iterable, cmp) {
 	return MochiKit.Iter.every(MochiKit.Iter.windowView(iterable), cmp || MochiKit.Base.operator.cle);
 };
 
@@ -551,8 +537,7 @@ MochiKit.Iter.isSorted = function(iterable, cmp)
  * @param {...!Iterable} var_args
  * @return {!Iterable}
  */
-MochiKit.Iter.interleave = function(iterable, var_args)
-{
+MochiKit.Iter.interleave = function(iterable, var_args) {
 	return MochiKit.Iter.chainFromIter(MochiKit.Iter.izip.apply(this, arguments));
 };
 
@@ -566,8 +551,7 @@ MochiKit.Iter.interleave = function(iterable, var_args)
  * @param {!ArrayLike} lst
  * @return {!Iterable} [lst[i0], lst[i1], ...lst[iN]]
  */
-MochiKit.Iter.remapView = function(index, lst)
-{
+MochiKit.Iter.remapView = function(index, lst) {
 	return MochiKit.Iter.imap(MochiKit.Base.partial(MochiKit.Base.operator.getitem, lst), index);
 };
 
@@ -580,8 +564,7 @@ MochiKit.Iter.remapView = function(index, lst)
  * @param {!Iterable} selectors
  * @return {!Iterable}
  */
-MochiKit.Iter.compressIter = function(data, selectors)
-{
+MochiKit.Iter.compressIter = function(data, selectors) {
 	return MochiKit.Iter.imap(
 		function(d_s) {
 			return d_s[0];
@@ -605,8 +588,7 @@ MochiKit.Iter.compressIter = function(data, selectors)
  * @param {integer} r
  * @return {!Iterable}
  */
-MochiKit.Iter.combinations = function(iterable, r)
-{
+MochiKit.Iter.combinations = function(iterable, r) {
 	var m = MochiKit, mi = MochiKit.Iter;
 
 	var pool = mi.list(iterable);
@@ -656,8 +638,7 @@ MochiKit.Iter.combinations = function(iterable, r)
  * @param {integer} r
  * @return {!Iterable}
  */
-MochiKit.Iter.combinationsWithReplacement = function(iterable, r)
-{
+MochiKit.Iter.combinationsWithReplacement = function(iterable, r) {
 	var m = MochiKit, mi = MochiKit.Iter;
 
     var pool = mi.list(iterable);
@@ -734,8 +715,7 @@ MochiKit.Iter.repeatSeq = function(iterable, n) // ..name? nCycles?
  * @param {integer=} [r=len(iterable)]
  * @return {!Iterable}
  */
-MochiKit.Iter.permutations = function(iterable, r)
-{
+MochiKit.Iter.permutations = function(iterable, r) {
 	var m = MochiKit, mi = MochiKit.Iter;
 
 	var pool = mi.list(iterable);
@@ -792,8 +772,7 @@ MochiKit.Iter.permutations = function(iterable, r)
  * @constructor
  * @private
  */
-MochiKit.Iter._Range = function(start, stop, step)
-{
+MochiKit.Iter._Range = function(start, stop, step) {
 	// todo: overload here also?
 	this.start = start;
 	this.stop = stop;
@@ -803,8 +782,7 @@ MochiKit.Iter._Range = function(start, stop, step)
 /**
  * @return {!Iterable}
  */
-MochiKit.Iter._Range.prototype.__iterator__ = function()
-{
+MochiKit.Iter._Range.prototype.__iterator__ = function() {
 	// return "old", iterator range
 	return new MochiKit.Iter.range(this.start, this.stop, this.step);
 };
@@ -823,8 +801,7 @@ MochiKit.Iter._Range.prototype.__iterator__ = function()
  * @param {integer=} [step=1]
  * @return {!Iterable}
  */
-MochiKit.Iter.xrange = function (/* [start,] stop[, step] */)
-{
+MochiKit.Iter.xrange = function (/* [start,] stop[, step] */) {
 	var start = 0;
 	var stop = 0;
 	var step = 1;
@@ -852,8 +829,7 @@ MochiKit.Iter.xrange = function (/* [start,] stop[, step] */)
  * @param {*} iterator
  * @return {boolean}
  */
-MochiKit.Iter.isJavaLikeIterator = function(iterator)
-{
+MochiKit.Iter.isJavaLikeIterator = function(iterator) {
 	return iterator && typeof iterator.hasNext == 'function' && typeof iterator.next == 'function';
 };
 
@@ -861,11 +837,11 @@ MochiKit.Iter.isJavaLikeIterator = function(iterator)
  * converts "Java style" iterators to the JS 1.7 interface.
  * @see http://download.oracle.com/javase/1.5.0/docs/api/java/util/Iterator.html
  * todo: take optional functions to provide next() & hasNext() configuration? (hmm, would make the registering symmetry cumbersome.. i.e require manual/static registering)
+ *
  * @param {!{hasNext: function(): boolean, next: !Function}} iterator
  * @return {!Iterable}
  */
-MochiKit.Iter.javaLikeIterator = function(iterator)
-{
+MochiKit.Iter.javaLikeIterator = function(iterator) {
 	return {
 		repr: function() { return "javaLikeIterator"; },
 		toString: MochiKit.Base.forwardCall("repr"),
@@ -879,8 +855,7 @@ MochiKit.Iter.javaLikeIterator = function(iterator)
 };
 
 // perhaps always add this?
-MochiKit.Iter.registerJavaLikeIteratorSupport = function()
-{
+MochiKit.Iter.registerJavaLikeIteratorSupport = function() {
 	MochiKit.Iter.registerIteratorFactory(
         "javaLikeIterator",
         MochiKit.Iter.isJavaLikeIterator,
@@ -1034,4 +1009,3 @@ MochiKit.Iter_ext.__new__ = function() {
 MochiKit.Iter_ext.__new__();
 
 MochiKit.Base._exportSymbols(this, MochiKit.Iter); // ! since we add to the existing namespace we export it again here (ok?)
- 
