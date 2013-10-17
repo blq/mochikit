@@ -447,6 +447,7 @@ MochiKit.Iter.generateN = function(genFn, n) {
  *
  * @param {!Iterable.<!Iterable>} iterables
  * @param {*=} [fillValue=null]
+ * @return {!Iterable}
  */
 MochiKit.Iter.izipLongest = function(iterables, fillValue) {
 	fillValue = fillValue || null;

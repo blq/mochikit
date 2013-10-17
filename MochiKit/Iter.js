@@ -570,7 +570,7 @@ MochiKit.Iter.reduce = function (fn, iterable, /* optional */initial) {
 
 /**
  * @id MochiKit.Iter.range
- * @param {number} start interepreted as stop if only one arg is give
+ * @param {number} start Interepreted as stop if only one arg is given
  * @param {number=} [stop]
  * @param {number=} [step=1]
  * @return {!Iterator}
