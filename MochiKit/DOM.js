@@ -1330,6 +1330,8 @@ MochiKit.Base.update(MochiKit.DOM, /** @lends {MochiKit.DOM} */{
         MochiKit.DOM.HGROUP = createDOMFunc("hgroup");
         /** @id MochiKit.DOM.HR */
         MochiKit.DOM.HR = createDOMFunc("hr");
+        /** @id MochiKit.DOM.I */
+        MochiKit.DOM.I = createDOMFunc("i");
         /** @id MochiKit.DOM.IFRAME */
         MochiKit.DOM.IFRAME = createDOMFunc("iframe");
         /** @id MochiKit.DOM.IMG */
