@@ -1000,6 +1000,88 @@ MochiKit.Iter.forEachIdx = function(iterable, fn) {
 };
 
 
+/**
+ * @param {*} obj
+ * @return {boolean}
+ */
+MochiKit.Iter.isES6Iterable = function(obj) {
+	if (obj != null && typeof Symbol == 'function' && typeof Symbol.iter != 'undefined') {
+		return typeof obj[Symbol.iter] == 'function' || typeof obj.next == 'function';
+	}
+	return false;
+};
+
+/**
+ * returns an ES6 Iterator either an ES6 Iterable or input if already an ES6 Iterator.
+ * todo: name?
+ * @see MochiKit.Iter.iter()
+ * @return {!ES6Iterable} throws if not compatibile or not an iterable
+ */
+MochiKit.Iter.es6Iter = function(es6iterable) {
+	// in ES6 typeof Symbol.iter == 'symbol'. but we use simpler test to allow polyfills and avoid lint warning.
+	if (typeof Symbol == 'function' && typeof Symbol.iter != 'undefined') {
+		var iter = es6iterable[Symbol.iter];
+		if (typeof iter == 'function' {
+			return iter;
+		} else if (typeof es6iterable.next == 'function') {
+			return es6iterable;
+		}
+		throw new TypeError(typeof iterable + ": is not iterable");
+	}
+	throw new Error("ES6 Iterators not supported");
+	return null; // silence warning
+};
+
+
+/**
+ * Convert a ES6 iterator style into a MochKit.Iterable
+ * todo: ok name?
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
+ * @see MochiKit.Iter.toES6Iterator
+ * @param {!ES6Iterator} es6iterable overloads on both Iterable and Iterator
+ * @return {!Iterable}
+ */
+MochiKit.Iter.fromES6Iterator = function(es6iterator) {
+	var it = MochiKit.Iter.es6Iter(es6iterator);
+	return {
+		next: function() {
+			var step = it.next();
+			if (step.done) {
+				throw MochiKit.Iter.StopIteration;
+			}
+			return step.value;
+		}
+	};
+};
+
+/**
+ * Convert a MochKit.Iterable into a ES6 Iterator.
+ * todo: todo: ok name?
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
+ * @see MochiKit.Iter.fromES6Iterator
+ * @param {!Iterable} iterable
+ * @return {!ES6Iterator} // todo: check exact type
+ */
+MochiKit.Iter.toES6Iterator = function(iterable) {
+	var it = MochiKit.Iter.iter(iterable);
+	return {
+		next: function() {
+			try {
+				var val = it.next();
+				return {
+					done: false,
+					value: val
+				};
+			} catch (e) {
+				if (e != MochiKit.Iter.StopIteration)
+					throw e;
+			}
+			return { done: true };
+		}
+	};
+};
+
+
 //--------------------------------
 
 MochiKit.Iter_ext.__new__ = function() {
