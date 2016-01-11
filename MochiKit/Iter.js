@@ -33,8 +33,12 @@ MochiKit.Iter.registerIteratorFactory = function (name, check, iterfactory, /* o
  * @return {boolean}
  */
 MochiKit.Iter.isIterable = function(o) {
-    return o != null &&
-           (typeof(o.next) == "function" || typeof(o.iter) == "function");
+	return (
+		o != null && (
+			typeof o.__iterator__ == 'function' ||
+			(typeof o.next == "function" || typeof o.iter == "function")
+		)
+	);
 };
 
 /**
@@ -51,12 +55,15 @@ MochiKit.Iter.iter = function (iterable, /* optional */ sentinel) {
             iterable
         );
     }
-    if (typeof(iterable.next) == 'function') {
+
+    // note that we now check __iterator__ first to not mistake jQuery when check .next..
+    if (typeof(iterable.__iterator__) == 'function') { // todo: could argue this should be either first or last test.. (?)
+        return iterable.__iterator__(false); // false should be the default (values)
+    } else
+    if (typeof(iterable.next) == 'function') { // this would give jQuery a false positive if placed first!
         return iterable;
     } else if (typeof(iterable.iter) == 'function') {
         return iterable.iter();
-    }  else if (typeof(iterable.__iterator__) == 'function') { // todo: could argue this should be either first or last test.. (?)
-        return iterable.__iterator__(false); // false should be the default (values)
     }
 
     try {
