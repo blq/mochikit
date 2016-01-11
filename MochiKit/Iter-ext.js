@@ -14,7 +14,7 @@
  * todo: rewrite many iterators to not use closures for better debugging and inspection? (might need to explicitly bind .next to still allow aliasing .next?)
  * todo: see if possible to be compatible with hypotetical JS 1.7 iterator code?
  *
- * good article that systematically describees the recursion -> loop transform needed for terators.
+ * good article that systematically describes the recursion -> loop transform needed for iterators.
  * @see http://www.codeproject.com/Articles/418776/How-to-replace-recursive-functions-using-stack-and
  *
  */
@@ -785,7 +785,7 @@ MochiKit.Iter._Range = function(start, stop, step) {
  */
 MochiKit.Iter._Range.prototype.__iterator__ = function() {
 	// return "old", iterator range
-	return new MochiKit.Iter.range(this.start, this.stop, this.step);
+	return MochiKit.Iter.range(this.start, this.stop, this.step);
 };
 
 /**
