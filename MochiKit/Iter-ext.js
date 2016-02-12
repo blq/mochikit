@@ -1021,7 +1021,7 @@ MochiKit.Iter.es6Iter = function(es6iterable) {
 	// in ES6 typeof Symbol.iter == 'symbol'. but we use simpler test to allow polyfills and avoid lint warning.
 	if (typeof Symbol == 'function' && typeof Symbol.iter != 'undefined') {
 		var iter = es6iterable[Symbol.iter];
-		if (typeof iter == 'function' {
+		if (typeof iter == 'function') {
 			return iter;
 		} else if (typeof es6iterable.next == 'function') {
 			return es6iterable;
