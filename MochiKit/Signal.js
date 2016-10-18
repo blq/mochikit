@@ -693,10 +693,11 @@ MochiKit.Signal.connect = function (src, sig, objOrFunc/* optional */, funcOrStr
     if (typeof(sig) != 'string') {
         throw new Error("'sig' must be a string");
     }
-	var sig_ns = sig.split('.');
-	if (sig_ns.length >= 2) {
-		sig = sig_ns[0];
-	}
+    
+    var sig_ns = sig.split('.');
+    if (sig_ns.length >= 2) {
+        sig = sig_ns[0];
+    }
 
     var destPair = self._getDestPair(objOrFunc, funcOrStr);
     var obj = destPair[0];
@@ -735,14 +736,15 @@ MochiKit.Signal.connect = function (src, sig, objOrFunc/* optional */, funcOrStr
         objOrFunc: objOrFunc,
         funcOrStr: funcOrStr,
         connected: true,
-		namespace: sig_ns[1] || ''
+        namespace: sig_ns[1] || ''
     });
-    self._observers.push(ident);
 
     if (!isDOM && typeof(src.__connect__) == 'function') {
         var args = MochiKit.Base.extend([ident], arguments, 1);
         src.__connect__.apply(src, args);
     }
+    
+    self._observers.push(ident);
 
     return ident;
 };
