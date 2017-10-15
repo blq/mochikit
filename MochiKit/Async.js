@@ -278,6 +278,52 @@ MochiKit.Async.Deferred.prototype._fire = function () {
 };
 
 
+/**
+ * Enable Deferred to be "thenable" for easy integration with ES6 Promises and "async await" code.
+ * (Assumes a Promise constructor is available, i.e a compliant browser or a polyfill is loaded)
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
+ * @param {function=} onFulfilled
+ * @param {function=} onRejected
+ * @return {!Promise}
+ */
+MochiKit.Async.Deferred.prototype.then = function(onFulfilled, onRejected) {
+	var self = this;
+	return new Promise(function(resolve, reject) {
+		// tap the MK Deferred
+		// https://mochi.github.io/mochikit/doc/html/MochiKit/Async.html#fn-deferred.prototype.addcallbacks
+		self.addCallbacks(
+			function(res) {
+				resolve(res);
+				return res;
+			},
+			function(err) {
+				reject(err.message); // MK wraps errors (shouldn't even need to sniff for Error instance)
+				return err;
+			}
+		);
+	})
+	.then(onFulfilled, onRejected);
+};
+
+/**
+ * Catch is not strictly necessary to fulfil "thenable" but good for symmetry I'd say
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch
+ * @param {function=} onRejected
+ * @return {!Promise}
+ */
+MochiKit.Async.Deferred.prototype.catch = function(onRejected) {
+	return this.then(null, onRejected);
+};
+
+/**
+ * useful? explicitly convert and return a pure Promise
+ * @return {!Promise}
+ */
+MochiKit.Async.Deferred.prototype.promise = function() {
+	return Promise.resolve(this);
+};
+
+
 /** @id MochiKit.Async.evalJSONRequest */
 MochiKit.Async.evalJSONRequest = function (req) {
 	return MochiKit.Base.evalJSON(req.responseText);
@@ -286,6 +332,7 @@ MochiKit.Async.evalJSONRequest = function (req) {
 /**
  * @id MochiKit.Async.succeed
  * @param {*=} [result]
+ *
  * @return {!MochiKit.Async.Deferred} (this, chain)
  */
 MochiKit.Async.succeed = function (/* optional */result) {
