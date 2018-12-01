@@ -456,10 +456,10 @@ MochiKit.Async.sendXMLHttpRequest = function (req, /* optional */ sendContent) {
 
 	var m = MochiKit.Base;
 	var self = MochiKit.Async;
-	var d = new self.Deferred(m.partial(self._xhr_canceller, req));
+	var d = new self.Deferred(self._xhr_canceller.bind(null, req));
 
 	try {
-		req.onreadystatechange = m.bind(self._xhr_onreadystatechange, req, d);
+		req.onreadystatechange = self._xhr_onreadystatechange.bind(req, d);
 		req.send(sendContent);
 	} catch (e) {
 		try {
@@ -732,7 +732,7 @@ MochiKit.Async.DeferredList = function (list, /* optional */fireOnOneCallback, f
     this.fireOnOneErrback = fireOnOneErrback;
     this.consumeErrors = consumeErrors;
 
-    var cb = MochiKit.Base.bind(this._cbDeferred, this);
+    var cb = this._cbDeferred.bind(this);
     for (var i = 0; i < list.length; i++) {
         var d = list[i];
         resultList.push(undefined);
@@ -851,7 +851,7 @@ MochiKit.Async.timeout = function(d, ms) {
 	}, ms);
 
 	d.addBoth(function() { clearTimeout(h); }) // can't use partial/bind for native fn in IE<9
-		.addCallbacks(MochiKit.Base.bind(dt.callback, dt), MochiKit.Base.bind(dt.errback, dt));
+		.addCallbacks(dt.callback.bind(dt), dt.errback.bind(dt));
 
 	return dt;
 };
@@ -861,7 +861,7 @@ MochiKit.Async.timeout = function(d, ms) {
 /** @this {MochiKit.Async} */
 MochiKit.Async.__new__ = function () {
     var m = MochiKit.Base;
-    var ne = m.partial(m._newNamedError, this);
+    var ne = m._newNamedError.bind(null, this);
 
     ne("AlreadyCalledError",
         /**
