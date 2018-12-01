@@ -13,7 +13,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Utility for Closure Library dependency calculation.
 
 ClosureBuilder scans source files to build dependency info.  From the
@@ -30,11 +29,11 @@ usage: %prog [options] [file1.js file2.js ...]
 __author__ = 'nnaze@google.com (Nathan Naze)'
 
 
+import io
 import logging
 import optparse
 import os
 import sys
-import string
 
 import depstree
 import jscompiler
@@ -77,7 +76,7 @@ def _GetOptionsParser():
                     dest='output_mode',
                     type='choice',
                     action='store',
-                    choices=['list', 'script', 'compiled', 'deps'],
+                    choices=['list', 'script', 'compiled'],
                     default='list',
                     help='The type of output to generate from this script. '
                     'Options are "list" for a list of filenames, "script" '
@@ -97,22 +96,19 @@ def _GetOptionsParser():
                     help='Additional flags to pass to the Closure compiler. '
                     'To pass multiple flags, --compiler_flags has to be '
                     'specified multiple times.')
+  parser.add_option('-j',
+                    '--jvm_flags',
+                    dest='jvm_flags',
+                    default=[],
+                    action='append',
+                    help='Additional flags to pass to the JVM compiler. '
+                    'To pass multiple flags, --jvm_flags has to be '
+                    'specified multiple times.')
   parser.add_option('--output_file',
                     dest='output_file',
                     action='store',
                     help=('If specified, write output to this path instead of '
                           'writing to standard output.'))
-  # todo: integrate depswriter's "--path_with_prefix" also (and a "--path_with_prefix_and_postfix"?)
-  # or make this a more general "--path_with_postfix" flag?
-  parser.add_option('--append_version',
-                    dest='append_version',
-                    action='store',
-                    help=('(mode=deps only). If specified, append version as "?v=version" to each url.'))
-  parser.add_option('--noCache',
-                    dest='noCache',
-                    action='store_true',
-                    help=('(mode=deps only). If specified, append a unique id, ex "&noCache=12313421", to each url to prevent browser from caching the script'))
-
 
   return parser
 
@@ -126,11 +122,11 @@ def _GetInputByPath(path, sources):
 
   Returns:
     The source from sources identified by path, if found.  Converts to
-    absolute paths for comparison.
+    real paths for comparison.
   """
   for js_source in sources:
-    # Convert both to absolute paths for comparison.
-    if os.path.abspath(path) == os.path.abspath(js_source.GetPath()):
+    # Convert both to real paths for comparison.
+    if os.path.realpath(path) == os.path.realpath(js_source.GetPath()):
       return js_source
 
 
@@ -147,7 +143,8 @@ def _GetClosureBaseFile(sources):
     The _PathSource representing the base Closure file.
   """
   base_files = [
-      js_source for js_source in sources if _IsClosureBaseFile(js_source)]
+      js_source for js_source in sources if _IsClosureBaseFile(js_source)
+  ]
 
   if not base_files:
     logging.error('No Closure base.js file found.')
@@ -180,9 +177,21 @@ class _PathSource(source.Source):
 
     self._path = path
 
+  def __str__(self):
+    return 'PathSource %s' % self._path
+
   def GetPath(self):
     """Returns the path."""
     return self._path
+
+
+def _WrapGoogModuleSource(src):
+  return (u'goog.loadModule(function(exports) {{'
+          '"use strict";'
+          '{0}'
+          '\n'  # terminate any trailing single line comment.
+          ';return exports'
+          '}});\n').format(src)
 
 
 def main():
@@ -192,9 +201,14 @@ def main():
 
   # Make our output pipe.
   if options.output_file:
-    out = open(options.output_file, 'w')
+    out = io.open(options.output_file, 'wb')
   else:
-    out = sys.stdout
+    version = sys.version_info[:2]
+    if version >= (3, 0):
+      # Write bytes to stdout
+      out = sys.stdout.buffer
+    else:
+      out = sys.stdout
 
   sources = set()
 
@@ -237,32 +251,22 @@ def main():
   output_mode = options.output_mode
   if output_mode == 'list':
     out.writelines([js_source.GetPath() + '\n' for js_source in deps])
-  elif output_mode == 'deps':
-
-    # typically for debug mode
-    postFix = ''
-    if options.append_version:
-      postFix += '?v=' + options.append_version
-    if options.noCache:
-      out.writelines('var noCache = (new Date()).getTime();\n') # todo: must make the var name unique also! (or wrap entire deps block in a closure fn? or sniff for a single version?)
-      if options.append_version:
-        postFix += "&"
-      else:
-        postFix += "?"
-      postFix += 'noCache=\'+noCache'
-    else:
-      postFix += "'"
-
-    for js_source in deps:
-      # todo: provide optional prefix And postfix
-      path = js_source.GetPath().replace('\\', '/') # fix for windows paths
-      out.writelines('goog.addDependency(\'%s%s, %s, %s);\n' % (path, postFix, list(js_source.provides), list(js_source.requires)))
-
-    out.writelines('}\n')
-
   elif output_mode == 'script':
-    out.writelines([js_source.GetSource() for js_source in deps])
+    for js_source in deps:
+      src = js_source.GetSource()
+      if js_source.is_goog_module:
+        src = _WrapGoogModuleSource(src)
+      out.write(src.encode('utf-8') + b'\n')
   elif output_mode == 'compiled':
+    logging.warning("""\
+Closure Compiler now natively understands and orders Closure dependencies and
+is prefererred over using this script for performing JavaScript compilation.
+
+Please migrate your codebase.
+
+See:
+https://github.com/google/closure-compiler/wiki/Managing-Dependencies
+""")
 
     # Make sure a .jar is specified.
     if not options.compiler_jar:
@@ -270,17 +274,15 @@ def main():
                     '"compiled"')
       sys.exit(2)
 
-    compiled_source = jscompiler.Compile(
-        options.compiler_jar,
-        [js_source.GetPath() for js_source in deps],
-        options.compiler_flags)
+    # Will throw an error if the compilation fails.
+    compiled_source = jscompiler.Compile(options.compiler_jar,
+                                         [js_source.GetPath()
+                                          for js_source in deps],
+                                         jvm_flags=options.jvm_flags,
+                                         compiler_flags=options.compiler_flags)
 
-    if compiled_source is None:
-      logging.error('JavaScript compilation failed.')
-      sys.exit(1)
-    else:
-      logging.info('JavaScript compilation succeeded.')
-      out.write(compiled_source)
+    logging.info('JavaScript compilation succeeded.')
+    out.write(compiled_source.encode('utf-8'))
 
   else:
     logging.error('Invalid value for --output flag.')

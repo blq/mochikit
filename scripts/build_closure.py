@@ -33,7 +33,9 @@ def build_modules(modules):
       ('--compilation_level', 'SIMPLE_OPTIMIZATIONS'), # todo: unless you compile MochiKit *toghether*  with your app scripts, ADVANCED_OPTIMIZATION can't (currently) be used, need to "export" the API functions.
       ('--warning_level', 'VERBOSE'),
       ('--summary_detail_level', '3'),
-
+      ('--language_in', 'ECMASCRIPT6'),
+      ('--language_out', 'ECMASCRIPT5'),
+      ('--strict_mode',_'input=false'),
       ('--define', 'goog.DEBUG=false'),
       ('--process_closure_primitives', 'true'), # hmm
 
@@ -50,9 +52,7 @@ def build_modules(modules):
       ('--jscomp_warning', 'checkDebuggerStatement'),
 
       ('--externs', 'scripts/closure_externs/mochikit_extern.js'),
-      ('--externs', 'scripts/closure_externs/generic_types.js'),
-      ('--externs', 'scripts/closure_externs/webkit_console.js'),
-      ('--externs', 'scripts/closure_externs/json.js')
+      ('--externs', 'scripts/closure_externs/generic_types.js')
       ])))
     ))
 
