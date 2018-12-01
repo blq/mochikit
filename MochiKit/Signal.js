@@ -17,8 +17,8 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 
 MochiKit.Base.module(MochiKit, 'Signal', '1.5', ['Base', 'DOM']);
 
-/** 
- * turn on to be able to inspect all signals. 
+/**
+ * turn on to be able to inspect all signals.
  * (Map vs WeakMap implementation of MochiKit.Signal._observers and MochiKit.Signal._contexts)
  * @type {boolean}
  */
@@ -1307,37 +1307,3 @@ MochiKit.Signal.__new__ = function (win) {
 MochiKit.Signal.__new__(this);
 
 MochiKit.Base._exportSymbols(this, MochiKit.Signal);
-
-
-//----------------
-/**
- * @param {!(Object|string|Element)} src
- * @param {string} signal
- * @param {!(Object|Function)} dest
- * @param {(Function|string)=} func
- * @param {...*} var_args
- * @return {!Object} event handler
- */
-var connect = MochiKit.Signal.connect;
-/**
- * @param {Object} ident event handler
- */
-var disconnect = MochiKit.Signal.disconnect;
-/**
- * @param {!Object} src
- * @param {string} signal
- * @param {...*} var_args
- * @throws {Error} if a handler raised an exception
- */
-var signal = MochiKit.Signal.signal;
-/**
- * @param {Object|string} src
- * @param {...string} var_args signal names
- */
-var disconnectAll = MochiKit.Signal.disconnectAll;
-/**
- * @param {Object|Function} objOrFunc
- * @param {!(Function|string)=} [funcOrStr]
- */
-var disconnectAllTo = MochiKit.Signal.disconnectAllTo;
-//----------------
