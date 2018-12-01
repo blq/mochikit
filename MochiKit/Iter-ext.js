@@ -1005,8 +1005,8 @@ MochiKit.Iter.forEachIdx = function(iterable, fn) {
  * @return {boolean}
  */
 MochiKit.Iter.isES6Iterable = function(obj) {
-	if (obj != null && typeof Symbol == 'function' && typeof Symbol.iter != 'undefined') {
-		return typeof obj[Symbol.iter] == 'function' || typeof obj.next == 'function';
+	if (obj != null && typeof Symbol == 'function' && typeof Symbol.iterator != 'undefined') {
+		return typeof obj[Symbol.iterator] == 'function' || typeof obj.next == 'function';
 	}
 	return false;
 };
@@ -1015,18 +1015,17 @@ MochiKit.Iter.isES6Iterable = function(obj) {
  * returns an ES6 Iterator either an ES6 Iterable or input if already an ES6 Iterator.
  * todo: name?
  * @see MochiKit.Iter.iter()
- * @return {!ES6Iterable} throws if not compatibile or not an iterable
+ * @return {!ES6Iterator} throws if not compatibile or not an iterable
  */
 MochiKit.Iter.es6Iter = function(es6iterable) {
-	// in ES6 typeof Symbol.iter == 'symbol'. but we use simpler test to allow polyfills and avoid lint warning.
-	if (typeof Symbol == 'function' && typeof Symbol.iter != 'undefined') {
-		var iter = es6iterable[Symbol.iter];
-		if (typeof iter == 'function') {
-			return iter;
+	// in ES6 typeof Symbol.iterator == 'symbol'. but we use simpler test to allow polyfills and avoid lint warning.
+	if (typeof Symbol == 'function' && typeof Symbol.iterator != 'undefined') {
+		if (typeof es6iterable[Symbol.iterator] == 'function') {
+			return es6iterable[Symbol.iterator]();
 		} else if (typeof es6iterable.next == 'function') {
 			return es6iterable;
 		}
-		throw new TypeError(typeof iterable + ": is not iterable");
+		throw new TypeError(es6iterable + ": is not iterable");
 	}
 	throw new Error("ES6 Iterators not supported");
 	return null; // silence warning
