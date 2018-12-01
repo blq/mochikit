@@ -463,7 +463,7 @@ tests.test_Signal = function (t) {
     signal(hasSignals, 'signalOne');
     signal(hasSignals, 'signalTwo');
     t.is(testfunc.count, 2, 'disconnectAllTo func precondition');
-    disconnectAllTo(testfunc);
+    disconnectAllTo(testfunc); // <- no ! can't implement this using new DS! :(
     signal(hasSignals, 'signalOne');
     signal(hasSignals, 'signalTwo');
     t.is(testfunc.count, 2, 'disconnectAllTo func');
@@ -614,12 +614,10 @@ tests.test_Signal = function (t) {
     signal(src, 'signal', 123);
     t.is(ns_fired, 1, 'signal attached with namespace fired ok');
 
-    var n = disconnectNS('.test_namespace');
-    t.is(n, 1, 'disconnectNS disconnected 1 signal');
+    disconnectNS(src, '.test_namespace'); <- global disconnect of a namespace is not possible using new WeakMap structure
     signal(src, 'signal', 666);
     t.is(ns_fired, 1, 'signal disconnected with namespace ok');
-    n = disconnectNS('.test_namespace');
-    t.is(n, 0, 'no more namespaced signals found ok');
+    disconnectNS(src, '.test_namespace');
 
     var ns_sig_threw = false;
     try {

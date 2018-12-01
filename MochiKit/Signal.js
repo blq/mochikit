@@ -17,11 +17,27 @@ if (typeof goog != 'undefined' && typeof goog.provide == 'function') {
 
 MochiKit.Base.module(MochiKit, 'Signal', '1.5', ['Base', 'DOM']);
 
+/** 
+ * turn on to be able to inspect all signals. 
+ * (Map vs WeakMap implementation of MochiKit.Signal._observers and MochiKit.Signal._contexts)
+ * @type {boolean}
+ */
+MochiKit.Signal._DEBUG = false;
+
 /**
- * @type {!Array.<!MochiKit.Signal.Ident>}
+ * ident.source -> Ident
+ * note: WeakMap can not be iterated, thus not possible to inspect
+ * @type {!WeakMap<!Object, !Set<!MochiKit.Signal.Ident>>}
  * @private
  */
-MochiKit.Signal._observers = [];
+MochiKit.Signal._observers = MochiKit.Signal._DEBUG ? new Map() : new WeakMap();
+/**
+ * ident.objOrFunc -> Ident
+ * @type {!WeakMap<!Object, !Set<!MochiKit.Signal.Ident>>}
+ * @private
+ */
+MochiKit.Signal._contexts = MochiKit.Signal._DEBUG ? new Map() : new WeakMap();
+
 
 /**
  * @id MochiKit.Signal.Event
@@ -410,7 +426,7 @@ MochiKit.Signal.Event.prototype.stopPropagation = function () {
 	if (this._event.stopPropagation) {
 		this._event.stopPropagation();
 	} else {
-		this._event.cancelBubble = true;
+		this._event.cancelBubble = true; // basically deprecated
 	}
 };
 
@@ -558,24 +574,26 @@ MochiKit.Signal.Ident.prototype.__repr__ = function() {
 	return 'src:' + repr(this.source) + ', sig: ' + repr(this.signal) + ', isDOM: ' + repr(this.isDOM) + ', connected: ' + repr(this.connected);
 };
 
-MochiKit.Signal._unloadCache = function () {
-    var self = MochiKit.Signal;
-    var observers = self._observers;
 
-    for (var i = 0; i < observers.length; i++) {
-        if (observers[i].signal !== 'onload' && observers[i].signal !== 'onunload') {
-            self._disconnect(observers[i]);
-        }
-    }
-};
-
+/**
+ * @param {Object} src
+ * @param {string} sig
+ * @param {Function|string} func
+ * @param {Object} obj
+ * @param {boolean} isDOM
+ * @private
+ */
 MochiKit.Signal._listener = function (src, sig, func, obj, isDOM) {
     var self = MochiKit.Signal;
     var E = self.Event;
     if (!isDOM) {
-        /* We don't want to re-bind already bound methods */
+        // We don't want to re-bind already bound methods
         if (typeof(func.im_self) == 'undefined') {
-            return MochiKit.Base.bindLate(func, obj);
+			if (typeof func == 'string') {
+            	return MochiKit.Base.bindLate(func, obj);
+			} else {
+				return func.bind(obj);
+			}
         } else {
             return func;
         }
@@ -589,7 +607,7 @@ MochiKit.Signal._listener = function (src, sig, func, obj, isDOM) {
                 var ident = new MochiKit.Signal.Ident({
                     source: src, signal: sig, objOrFunc: obj, funcOrStr: func});
 
-                MochiKit.Signal._disconnect(ident);
+				MochiKit.Signal._disconnect(ident);
             };
         } else {
             return function (nativeEvent) {
@@ -604,7 +622,7 @@ MochiKit.Signal._listener = function (src, sig, func, obj, isDOM) {
                 var ident = new MochiKit.Signal.Ident({
                     source: src, signal: sig, objOrFunc: func});
 
-                MochiKit.Signal._disconnect(ident);
+				MochiKit.Signal._disconnect(ident);
             };
         } else {
             return function (nativeEvent) {
@@ -653,6 +671,7 @@ MochiKit.Signal._mouseEnterListener = function (src, sig, func, obj) {
 /**
  * creates and validates a handler object
  * @throws {Error} if invalid input arguments
+ * @return {Array.<!(Object|Function)>} pair
  */
 MochiKit.Signal._getDestPair = function (objOrFunc, funcOrStr) {
     var obj = null;
@@ -693,11 +712,10 @@ MochiKit.Signal.connect = function (src, sig, objOrFunc/* optional */, funcOrStr
     if (typeof(sig) != 'string') {
         throw new Error("'sig' must be a string");
     }
-    
-    var sig_ns = sig.split('.');
-    if (sig_ns.length >= 2) {
-        sig = sig_ns[0];
-    }
+	var sig_ns = sig.split('.');
+	if (sig_ns.length >= 2) {
+		sig = sig_ns[0];
+	}
 
     var destPair = self._getDestPair(objOrFunc, funcOrStr);
     var obj = destPair[0];
@@ -706,7 +724,7 @@ MochiKit.Signal.connect = function (src, sig, objOrFunc/* optional */, funcOrStr
         obj = src;
     }
 
-    var isDOM = !!(src.addEventListener || src.attachEvent);
+    var isDOM = !!(src.addEventListener);
     if (isDOM && (sig === "onmouseenter" || sig === "onmouseleave")
               && !self._browserAlreadyHasMouseEnterAndLeave()) {
         var listener = self._mouseEnterListener(src, sig.substr(2), func, obj);
@@ -722,11 +740,9 @@ MochiKit.Signal.connect = function (src, sig, objOrFunc/* optional */, funcOrStr
         var listener = self._listener(src, sig, func, obj, isDOM);
     }
 
-    if (src.addEventListener) {
-        src.addEventListener(sig.substr(2), listener, false);
-    } else if (src.attachEvent) {
-        src.attachEvent(sig, listener); // useCapture unsupported
-    }
+	if (isDOM) {
+		src.addEventListener(sig.substr(2), listener, false);
+	}
 
     var ident = new MochiKit.Signal.Ident({
         source: src,
@@ -736,18 +752,35 @@ MochiKit.Signal.connect = function (src, sig, objOrFunc/* optional */, funcOrStr
         objOrFunc: objOrFunc,
         funcOrStr: funcOrStr,
         connected: true,
-        namespace: sig_ns[1] || ''
+		namespace: sig_ns[1] || ''
     });
 
-    if (!isDOM && typeof(src.__connect__) == 'function') {
-        var args = MochiKit.Base.extend([ident], arguments, 1);
-        src.__connect__.apply(src, args);
+	var slots = self._observers.get(ident.source);
+    if (!slots) {
+		slots = new Set();
+		self._observers.set(ident.source, slots);
     }
-    
-    self._observers.push(ident);
+	slots.add(ident);
 
-    return ident;
+	if (ident.funcOrStr && ident.objOrFunc) {
+		var contexts = self._contexts.get(ident.objOrFunc);
+		if (!contexts) {
+			contexts = new Set();
+			self._contexts.set(ident.objOrFunc, contexts);
+		}
+		contexts.add(ident);
+	}
+
+	// todo: try-catch guard and disconnect on throw? earlier logic was kindof that when ran before DS
+	// todo: support using Symbol also
+	if (!isDOM && typeof(src.__connect__) == 'function') {
+		var args = MochiKit.Base.extend([ident], arguments, 1);
+		src.__connect__.apply(src, args);
+	}
+
+	return ident;
 };
+
 
 /** @id MochiKit.Signal.connectOnce */
 MochiKit.Signal.connectOnce = function (src, sig, objOrFunc/* optional */, funcOrStr) {
@@ -766,25 +799,23 @@ MochiKit.Signal.connectOnce = function (src, sig, objOrFunc/* optional */, funcO
  * @private
  */
 MochiKit.Signal._disconnect = function (ident) {
-    // already disconnected
     if (!ident.connected) {
         return;
     }
     ident.connected = false;
     var src = ident.source;
     var sig = ident.signal;
-    var listener = ident.listener;
     // check isDOM
     if (!ident.isDOM) {
+		// note that this will only run for manually disconnected signals, not the weakmap-GC ones
+		// todo: support using Symbol also
         if (typeof(src.__disconnect__) == 'function') {
             src.__disconnect__(ident, sig, ident.objOrFunc, ident.funcOrStr);
         }
         return;
     }
     if (src.removeEventListener) {
-        src.removeEventListener(sig.substr(2), listener, false);
-    } else if (src.detachEvent) {
-        src.detachEvent(sig, listener); // useCapture unsupported
+        src.removeEventListener(sig.substr(2), ident.listener, false);
     } else {
         throw new Error("'src' must be a DOM element");
     }
@@ -793,12 +824,15 @@ MochiKit.Signal._disconnect = function (ident) {
  /**
   * @id MochiKit.Signal.disconnect
   * @param {Object} ident event handler
-  * // undocumented {boolean} return. false if a matching slot not found ("failed")
+  * @return {boolean} return (undocumented) false if a matching slot not found ("failed")
   */
 MochiKit.Signal.disconnect = function (ident) {
-    var self = MochiKit.Signal;
-    var observers = self._observers;
-    var m = MochiKit.Base;
+	var self = MochiKit.Signal;
+
+	if (!ident) return false;
+
+	var found = false;
+
     if (arguments.length > 1) {
         // compatibility API
         var src = arguments[0];
@@ -807,33 +841,74 @@ MochiKit.Signal.disconnect = function (ident) {
         }
         var sig = arguments[1];
         var obj = arguments[2];
-        var func = arguments[3];
-        for (var i = observers.length - 1; i >= 0; i--) {
-            var o = observers[i];
-            if (o.source === src && o.signal === sig && o.objOrFunc === obj && o.funcOrStr === func) {
-                self._disconnect(o);
-                if (self._lock === 0) {
-                    observers.splice(i, 1);
-                } else {
-                    self._dirty = true;
-                }
-                return true;
-            }
-        }
+		var func = arguments[3];
+
+		var slots = self._observers.get(src);
+		if (slots) {
+			slots.forEach(function(o) {
+				if (o.source === src && o.signal === sig && o.objOrFunc === obj && o.funcOrStr === func) {
+					self._disconnect(o);
+
+					found = slots.delete(o) || found;
+					found = self._deleteContext(o) || found;
+
+					// ** todo: early out from forEach (throw?!)
+				}
+			});
+		}
     } else {
-        var idx = m.findIdentical(observers, ident);
-        if (idx >= 0) {
-            self._disconnect(ident);
-            if (self._lock === 0) {
-                observers.splice(idx, 1);
-            } else {
-                self._dirty = true;
-            }
-            return true;
-        }
-    }
-    return false;
+		found = self._deleteSlot(ident) || found; // keep flag true
+		found = self._deleteContext(ident) || found;
+
+		self._disconnect(ident);
+
+		// todo: hmm, maybe we could fallback to a deep linear search if ident not
+		// found directly in set but if a matching source-dest ident is found?
+		// could be useful for moveEvent code?
+	}
+
+	return found;
 };
+
+
+/**
+ * @private
+ * low-level Set helper
+ * @return {boolean} true if found and deleted
+ */
+MochiKit.Signal._deleteSlot = function(ident) {
+	var self = MochiKit.Signal;
+	var deleted = false;
+	var slots = self._observers.get(ident.source);
+	if (slots) {
+		deleted = slots.delete(ident);
+		if (slots.size === 0) {
+			self._observers.delete(ident.source);
+		}
+	}
+	return deleted;
+};
+
+/**
+ * @private
+ * low-level Set helper
+ * @return {boolean} true if found and deleted
+ */
+MochiKit.Signal._deleteContext = function(ident) {
+	var self = MochiKit.Signal;
+	var deleted = false;
+	if (ident.funcOrStr && ident.objOrFunc) {
+		var contexts = self._contexts.get(ident.objOrFunc);
+		if (contexts) {
+			deleted = contexts.delete(ident);
+			if (contexts.size === 0) {
+				self._contexts.delete(ident.objOrFunc);
+			}
+		}
+	}
+	return deleted;
+};
+
 
 /**
  * @id MochiKit.Signal.disconnectAllTo
@@ -841,27 +916,32 @@ MochiKit.Signal.disconnect = function (ident) {
  * @param {!(Function|string)=} [funcOrStr]
  */
 MochiKit.Signal.disconnectAllTo = function (objOrFunc, /* optional */funcOrStr) {
-    var self = MochiKit.Signal;
-    var observers = self._observers;
-    var disconnect = self._disconnect;
-    var lock = self._lock;
-    var dirty = self._dirty;
-    if (typeof(funcOrStr) === 'undefined') {
-        funcOrStr = null;
-    }
-    for (var i = observers.length - 1; i >= 0; i--) {
-        var ident = observers[i];
-        if (ident.objOrFunc === objOrFunc &&
-                (funcOrStr === null || ident.funcOrStr === funcOrStr)) {
-            disconnect(ident);
-            if (lock === 0) {
-                observers.splice(i, 1);
-            } else {
-                dirty = true;
-            }
-        }
-    }
-    self._dirty = dirty;
+	var self = MochiKit.Signal;
+
+	// todo: hmm, original MK handles single arg function. can't do that..
+	var contexts = self._contexts.get(objOrFunc);
+	if (!contexts)
+		return;
+
+	if (funcOrStr) {
+		contexts.forEach(function(ident) {
+			if (ident.funcOrStr === funcOrStr) {
+				self._disconnect(ident);
+				self._deleteSlot(ident);
+				contexts.delete(ident);
+			}
+		});
+	} else {
+		contexts.forEach(function(ident) {
+			self._disconnect(ident);
+			self._deleteSlot(ident);
+		});
+		contexts.clear();
+	}
+
+	if (contexts.size === 0) {
+		self._contexts.delete(objOrFunc);
+	}
 };
 
 /**
@@ -874,54 +954,46 @@ MochiKit.Signal.disconnectAll = function (src, /* optional */var_args) {
         src = MochiKit.DOM.getElement(src);
     }
     var m = MochiKit.Base;
-    var signals = m.flattenArguments(m.extend(null, arguments, 1));
     var self = MochiKit.Signal;
-    var disconnect = self._disconnect;
-    var observers = self._observers;
-    var i, ident;
-    var lock = self._lock;
-    var dirty = self._dirty;
-    if (signals.length === 0) {
-        // disconnect all
-        for (i = observers.length - 1; i >= 0; i--) {
-            ident = observers[i];
-            if (ident.source === src) {
-                disconnect(ident);
-                if (lock === 0) {
-                    observers.splice(i, 1);
-                } else {
-                    dirty = true;
-                }
-            }
-        }
-    } else {
-        var sigs = {};
-        for (i = 0; i < signals.length; i++) {
-            sigs[signals[i]] = true;
-        }
-        for (i = observers.length - 1; i >= 0; i--) {
-            ident = observers[i];
-            if (ident.source === src && ident.signal in sigs) {
-                disconnect(ident);
-                if (lock === 0) {
-                    observers.splice(i, 1);
-                } else {
-                    dirty = true;
-                }
-            }
-        }
-    }
-    self._dirty = dirty;
+
+	var slots = self._observers.get(src);
+	if (!slots)
+		return;
+
+	var signals = m.flattenArguments(m.extend(null, arguments, 1));
+
+	if (signals.length === 0) {
+		slots.forEach(function(ident) {
+			self._disconnect(ident);
+			self._deleteContext(ident);
+		});
+		slots.clear();
+	} else {
+		var sigs = {};
+		for (var i = 0; i < signals.length; ++i) {
+			sigs[signals[i]] = true;
+		}
+		slots.forEach(function(ident) {
+			if (ident.signal in sigs) {
+				self._disconnect(ident);
+				slots.delete(ident);
+				self._deleteContext(ident);
+			}
+		});
+	}
+
+	if (slots.size === 0) {
+		self._observers.delete(src);
+	}
 };
 
 /**
  * todo: support multiple args (flattening)?
- * todo: should support passing in a src object also!
  * @id MochiKit.Signal.disconnectNS
+ * @param {Object} src
  * @param {string} sigAndOrNS  example: 'onclick.myNamespace' or '.myNamespace'. Note that namespace must start with a dot.
- * @return {integer} number of signals disconnected
  */
-MochiKit.Signal.disconnectNS = function(sigAndOrNS) { // ok name?
+MochiKit.Signal.disconnectNS = function(src, sigAndOrNS) { // ok name?
     var self = MochiKit.Signal;
 
 	var sig_ns = sigAndOrNS.split('.');
@@ -933,27 +1005,20 @@ MochiKit.Signal.disconnectNS = function(sigAndOrNS) { // ok name?
 	var namespace = sig_ns[1];
 	// assert(namespace.length > 0);
 
-	var n = 0;
-	var observers = self._observers;
-	for (var i = observers.length - 1; i >= 0; i--) {
-		var ident = observers[i];
+	var slots = self._observers.get(src);
+	if (!slots)
+		return;
 
+	slots.forEach(function(ident) {
 		if (
 			(ident.namespace == namespace) && (
 				(signal != '' && ident.signal == signal) ||
 				(signal == '')
 			)
 		) {
-			self._disconnect(ident);
-			if (self._lock === 0) {
-				observers.splice(i, 1);
-			} else {
-				self._dirty = true;
-			}
-			n += 1;
+			self.disconnect(ident);
 		}
-	}
-	return n;
+	});
 };
 
 /**
@@ -965,33 +1030,33 @@ MochiKit.Signal.disconnectNS = function(sigAndOrNS) { // ok name?
  */
 MochiKit.Signal.signal = function (src, sig, var_args) {
     var self = MochiKit.Signal;
-    var observers = self._observers;
     if (typeof(src) == "string") {
         src = MochiKit.DOM.getElement(src);
-    }
+	}
+
+	var slots = self._observers.get(src);
+	if (!slots)
+		return;
+
     var args = MochiKit.Base.extend(null, arguments, 2);
     var errors = [];
-    self._lock++;
-    for (var i = 0; i < observers.length; i++) {
-        var ident = observers[i];
-        if (ident.source === src && ident.signal === sig &&
-                ident.connected) {
-            try {
-                if (ident.isDOM && ident.funcOrStr != null) {
-                    var obj = ident.objOrFunc;
-                    obj[ident.funcOrStr].apply(obj, args);
-                } else if (ident.isDOM) {
-                    ident.objOrFunc.apply(src, args);
-                } else {
-                    ident.listener.apply(src, args);
-                }
-            } catch (e) {
-                errors.push(e);
-            }
-        }
-    }
-    self._lock--;
-	self._gc();
+	slots.forEach(function(ident) {
+		if (ident.signal === sig && ident.connected) {
+			try {
+				if (ident.isDOM && ident.funcOrStr != null) {
+					var obj = ident.objOrFunc;
+					obj[ident.funcOrStr].apply(obj, args);
+				} else if (ident.isDOM) {
+					ident.objOrFunc.apply(src, args);
+				} else {
+					ident.listener.apply(src, args);
+				}
+			} catch (e) {
+				errors.push(e);
+			}
+		}
+	});
+
     if (errors.length == 1) {
         throw errors[0];
     } else if (errors.length > 1) {
@@ -1002,54 +1067,47 @@ MochiKit.Signal.signal = function (src, sig, var_args) {
 };
 
 /**
- * frees any pending disconnects (if lock allows)
- * @return {boolean} false if locked and no gc could be performed
- * @private
- */
-MochiKit.Signal._gc = function() {
-	var self = MochiKit.Signal;
-	var observers = self._observers;
-    if (self._lock === 0 && self._dirty) {
-        for (var i = observers.length - 1; i >= 0; i--) {
-            if (!observers[i].connected) {
-                observers.splice(i, 1);
-            }
-        }
-		self._dirty = false;
-		return true;
-    }
-	return false;
-};
-
-
-/**
  * Combination of disconnectAll(src) and disconnectAllTo(objOrFunc).
  * Disconnects all signals to src that are also are bound to objOrFunc.
  * todo: ok name?
  * @param {Object} src
  * @param {Object|Function} objOrFunc
+ * // todo: support taking signal names also?
  */
 MochiKit.Signal.disconnectAllFromTo = function(src, objOrFunc) {
 	var self = MochiKit.Signal;
-	var observers = self._observers;
-	var disconnect = self._disconnect;
-	var lock = self._lock;
-	var dirty = self._dirty;
 
-	for (var i = observers.length - 1; i >= 0; i--) {
-		var ident = observers[i];
-		if (ident.objOrFunc === objOrFunc && ident.source == src) {
-			disconnect(ident);
-			if (lock === 0) {
-				observers.splice(i, 1);
-			} else {
-				dirty = true;
-			}
-		}
+	var slots = self._observers.get(src);
+	if (!slots)
+		return;
+	var contexts = self._contexts.get(objOrFunc);
+	if (!contexts)
+		return;
+
+	// iterate the smallest Set for efficiency
+	var small = null, large = null;
+	if (slots.size > contexts.size) {
+		small = contexts;
+		large = slots;
+	} else {
+		small = slots;
+		large = contexts;
 	}
-	self._dirty = dirty;
-};
 
+	small.forEach(function(ident) {
+		if (large.delete(ident)) {
+			self._disconnect(ident);
+			small.delete(ident);
+		}
+	});
+
+	if (slots.size === 0) {
+		self._observers.delete(src);
+	}
+	if (contexts.size === 0) {
+		self._contexts.delete(objOrFunc);
+	}
+};
 
 /**
  * shorthand for a call to disconnectAll() + disconnectAllTo()
@@ -1058,10 +1116,124 @@ MochiKit.Signal.disconnectAllFromTo = function(src, objOrFunc) {
  * @param {Object} obj
  */
 MochiKit.Signal.close = function(obj) {
-	// todo: write a custom low-level method optimized to do both of these in one iteration?
-	// ok order? guess theoretically there can be cases both ways if complex assumptions are made..
-	MochiKit.Signal.disconnectAll(obj);
-	MochiKit.Signal.disconnectAllTo(obj);
+	var self = MochiKit.Signal;
+
+	// ==
+// 	self.disconnectAll(obj);
+// 	self.disconnectAllTo(obj);
+
+	var slots = self._observers.get(obj);
+	if (slots) {
+		slots.forEach(function(ident) {
+			self._disconnect(ident);
+			self._deleteContext(ident);
+		});
+		slots.clear(); // help GC maybe, in the case someone still holds a ref to it
+		self._observers.delete(obj);
+	}
+
+	var contexts = self._contexts.get(obj);
+	if (contexts) {
+		contexts.forEach(function(ident) {
+			self._disconnect(ident);
+			self._deleteSlot(ident);
+		});
+		contexts.clear(); // help GC maybe, in the case someone still holds a ref to it
+		self._contexts.delete(obj);
+	}
+};
+
+/**
+ * @private
+ * debug function
+ */
+MochiKit.Signal._checkInvariants = function() {
+	var self = MochiKit.Signal;
+
+	// note: yes, in the WeakMap case the invariants will be broken if/when GC runs,
+	// it will release Sets from observers or vice-versa. This is for finding logical errors and testing.
+	if (!self._observers.forEach) {
+		console.warn('MochiKit.Signal._checkInvariants: can not run checks when using WeakMap impl. Change to debug mode');
+		console.log('WeakMaps can manually be inspected in debugger:\nMochiKit.Signal._observers:', self._observers, '\nMochiKit.Signal._contexts:', self._contexts);
+		return;
+	}
+
+	var srcIdents = new Set();
+	var srcContexts = new Set();
+
+	var isOk = true;
+
+	self._observers.forEach(function(srcSet, src) {
+		if (srcSet.size === 0) {
+			console.warn('source Set should not really be 0 size', src);
+			// false-ish..
+		}
+
+		srcSet.forEach(function(ident) {
+			if (!ident.connected) {
+				console.warn('disconnected signal in observers. Should not really happen', ident);
+				// false-ish..
+			}
+
+			if (ident.source != src) {
+				console.warn('ident.source in observers does not match key!', ident);
+				isOk = false;
+			}
+
+			if (ident.funcOrStr && ident.objOrFunc) {
+				if (!self._contexts.has(ident.objOrFunc)) {
+					console.warn('connection from observer->context does not match!', ident);
+					isOk = false;
+				}
+				srcContexts.add(ident.objOrFunc);
+			}
+
+			srcIdents.add(ident);
+		});
+	});
+
+	var dstIdents = new Set();
+
+	self._contexts.forEach(function(dstSet, dst) {
+		if (dstSet.size === 0) {
+			console.warn('context Set should not really be 0 size', dst);
+			// false-ish..
+		}
+
+		dstSet.forEach(function(ident) {
+			if (!ident.connected) {
+				console.warn('disconnected signal in contexts. Should not really happen', ident);
+				// false-ish..
+			}
+
+			if (ident.objOrFunc != dst) {
+				console.warn('ident.objOrFunc in contexts does not match key!', ident);
+				isOk = false;
+			}
+
+			if (!self._observers.has(ident.source)) {
+				console.warn('connection from context->observer does not match!', ident);
+				isOk = false;
+			}
+
+			dstIdents.add(ident);
+		});
+	});
+
+	if (srcIdents.size < dstIdents.size) {
+		console.warn('observers Set should be >= than context Set!');
+		isOk = false;
+	}
+
+	if (srcContexts.size != self._contexts.size) {
+		// todo: could filter out the exact elems
+		console.warn('orphan contexts!?');
+		isOk = false;
+	}
+
+	// todo: more?
+
+	return isOk;
 };
 
 
@@ -1128,29 +1300,44 @@ MochiKit.Signal.__new__ = function (win) {
     var m = MochiKit.Base;
     this._document = document;
     this._window = win;
-    MochiKit.Signal._lock = 0;
-    this._dirty = false;
-
-	// todo: deprecate this? only IE<8 really ever needed this(?)
-    try {
-        this.connect(window, 'onunload', this._unloadCache);
-    } catch (e) {
-        // pass: might not be a browser
-    }
 
     m.nameFunctions(this);
 };
 
 MochiKit.Signal.__new__(this);
 
-//
-// XXX: Internet Explorer blows
-//
-if (MochiKit.__export__) {
-	window.connect = MochiKit.Signal.connect;
-	window.disconnect = MochiKit.Signal.disconnect;
-	window.disconnectAll = MochiKit.Signal.disconnectAll;
-	window.signal = MochiKit.Signal.signal;
-}
-
 MochiKit.Base._exportSymbols(this, MochiKit.Signal);
+
+
+//----------------
+/**
+ * @param {!(Object|string|Element)} src
+ * @param {string} signal
+ * @param {!(Object|Function)} dest
+ * @param {(Function|string)=} func
+ * @param {...*} var_args
+ * @return {!Object} event handler
+ */
+var connect = MochiKit.Signal.connect;
+/**
+ * @param {Object} ident event handler
+ */
+var disconnect = MochiKit.Signal.disconnect;
+/**
+ * @param {!Object} src
+ * @param {string} signal
+ * @param {...*} var_args
+ * @throws {Error} if a handler raised an exception
+ */
+var signal = MochiKit.Signal.signal;
+/**
+ * @param {Object|string} src
+ * @param {...string} var_args signal names
+ */
+var disconnectAll = MochiKit.Signal.disconnectAll;
+/**
+ * @param {Object|Function} objOrFunc
+ * @param {!(Function|string)=} [funcOrStr]
+ */
+var disconnectAllTo = MochiKit.Signal.disconnectAllTo;
+//----------------
