@@ -26,7 +26,7 @@ MochiKit.Base.module(MochiKit, 'Random', '1.5', ['Base', '_MersenneTwister19937'
  */
 MochiKit.Random.seed = function(x)
 {
-	x = typeof x == 'number' ? x : (new Date()).getTime();
+	x = typeof x == 'number' ? x : Date.now();
 	MochiKit.Random._generator.seed(x);
 };
 
@@ -293,7 +293,7 @@ MochiKit.Random.MersenneTwister = function(x)
 
 MochiKit.Random.MersenneTwister.prototype.seed = function(x)
 {
-	x = typeof x == 'number' ? x : (new Date()).getTime();
+	x = typeof x == 'number' ? x : Date.now();
 	this._mt.init_genrand(x);
 };
 
