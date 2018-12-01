@@ -143,6 +143,12 @@ SimpleTest.ok = function (condition, name, diag) {
     SimpleTest._tests.push(test);
 };
 
+SimpleTest.fail = function(msg) {
+    if (SimpleTest._logEnabled) {
+        parent.TestRunner.logger.log(msg);
+    }
+};
+
 /**
  * Roughly equivalent to ok(a==b, name)
  */
@@ -502,4 +508,5 @@ SimpleTest.isa = function (object, clas) {
 // Global symbols:
 var ok = SimpleTest.ok;
 var is = SimpleTest.is;
+var fail = SimpleTest.fail;
 var isDeeply = SimpleTest.isDeeply;
