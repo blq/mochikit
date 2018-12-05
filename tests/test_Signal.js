@@ -614,7 +614,7 @@ tests.test_Signal = function (t) {
     signal(src, 'signal', 123);
     t.is(ns_fired, 1, 'signal attached with namespace fired ok');
 
-    disconnectNS(src, '.test_namespace'); <- global disconnect of a namespace is not possible using new WeakMap structure
+    disconnectNS(src, '.test_namespace'); // <- global disconnect of a namespace is not possible using new WeakMap structure
     signal(src, 'signal', 666);
     t.is(ns_fired, 1, 'signal disconnected with namespace ok');
     disconnectNS(src, '.test_namespace');
