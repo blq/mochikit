@@ -773,7 +773,7 @@ MochiKit.Signal.connect = function (src, sig, objOrFunc/* optional */, funcOrStr
 
 	// todo: try-catch guard and disconnect on throw? earlier logic was kindof that when ran before DS
 	// todo: support using Symbol also
-	if (!isDOM && typeof(src.__connect__) == 'function') {
+	if (!isDOM && typeof src.__connect__ === 'function') {
 		var args = MochiKit.Base.extend([ident], arguments, 1);
 		src.__connect__.apply(src, args);
 	}
@@ -795,6 +795,7 @@ MochiKit.Signal.connectOnce = function (src, sig, objOrFunc/* optional */, funcO
 };
 
 /**
+ * ! nulls out handler's references
  * @param {Object} ident event handler
  * @private
  */
@@ -804,21 +805,32 @@ MochiKit.Signal._disconnect = function (ident) {
     }
     ident.connected = false;
     var src = ident.source;
-    var sig = ident.signal;
+	var sig = ident.signal;
+	var objOrFunc = ident.objOrFunc;
+	var funcOrStr = ident.funcOrStr;
+	var listener = ident.listener;
+
+	// kill references to help GC
+	ident.source = null;
+	ident.objOrFunc = null;
+	ident.funcOrStr = null;
+	ident.listener = null;
+
     // check isDOM
     if (!ident.isDOM) {
 		// note that this will only run for manually disconnected signals, not the weakmap-GC ones
 		// todo: support using Symbol also
-        if (typeof(src.__disconnect__) == 'function') {
-            src.__disconnect__(ident, sig, ident.objOrFunc, ident.funcOrStr);
+        if (typeof src.__disconnect__ === 'function') {
+            src.__disconnect__(ident, sig, objOrFunc, funcOrStr);
         }
         return;
-    }
+	}
+
     if (src.removeEventListener) {
-        src.removeEventListener(sig.substr(2), ident.listener, false);
+        src.removeEventListener(sig.substr(2), listener, false);
     } else {
         throw new Error("'src' must be a DOM element");
-    }
+	}
 };
 
  /**
@@ -847,10 +859,9 @@ MochiKit.Signal.disconnect = function (ident) {
 		if (slots) {
 			slots.forEach(function(o) {
 				if (o.source === src && o.signal === sig && o.objOrFunc === obj && o.funcOrStr === func) {
-					self._disconnect(o);
-
 					found = slots.delete(o) || found;
 					found = self._deleteContext(o) || found;
+					self._disconnect(o);
 
 					// ** todo: early out from forEach (throw?!)
 				}
@@ -926,15 +937,15 @@ MochiKit.Signal.disconnectAllTo = function (objOrFunc, /* optional */funcOrStr) 
 	if (funcOrStr) {
 		contexts.forEach(function(ident) {
 			if (ident.funcOrStr === funcOrStr) {
-				self._disconnect(ident);
 				self._deleteSlot(ident);
 				contexts.delete(ident);
+				self._disconnect(ident);
 			}
 		});
 	} else {
 		contexts.forEach(function(ident) {
-			self._disconnect(ident);
 			self._deleteSlot(ident);
+			self._disconnect(ident);
 		});
 		contexts.clear();
 	}
@@ -964,8 +975,8 @@ MochiKit.Signal.disconnectAll = function (src, /* optional */var_args) {
 
 	if (signals.length === 0) {
 		slots.forEach(function(ident) {
-			self._disconnect(ident);
 			self._deleteContext(ident);
+			self._disconnect(ident);
 		});
 		slots.clear();
 	} else {
@@ -975,9 +986,9 @@ MochiKit.Signal.disconnectAll = function (src, /* optional */var_args) {
 		}
 		slots.forEach(function(ident) {
 			if (ident.signal in sigs) {
-				self._disconnect(ident);
 				slots.delete(ident);
 				self._deleteContext(ident);
+				self._disconnect(ident);
 			}
 		});
 	}
@@ -1096,8 +1107,8 @@ MochiKit.Signal.disconnectAllFromTo = function(src, objOrFunc) {
 
 	small.forEach(function(ident) {
 		if (large.delete(ident)) {
-			self._disconnect(ident);
 			small.delete(ident);
+			self._disconnect(ident);
 		}
 	});
 
@@ -1125,8 +1136,8 @@ MochiKit.Signal.close = function(obj) {
 	var slots = self._observers.get(obj);
 	if (slots) {
 		slots.forEach(function(ident) {
-			self._disconnect(ident);
 			self._deleteContext(ident);
+			self._disconnect(ident);
 		});
 		slots.clear(); // help GC maybe, in the case someone still holds a ref to it
 		self._observers.delete(obj);
@@ -1135,8 +1146,8 @@ MochiKit.Signal.close = function(obj) {
 	var contexts = self._contexts.get(obj);
 	if (contexts) {
 		contexts.forEach(function(ident) {
-			self._disconnect(ident);
 			self._deleteSlot(ident);
+			self._disconnect(ident);
 		});
 		contexts.clear(); // help GC maybe, in the case someone still holds a ref to it
 		self._contexts.delete(obj);
