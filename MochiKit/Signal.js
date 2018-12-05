@@ -423,11 +423,7 @@ MochiKit.Signal.Event.prototype.stop = function () {
 
 /** @id MochiKit.Signal.Event.prototype.stopPropagation */
 MochiKit.Signal.Event.prototype.stopPropagation = function () {
-	if (this._event.stopPropagation) {
-		this._event.stopPropagation();
-	} else {
-		this._event.cancelBubble = true; // basically deprecated
-	}
+	this._event.stopPropagation();
 };
 
 /** @id MochiKit.Signal.Event.prototype.preventDefault */
