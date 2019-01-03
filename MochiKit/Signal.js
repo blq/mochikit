@@ -1157,8 +1157,6 @@ MochiKit.Signal.close = function(obj) {
 MochiKit.Signal._checkInvariants = function() {
 	var self = MochiKit.Signal;
 
-	// note: yes, in the WeakMap case the invariants will be broken if/when GC runs,
-	// it will release Sets from observers or vice-versa. This is for finding logical errors and testing.
 	if (!self._observers.forEach) {
 		console.warn('MochiKit.Signal._checkInvariants: can not run checks when using WeakMap impl. Change to debug mode');
 		console.log('WeakMaps can manually be inspected in debugger:\nMochiKit.Signal._observers:', self._observers, '\nMochiKit.Signal._contexts:', self._contexts);
